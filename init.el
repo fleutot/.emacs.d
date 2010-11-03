@@ -1,5 +1,5 @@
 ; directory to put various el files into
-(add-to-list 'load-path "includes")
+(add-to-list 'load-path "~/.emacs.d/includes")
 
 (setq auto-mode-alist (cons '(".ss$" . asm-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '(".inc$" . asm-mode) auto-mode-alist))

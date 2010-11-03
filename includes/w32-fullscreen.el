@@ -12,7 +12,7 @@
 
 ;; ------ configuration -----
 (defvar w32-fullscreen-toggletitle-cmd
-   "w32toggletitle.exe"
+   "~/.emacs.d/includes/w32toggletitle.exe"
    "Path to w32toggletitle command")
 
 ;; ------ code -----
