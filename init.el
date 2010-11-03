@@ -200,10 +200,39 @@ If point was already at that position, move point to beginning of line."
 ;; (autoload 'ack-find-file "full-ack" nil t)
 
 
+;; Better buffer list functionality.
+(require 'ibuffer)
+(setq ibuffer-saved-filter-groups
+  (quote (("default"      
+            ("Belasigna"
+              (filename . "work/bs200/"))
+            ("PIC"
+              (filename . "*.asm"))
+            ("Assembly" ;; all org-related buffers
+              (mode . asm-mode))  
+            ("Programming" ;; prog stuff not already in MyProjectX
+              (or
+                (mode . c-mode)
+                (mode . perl-mode)
+                (mode . python-mode)
+                (mode . emacs-lisp-mode)
+                ;; etc
+                )) 
+            ))))
+
+(add-hook 'ibuffer-mode-hook
+  (lambda ()
+    (ibuffer-switch-to-saved-filter-groups "default")))
+
+(global-set-key (kbd "C-x C-b") 'ibuffer)
+
+
+;; Interface to git
 (require 'egg)
 
 (require 'gas-mode)
 
+;; For fullscreen functionality
 (require 'darkroom-mode)
 
 ;; Fringes are the margin areas where truncate or wrap arrows are shown.
