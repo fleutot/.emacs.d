@@ -41,16 +41,25 @@
 
 (show-paren-mode 1)
 
+;; New window pop-up vertical split threshold.
+;; Windows with a fewer number of visible lines may not be split vertically.
+(setq split-height-threshold 120)
+(setq split-width-threshold 90)
+
 ; Color theme
 (require 'color-theme)
 (color-theme-pok-wog)
 ;;Emacs.pane.menubar.* does not seem to work? 
-;Emacs.pane.menubar.background: darkGrey
+(setq Emacs.pane.menubar.background 'darkGrey)
 ;Emacs.pane.menubar.foreground: black
 
 
+
 ; Default font 9 pt
-(set-face-attribute 'default nil :height 80)
+;(set-face-attribute 'default nil :height 90)
+;(set-default-font "-outline-Lucida Console-normal-normal-normal-mono-11-*-*-*-c-*-iso8859-1")
+(set-default-font "Lucida Console-9")
+;(set-face-attribute 'default nil :height 90)
 
 (defun my-compilation-mode-hook ()
   (setq truncate-lines t)
@@ -227,6 +236,17 @@ If point was already at that position, move point to beginning of line."
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 
 
+;; Tags
+(defun create-tags (dir-name)
+  "Create tags file."
+  (interactive "DDirectory: ")
+  (eshell-command
+  ;;(message
+   ;;(format "ctags %s -f %s/TAGS -e -R %s" path-to-ctags dir-name (directory-file-name dir-name)))
+   (format "ctags -e -R \"%s\"" (directory-file-name dir-name)))
+  )
+
+
 ;; Interface to git
 (require 'egg)
 
@@ -270,4 +290,37 @@ If point was already at that position, move point to beginning of line."
 (set-fringe-mode '(4 . 2))
 
 (put 'dired-find-alternate-file 'disabled nil)
+
+;; alternative python mode
+ (require 'python-mode)
+ (autoload 'python-mode "python-mode.el"
+   "Major mode for editing Python source." t)
+ (add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
+ 
+;; pymacs
+ (setenv "PYMACS_PYTHON" "c:/program/python2.7") 
+ 
+ (autoload 'pymacs-apply "pymacs")
+ (autoload 'pymacs-call "pymacs")
+ (autoload 'pymacs-eval "pymacs" nil t)
+ (autoload 'pymacs-exec "pymacs" nil t)
+ (autoload 'pymacs-load "pymacs" nil t)
+ (require 'pymacs)
+ ;;(eval-after-load "pymacs"
+ ;;  '(add-to-list 'pymacs-load-path YOUR-PYMACS-DIRECTORY"))
+ 
+ 
+;; iPython integration
+ (add-to-list 'interpreter-mode-alist '("python" . python-mode))
+ (require 'ipython)
+ (setq py-python-command-args '("-pylab" "-colors" "LightBG"))
+ (setq ipython-command "ipython")
+
+ ;;(when (executable-find "ipython")
+ ;;    (require 'ipython nil 'noerror))
+ ;;(when (featurep 'ipython)
+ ;;  (setq python-python-command "ipython")
+ ;;  (autoload 'py-shell "ipython"
+ ;;    "Use IPython as the Python interpreter." t))
+
 

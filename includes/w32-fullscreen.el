@@ -73,7 +73,8 @@
 			   '((menu-bar-lines . 0) (tool-bar-lines . 0)
 			     (vertical-scroll-bars . nil)))
   (w32-fullscreen-toggle-titlebar)
-  (w32-fullscreen-maximize-frame))
+  (w32-fullscreen-maximize-frame)
+)
 
 (defun w32-fullscreen-off ()
   "Disable fullscreen display of current frame (windows only)"

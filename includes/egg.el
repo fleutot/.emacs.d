@@ -3732,12 +3732,12 @@ If INIT was not nil, then perform 1st-time initializations as well."
 	      (if full-refs
 		  (propertize
 		   (mapconcat (lambda (full-ref-name)
-				; (cdr (assoc full-ref-name 
-				;         dec-ref-alist)))
-                        full-ref-name)
+				 (cdr (assoc full-ref-name 
+				         dec-ref-alist)))
+;                        full-ref-name)
 			      full-refs separator)
 		   :navigation sha1 :commit sha1
-		   :references refs)))
+		   :references (egg-short-ref refs))))
 	(setq ref-string-len (if ref-string (length ref-string)))
 
 	;; entire line
