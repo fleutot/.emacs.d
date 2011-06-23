@@ -14,6 +14,9 @@
 (defvar w32-fullscreen-toggletitle-cmd
    "~/.emacs.d/includes/w32toggletitle.exe"
    "Path to w32toggletitle command")
+;(defvar w32-fullscreen-toggletitle-cmd
+;  "C:\\Program\\python25\\python.exe ~\\.emacs.d\\includes\\w32toggletitle.py"
+;   "Path to w32toggletitle command")
 
 ;; ------ code -----
 (defun w32-fullscreen-maximize-frame ()

@@ -1,6 +1,7 @@
 ; directory to put various el files into
 (add-to-list 'load-path "~/.emacs.d/includes")
 
+; Add some extensions for assembly mode
 (setq auto-mode-alist (cons '(".ss$" . asm-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '(".inc$" . asm-mode) auto-mode-alist))
 
@@ -53,6 +54,12 @@
 (setq Emacs.pane.menubar.background 'darkGrey)
 ;Emacs.pane.menubar.foreground: black
 
+
+;; Smart kill-line on end of line, strips white space from following line.
+(defadvice kill-line (after kill-line-cleanup-whitespace activate compile)
+      "cleanup whitespace on kill-line"
+      (if (not (bolp))
+	  (delete-region (point) (progn (skip-chars-forward " \t") (point)))))
 
 
 ; Default font 9 pt
@@ -107,6 +114,8 @@ kernel."
 ; Warn in C for while();, if(x=0), ...
 (global-cwarn-mode 1)
 
+(setq-default buffer-file-coding-system 'dos)
+
 
 ; no electric mode in c
 (c-toggle-electric-state -1)
@@ -157,6 +166,10 @@ kernel."
 (add-hook 'window-size-change-functions 'save-window-size-if-changed)
 
 
+;; Refresh on F5
+;;(global-set-key (kbd "M-<f4>") 'save-buffers-kill-emacs)
+(global-set-key (kbd "<f5>") '(lambda () (interactive) (revert-buffer nil t nil)))
+
 ;; smart home behaviour
 (defun smart-beginning-of-line ()
   "Move point to first non-whitespace character or beginning-of-line.
@@ -194,7 +207,7 @@ If point was already at that position, move point to beginning of line."
 (defface column-marker-1 '((t (:backgroung "red")))
   "Face for column marker 1."
   :group 'faces)
-(defvar column-marker-1-face ((t (:background "PaleGreen"))))
+(defvar column-marker-1-face ((t (:background "DarkGreen"))))
 (defvar column-marker-2-face ((t (:background "LemonChiffon"))))
 (defvar column-marker-3-face ((t (:background "MistyRose")))) 
 
@@ -279,6 +292,7 @@ If point was already at that position, move point to beginning of line."
  (setq confirm-nonexistent-file-or-buffer nil)
 
 
+(require 'revbufs)
 
 (require 'gas-mode)
 
@@ -324,3 +338,70 @@ If point was already at that position, move point to beginning of line."
  ;;    "Use IPython as the Python interpreter." t))
 
 
+
+(defun insert-function-header()
+  "Insert a C function header above the current function."
+  (interactive)
+  (setq function-name (c-defun-name))
+  (beginning-of-defun)  ; leave mark at the old location
+  (insert "//------------------------------------------------------------------------------
+// Function:    ")
+  (insert function-name)
+  (insert "
+//------------------------------------------------------------------------------
+// Description: 
+// Input:       
+// Output:      
+// Notes:       
+//------------------------------------------------------------------------------
+")
+  (word-search-backward "Description:")
+  (move-end-of-line nil))
+
+(define-key global-map "\C-x\C-hf" 'insert-function-header)
+
+
+(defun insert-c-file-header()
+  "Insert a C file header."
+  (interactive)
+  (insert "/*----------------------------------------------------------------------------
+Copyright (c) 2011 Bellman & Symfon AB
+This code is the property of Bellman & Symfon AB and may not be redistributed 
+in any form without prior written permission from Bellman & Symfon AB. 
+----------------------------------------------------------------------------*/
+
+//******************************************************************************
+// Module constants
+//******************************************************************************
+
+//******************************************************************************
+// Module variables
+//******************************************************************************
+
+//******************************************************************************
+// Function prototypes
+//******************************************************************************
+
+//******************************************************************************
+// Function definitions
+//******************************************************************************
+
+//******************************************************************************
+// Internal functions
+//******************************************************************************
+"))
+
+
+(defun insert-h-file-header()
+  "Insert a H file header."
+  (interactive)
+  (insert "/*----------------------------------------------------------------------------
+Copyright (c) 2011 Bellman & Symfon AB
+This code is the property of Bellman & Symfon AB and may not be redistributed 
+in any form without prior written permission from Bellman & Symfon AB. 
+----------------------------------------------------------------------------*/
+
+#ifndef _INCLUDED
+#define _INCLUDED
+#endif // _INCLUDED
+"))
