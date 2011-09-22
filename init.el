@@ -47,14 +47,6 @@
 (setq split-height-threshold 120)
 (setq split-width-threshold 90)
 
-; Color theme
-(require 'color-theme)
-(color-theme-pok-wog)
-;;Emacs.pane.menubar.* does not seem to work? 
-(setq Emacs.pane.menubar.background 'darkGrey)
-;Emacs.pane.menubar.foreground: black
-
-
 ;; Smart kill-line on end of line, strips white space from following line.
 (defadvice kill-line (after kill-line-cleanup-whitespace activate compile)
       "cleanup whitespace on kill-line"
@@ -67,6 +59,7 @@
 ;(set-default-font "-outline-Lucida Console-normal-normal-normal-mono-11-*-*-*-c-*-iso8859-1")
 (set-default-font "Lucida Console-9")
 ;(set-face-attribute 'default nil :height 90)
+
 
 (defun my-compilation-mode-hook ()
   (setq truncate-lines t)
@@ -115,6 +108,16 @@ kernel."
 (global-cwarn-mode 1)
 
 (setq-default buffer-file-coding-system 'dos)
+
+
+; Color theme
+(require 'color-theme)
+(require 'color-theme-zenburn)
+(color-theme-zenburn)
+;(color-theme-pok-wog)
+;;Emacs.pane.menubar.* does not seem to work? 
+;(setq Emacs.pane.menubar.background 'darkGrey)
+;Emacs.pane.menubar.foreground: black
 
 
 ; no electric mode in c
@@ -204,7 +207,7 @@ If point was already at that position, move point to beginning of line."
                    (column-marker-1 78)
                    (column-marker-2 79)
                    (column-marker-3 80))))
-(defface column-marker-1 '((t (:backgroung "red")))
+(defface column-marker-1 '((t (:background "red")))
   "Face for column marker 1."
   :group 'faces)
 (defvar column-marker-1-face ((t (:background "DarkGreen"))))
@@ -337,6 +340,13 @@ If point was already at that position, move point to beginning of line."
  ;;  (autoload 'py-shell "ipython"
  ;;    "Use IPython as the Python interpreter." t))
 
+(setq load-path
+          (append (list nil "~/.emacs.d/includes/deft")
+                  load-path))
+(when (require 'deft nil 'noerror)
+  (setq
+   deft-directory "~/.deft")
+  (global-set-key (kbd "<f9>") 'deft))
 
 
 (defun insert-function-header()

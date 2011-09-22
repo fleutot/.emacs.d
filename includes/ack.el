@@ -56,7 +56,7 @@ find the text that ack hits refer to. The command actually run is
 defined by the ack-command variable."
   (interactive (list (read-file-name "Run ack in directory: " nil "" t)
                      (read-string "Search for: " (thing-at-point 'symbol))
-                     (read-string "Ack arguments: " "-i --group --type-add asm=.ss" nil "-i --group --type-add asm=.ss --type-add asm=.inc" nil)
+                     (read-string "Ack arguments: " "-i --group --type-add asm=.ss -n" nil "-i --group --type-add asm=.ss --type-add asm=.inc -n" nil)
                                   ))
   ; Get dir into an the right state, incase a file name was used
     (setq dir (abbreviate-file-name
