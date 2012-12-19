@@ -1,14 +1,19 @@
 ; directory to put various el files into
 (add-to-list 'load-path "~/.emacs.d/includes")
 
-; Add some extensions for assembly mode
+; Add file associations
 (setq auto-mode-alist (cons '(".ss$" . asm-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '(".inc$" . asm-mode) auto-mode-alist))
-
-; loads ruby mode when a .rb file is opened.
+(setq auto-mode-alist (cons '(".m$" . octave-mode) auto-mode-alist))
 (autoload 'ruby-mode "ruby-mode" "Major mode for editing ruby scripts." t)
 (setq auto-mode-alist  (cons '(".rb$" . ruby-mode) auto-mode-alist))
 (setq auto-mode-alist  (cons '(".rhtml$" . html-mode) auto-mode-alist))
+
+; Give back a hard newline with no indentation. Use C-j for newline-and-indent.
+(eval-after-load 'asm
+  '(define-key asm-mode-map (kbd "RET") 'newline))
+
+; loads ruby mode when a .rb file is opened.
 
 (add-hook 'ruby-mode-hook
           (lambda()
@@ -54,11 +59,13 @@
 	  (delete-region (point) (progn (skip-chars-forward " \t") (point)))))
 
 
+(set-default-font "-outline-Lucida Console-normal-normal-normal-mono-11-*-*-*-c-*-iso8859-1")
 ; Default font 9 pt
 ;(set-face-attribute 'default nil :height 90)
 ;(set-default-font "-outline-Lucida Console-normal-normal-normal-mono-11-*-*-*-c-*-iso8859-1")
 (set-default-font "Lucida Console-9")
 ;(set-face-attribute 'default nil :height 90)
+
 
 
 (defun my-compilation-mode-hook ()
@@ -90,7 +97,7 @@
 
 
 (defun linux-c-mode ()
-  "C mode with adjusted defaults for use with the Linux 
+  "C mode with adjusted defaults for use with the Linux
 kernel."
   (interactive)
   (c-mode)
@@ -147,7 +154,7 @@ kernel."
 (require 'color-theme-zenburn)
 (color-theme-zenburn)
 ;(color-theme-pok-wog)
-;;Emacs.pane.menubar.* does not seem to work? 
+;;Emacs.pane.menubar.* does not seem to work?
 ;(setq Emacs.pane.menubar.background 'darkGrey)
 ;Emacs.pane.menubar.foreground: black
 
@@ -193,7 +200,7 @@ kernel."
   (let ((original-window-size  `(,(frame-width) ,(frame-height))))
     (unless (equal original-window-size saved-window-size)
       (with-temp-buffer
-        (setq saved-window-size original-window-size) 
+        (setq saved-window-size original-window-size)
         (insert (concat "(setq saved-window-size '"
                         (prin1-to-string saved-window-size) ")"))
         (write-file "~/.emacs.d/whsettings")))))
@@ -244,7 +251,7 @@ If point was already at that position, move point to beginning of line."
   :group 'faces)
 (defvar column-marker-1-face ((t (:background "DarkGreen"))))
 (defvar column-marker-2-face ((t (:background "LemonChiffon"))))
-(defvar column-marker-3-face ((t (:background "MistyRose")))) 
+(defvar column-marker-3-face ((t (:background "MistyRose"))))
 
 
 ;; Ack as a replacement for grep
@@ -260,13 +267,13 @@ If point was already at that position, move point to beginning of line."
 ;; Better buffer list functionality.
 (require 'ibuffer)
 (setq ibuffer-saved-filter-groups
-  (quote (("default"      
+  (quote (("default"
             ("Belasigna"
               (filename . "work/bs200/"))
             ("PIC"
               (filename . "*.asm"))
             ("Assembly" ;; all org-related buffers
-              (mode . asm-mode))  
+              (mode . asm-mode))
             ("Programming" ;; prog stuff not already in MyProjectX
               (or
                 (mode . c-mode)
@@ -274,7 +281,7 @@ If point was already at that position, move point to beginning of line."
                 (mode . python-mode)
                 (mode . emacs-lisp-mode)
                 ;; etc
-                )) 
+                ))
             ))))
 
 (add-hook 'ibuffer-mode-hook
@@ -290,8 +297,8 @@ If point was already at that position, move point to beginning of line."
   (interactive "DDirectory: ")
   (eshell-command
   ;;(message
-   ;;(format "ctags %s -f %s/TAGS -e -R %s" path-to-ctags dir-name (directory-file-name dir-name)))
-   (format "ctags -e -R \"%s\"" (directory-file-name dir-name)))
+   (format "ctags %s -f %s/TAGS -e -R %s" path-to-ctags dir-name (directory-file-name dir-name)))
+   ;;(format "ctags -e -R \"%s\"" (directory-file-name dir-name)))
   )
 
 
@@ -301,9 +308,9 @@ If point was already at that position, move point to beginning of line."
 
 ;; ido makes competing buffers and finding files easier
 ;; http://www.emacswiki.org/cgi-bin/wiki/InteractivelyDoThings
-(require 'ido) 
+(require 'ido)
 (ido-mode 'both) ;; for buffers and files
-(setq 
+(setq
   ido-save-directory-list-file "~/.emacs.d/cache/ido.last"
 
   ido-ignore-buffers ;; ignore these guys
@@ -345,10 +352,10 @@ If point was already at that position, move point to beginning of line."
  (autoload 'python-mode "python-mode.el"
    "Major mode for editing Python source." t)
  (add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
- 
+
 ;; pymacs
- (setenv "PYMACS_PYTHON" "c:/program/python2.7") 
- 
+ (setenv "PYMACS_PYTHON" "c:/program/python2.7")
+
  (autoload 'pymacs-apply "pymacs")
  (autoload 'pymacs-call "pymacs")
  (autoload 'pymacs-eval "pymacs" nil t)
@@ -357,8 +364,8 @@ If point was already at that position, move point to beginning of line."
  (require 'pymacs)
  ;;(eval-after-load "pymacs"
  ;;  '(add-to-list 'pymacs-load-path YOUR-PYMACS-DIRECTORY"))
- 
- 
+
+
 ;; iPython integration
  (add-to-list 'interpreter-mode-alist '("python" . python-mode))
  (require 'ipython)
@@ -391,10 +398,10 @@ If point was already at that position, move point to beginning of line."
   (insert function-name)
   (insert "
 //------------------------------------------------------------------------------
-// Description: 
-// Input:       
-// Output:      
-// Notes:       
+// Description:
+// Input:
+// Output:
+// Notes:
 //------------------------------------------------------------------------------
 ")
   (word-search-backward "Description:")
@@ -408,8 +415,8 @@ If point was already at that position, move point to beginning of line."
   (interactive)
   (insert "/*----------------------------------------------------------------------------
 Copyright (c) 2011 Bellman & Symfon AB
-This code is the property of Bellman & Symfon AB and may not be redistributed 
-in any form without prior written permission from Bellman & Symfon AB. 
+This code is the property of Bellman & Symfon AB and may not be redistributed
+in any form without prior written permission from Bellman & Symfon AB.
 ----------------------------------------------------------------------------*/
 
 //******************************************************************************
@@ -439,11 +446,20 @@ in any form without prior written permission from Bellman & Symfon AB.
   (interactive)
   (insert "/*----------------------------------------------------------------------------
 Copyright (c) 2011 Bellman & Symfon AB
-This code is the property of Bellman & Symfon AB and may not be redistributed 
-in any form without prior written permission from Bellman & Symfon AB. 
+This code is the property of Bellman & Symfon AB and may not be redistributed
+in any form without prior written permission from Bellman & Symfon AB.
 ----------------------------------------------------------------------------*/
 
 #ifndef _INCLUDED
 #define _INCLUDED
 #endif // _INCLUDED
 "))
+
+;(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+(require 'ws-trim)
+(setq ws-trim-level 1) ; 1 -> only modified lines are trimmed.
+(setq ws-trim-method-hook '(ws-trim-trailing ws-trim-tabs))
+(global-ws-trim-mode t)
+
+(require 'copy)
