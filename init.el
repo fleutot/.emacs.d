@@ -148,13 +148,16 @@ kernel."
 (setq-default buffer-file-coding-system 'dos)
 
 
-; This is not working in emacs 24. Use M-x load-theme instead, suggestedly with
-; the theme tango-dark (not too long from zenbrun).
 ; Color theme
-;(require 'color-theme)
-;(require 'color-theme-zenburn)
-;(color-theme-zenburn)
-;(color-theme-pok-wog)
+(if (< emacs-major-version 24)
+  (
+    (require 'color-theme)
+    (require 'color-theme-zenburn)
+    (color-theme-zenburn)
+    ;(color-theme-pok-wog)
+  )
+    (load-theme 'tango-dark)
+)
 ;;Emacs.pane.menubar.* does not seem to work?
 ;(setq Emacs.pane.menubar.background 'darkGrey)
 ;Emacs.pane.menubar.foreground: black
