@@ -150,12 +150,12 @@ kernel."
 
 ; Color theme
 (if (< emacs-major-version 24)
-  (
+  (progn
     (require 'color-theme)
     (require 'color-theme-zenburn)
     (color-theme-zenburn)
     ;(color-theme-pok-wog)
-  )
+    )
     (load-theme 'tango-dark)
 )
 ;;Emacs.pane.menubar.* does not seem to work?
@@ -466,4 +466,4 @@ in any form without prior written permission from Bellman & Symfon AB.
 (setq ws-trim-method-hook '(ws-trim-trailing ws-trim-tabs))
 (global-ws-trim-mode t)
 
-(require 'copy)
+;(require 'copy)
