@@ -101,3 +101,5 @@
   (paste-to-mark arg)
   )
 (global-set-key (kbd "C-c a")         (quote thing-copy-parenthesis-to-mark))
+
+(provide 'copy)
