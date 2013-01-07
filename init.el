@@ -59,11 +59,11 @@
 	  (delete-region (point) (progn (skip-chars-forward " \t") (point)))))
 
 
-(set-default-font "-outline-Lucida Console-normal-normal-normal-mono-11-*-*-*-c-*-iso8859-1")
+;(set-default-font "-outline-Lucida Console-normal-normal-normal-mono-11-*-*-*-c-*-iso8859-1")
 ; Default font 9 pt
 ;(set-face-attribute 'default nil :height 90)
 ;(set-default-font "-outline-Lucida Console-normal-normal-normal-mono-11-*-*-*-c-*-iso8859-1")
-(set-default-font "Lucida Console-9")
+;(set-default-font "Lucida Console-9")
 ;(set-face-attribute 'default nil :height 90)
 
 
@@ -83,13 +83,13 @@
  '(egg-enable-tooltip t)
  '(egg-git-command "c:\\Program\\git\\bin\\git")
  '(tab-stop-list (quote (4 8 12 16 20 24 28 32 36 40 44 48 52 56 60 64 68 72 76 80 84 88 92 96 100 104 108 112 116 120))))
-(custom-set-faces
+;(custom-set-faces
   ;; custom-set-faces was added by Custom.
   ;; If you edit it by hand, you could mess it up, so be careful.
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
- '(font-lock-comment-face ((t (:foreground "limegreen" :slant oblique))))
- '(font-lock-preprocessor-face ((t (:inherit font-lock-builtin-face :foreground "orange" :weight bold)))))
+; '(font-lock-comment-face ((t (:foreground "limegreen" :slant oblique))))
+; '(font-lock-preprocessor-face ((t (:inherit font-lock-builtin-face :foreground "orange" :weight bold)))))
 
 
 (global-set-key [C-tab] 'other-window)
@@ -148,12 +148,16 @@ kernel."
 (setq-default buffer-file-coding-system 'dos)
 
 
-
 ; Color theme
-(require 'color-theme)
-(require 'color-theme-zenburn)
-(color-theme-zenburn)
-;(color-theme-pok-wog)
+(if (< emacs-major-version 24)
+  (progn
+    (require 'color-theme)
+    (require 'color-theme-zenburn)
+    (color-theme-zenburn)
+    ;(color-theme-pok-wog)
+    )
+    (load-theme 'tango-dark)
+)
 ;;Emacs.pane.menubar.* does not seem to work?
 ;(setq Emacs.pane.menubar.background 'darkGrey)
 ;Emacs.pane.menubar.foreground: black
