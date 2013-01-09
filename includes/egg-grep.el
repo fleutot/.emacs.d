@@ -1,6 +1,7 @@
-;;; egg -- Emacs Got Git
-;;; A magit fork
-
+;;; egg-grep.el -- Emacs Got Git's compile-mode which can grep files in non-checkout git revisions
+;; 
+;; A magit fork
+;; 
 ;; Copyright (C) 2008  Linh Dang
 ;;
 ;; Egg is free software; you can redistribute it and/or modify it
@@ -25,7 +26,7 @@
 (require 'egg)
 (require 'compile)
 (require 'grep)
-(require 'cl)
+(eval-when-compile (require 'cl))
 
 (defvar egg-grep-saved-find-file-func nil)
 
@@ -130,3 +131,4 @@ Set up `compilation-exit-message-function' and run `egg-grep-setup-hook'."
 		       `(lambda (name) 
 			  (format "*git-grep@%s*" ,git-dir)))))
 
+;;; egg-grep.el ends here

@@ -63,7 +63,7 @@
 ; Default font 9 pt
 ;(set-face-attribute 'default nil :height 90)
 ;(set-default-font "-outline-Lucida Console-normal-normal-normal-mono-11-*-*-*-c-*-iso8859-1")
-;(set-default-font "Lucida Console-9")
+(set-default-font "Lucida Console-9")
 ;(set-face-attribute 'default nil :height 90)
 
 
@@ -305,11 +305,6 @@ If point was already at that position, move point to beginning of line."
    ;;(format "ctags -e -R \"%s\"" (directory-file-name dir-name)))
   )
 
-
-;; Interface to git
-(require 'egg)
-
-
 ;; ido makes competing buffers and finding files easier
 ;; http://www.emacswiki.org/cgi-bin/wiki/InteractivelyDoThings
 (require 'ido)
@@ -467,3 +462,7 @@ in any form without prior written permission from Bellman & Symfon AB.
 (global-ws-trim-mode t)
 
 (require 'copy)
+
+;; Interface to git
+(require 'egg)
+
