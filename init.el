@@ -1,4 +1,4 @@
-; directory to put various el files into
+;git directory to put various el files into
 (add-to-list 'load-path "~/.emacs.d/includes")
 
 ; Add file associations
@@ -8,6 +8,12 @@
 (autoload 'ruby-mode "ruby-mode" "Major mode for editing ruby scripts." t)
 (setq auto-mode-alist  (cons '(".rb$" . ruby-mode) auto-mode-alist))
 (setq auto-mode-alist  (cons '(".rhtml$" . html-mode) auto-mode-alist))
+
+
+(package-initialize)
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(package-initialize)
 
 ; Give back a hard newline with no indentation. Use C-j for newline-and-indent.
 (eval-after-load 'asm
@@ -75,13 +81,19 @@
 (add-hook 'compilation-mode-hook 'my-compilation-mode-hook)
 
 (custom-set-variables
-  ;; custom-set-variables was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(ansi-color-names-vector ["#2d3743" "#ff4242" "#74af68" "#dbdb95" "#34cae2" "#008b8b" "#00ede1" "#e1e1e0"])
+ '(ansi-term-color-vector ["#3f3f3f" "#cc9393" "#7f9f7f" "#f0dfaf" "#8cd0d3" "#dc8cc3" "#93e0e3" "#dcdccc"])
  '(compilation-scroll-output t)
+ '(custom-safe-themes (quote ("c77a31867f444e1c82bacd22146cb2d781a471168305e1660558b2b54ec016b7" "01a269e63522c39b95bee8df829ae8633ea372fd1921487cd6ccac42b1bf1cb9" "36a309985a0f9ed1a0c3a69625802f87dee940767c9e200b89cdebdb737e5b29" default)))
  '(egg-enable-tooltip t)
- '(egg-git-command "c:\\Program\\git\\bin\\git")
+ '(egg-git-command "c:\\Program Files (x86)\\git\\bin\\git")
+ '(fci-rule-color "#383838")
+ '(global-hl-line-mode nil)
+ '(magit-git-executable "c:/Programx86/git/bin/git.exe")
  '(tab-stop-list (quote (4 8 12 16 20 24 28 32 36 40 44 48 52 56 60 64 68 72 76 80 84 88 92 96 100 104 108 112 116 120))))
 ;(custom-set-faces
   ;; custom-set-faces was added by Custom.
@@ -144,11 +156,20 @@ kernel."
    '((my-c-mode-font-lock-if0 (0 font-lock-comment-face prepend))) 'add-to-end))
 
 (add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
+(add-hook 'c-mode-common-hook 'auto-fill-mode)
 
 (setq-default buffer-file-coding-system 'dos)
 
 
 ; Color theme
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(hl-line ((t (:inherit highlight :background "gray10")))))
+
 (if (< emacs-major-version 24)
   (progn
     (require 'color-theme)
@@ -156,11 +177,15 @@ kernel."
     (color-theme-zenburn)
     ;(color-theme-pok-wog)
     )
-    (load-theme 'tango-dark)
+  (load-theme 'zenburn t)
 )
 ;;Emacs.pane.menubar.* does not seem to work?
 ;(setq Emacs.pane.menubar.background 'darkGrey)
 ;Emacs.pane.menubar.foreground: black
+
+; Smart mode line
+(require 'smart-mode-line)
+(sml/setup)
 
 
 ; no electric mode in c
@@ -180,6 +205,8 @@ kernel."
 
 (setq c-default-style "k&r")
 (setq tab-width 4)
+; indent C preprocessor macros together with the code.
+(c-set-offset (quote cpp-macro) 0 nil)
 (setq indent-line-function 'insert-tab)
 (setq asm-indent-level 4)
 
@@ -215,6 +242,16 @@ kernel."
 ;; Refresh on F5
 ;;(global-set-key (kbd "M-<f4>") 'save-buffers-kill-emacs)
 (global-set-key (kbd "<f5>") '(lambda () (interactive) (revert-buffer nil t nil)))
+(defun revert-all-buffers ()
+  "Refreshes all open buffers from their respective files."
+  (interactive)
+  (dolist (buf (buffer-list))
+    (with-current-buffer buf
+      (when (and (buffer-file-name) (not (buffer-modified-p)))
+        (revert-buffer t t t) )))
+  (message "Refreshed open files.") )
+(global-set-key (kbd "C-<f5>") '(lambda () (interactive) (revert-all-buffers)))
+
 
 ;; smart home behaviour
 (defun smart-beginning-of-line ()
@@ -253,10 +290,12 @@ If point was already at that position, move point to beginning of line."
 (defface column-marker-1 '((t (:background "red")))
   "Face for column marker 1."
   :group 'faces)
-(defvar column-marker-1-face ((t (:background "DarkGreen"))))
-(defvar column-marker-2-face ((t (:background "LemonChiffon"))))
-(defvar column-marker-3-face ((t (:background "MistyRose"))))
+;; (defvar column-marker-1-face ((t (:background "#4f4f4f"))))
+;; (defvar column-marker-2-face ((t (:background "#5f5f5f"))))
+;; (defvar column-marker-3-face ((t (:background "#8c5353"))))
 
+;; Always longlines-mode for text files
+(add-hook 'text-mode-hook 'longlines-mode)
 
 ;; Ack as a replacement for grep
 (global-set-key "\M-s" 'ack)
@@ -301,8 +340,8 @@ If point was already at that position, move point to beginning of line."
   (interactive "DDirectory: ")
   (eshell-command
   ;;(message
-   (format "ctags %s -f %s/TAGS -e -R %s" path-to-ctags dir-name (directory-file-name dir-name)))
-   ;;(format "ctags -e -R \"%s\"" (directory-file-name dir-name)))
+   ;;(format "ctags %s -f %s/TAGS -e -R %s" path-to-ctags dir-name (directory-file-name dir-name)))
+   (format "ctags -e -R \"%s\"" (directory-file-name dir-name)))
   )
 
 ;; ido makes competing buffers and finding files easier
@@ -390,20 +429,14 @@ If point was already at that position, move point to beginning of line."
 (defun insert-function-header()
   "Insert a C function header above the current function."
   (interactive)
-  (setq function-name (c-defun-name))
   (beginning-of-defun)  ; leave mark at the old location
-  (insert "//------------------------------------------------------------------------------
-// Function:    ")
-  (insert function-name)
-  (insert "
-//------------------------------------------------------------------------------
-// Description:
-// Input:
-// Output:
-// Notes:
-//------------------------------------------------------------------------------
+  (insert "//  ----------------------------------------------------------------------------
+/// \\brief  
+/// \\param  
+/// \\return 
+//  ----------------------------------------------------------------------------
 ")
-  (word-search-backward "Description:")
+  (word-search-backward "brief")
   (move-end-of-line nil))
 
 (define-key global-map "\C-x\C-hf" 'insert-function-header)
@@ -413,7 +446,7 @@ If point was already at that position, move point to beginning of line."
   "Insert a C file header."
   (interactive)
   (insert "/*----------------------------------------------------------------------------
-Copyright (c) 2011 Bellman & Symfon AB
+Copyright (c) 2013 Bellman & Symfon AB
 This code is the property of Bellman & Symfon AB and may not be redistributed
 in any form without prior written permission from Bellman & Symfon AB.
 ----------------------------------------------------------------------------*/
@@ -444,7 +477,7 @@ in any form without prior written permission from Bellman & Symfon AB.
   "Insert a H file header."
   (interactive)
   (insert "/*----------------------------------------------------------------------------
-Copyright (c) 2011 Bellman & Symfon AB
+Copyright (c) 2013 Bellman & Symfon AB
 This code is the property of Bellman & Symfon AB and may not be redistributed
 in any form without prior written permission from Bellman & Symfon AB.
 ----------------------------------------------------------------------------*/
@@ -453,6 +486,24 @@ in any form without prior written permission from Bellman & Symfon AB.
 #define _INCLUDED
 #endif // _INCLUDED
 "))
+
+
+; Occur
+;; Same as occur with default symbol at point, no need to press enter.
+(defun occur-symbol-at-point ()
+  (interactive)
+  (let ((sym (thing-at-point 'symbol)))
+    (funcall 'occur sym)))
+(global-set-key (kbd "\C-co") 'occur-symbol-at-point)
+
+
+; Find-tag
+;; Same as find-tag, without the need to press enter.
+(defun find-tag-at-point ()
+  (interactive)
+  (let ((sym (thing-at-point 'symbol)))
+    (funcall 'find-tag sym)))
+(global-set-key (kbd "C-.") 'find-tag-at-point)
 
 ;(add-hook 'before-save-hook 'delete-trailing-whitespace)
 
@@ -463,6 +514,39 @@ in any form without prior written permission from Bellman & Symfon AB.
 
 (require 'copy)
 
+(require 'highlight-symbol)
+(global-set-key [(control f3)] 'highlight-symbol-at-point)
+(global-set-key [f3] 'highlight-symbol-next)
+(global-set-key [(shift f3)] 'highlight-symbol-prev)
+(global-set-key [(meta f3)] 'highlight-symbol-remove-all)
+(global-set-key [(control meta f3)] 'highlight-symbol-query-replace)
+
 ;; Interface to git
 (require 'egg)
 
+;; To format git commit messages
+(require 'git-commit)
+(add-hook 'git-commit-mode-hook 'turn-on-flyspell)
+(add-hook 'git-commit-mode-hook (lambda () (toggle-save-place 0)))
+
+
+;; Mover buffers across windows
+(require 'buffer-move)
+(global-set-key (kbd "<C-S-up>")     'buf-move-up)
+(global-set-key (kbd "<C-S-down>")   'buf-move-down)
+(global-set-key (kbd "<C-S-left>")   'buf-move-left)
+(global-set-key (kbd "<C-S-right>")  'buf-move-right)
+
+
+;; Start server to allow for emacsclient to use this.
+(server-start)
+(put 'downcase-region 'disabled nil)
+
+
+;; Fill newly created files with template content
+(require 'defaultcontent)
+
+;; UTF-8 as default (mostly for encoding swedish characters correctly)
+(prefer-coding-system 'utf-8)
+
+(setq-default fill-column 80)

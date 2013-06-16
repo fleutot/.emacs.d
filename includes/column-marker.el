@@ -135,7 +135,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;
 
 
-(defface column-marker-1 '((t (:background "gray")))
+(defface column-marker-1 '((t (:background "#4f4f4f")))
   "Face used for a column marker.  Usually a background color."
   :group 'faces)
 
@@ -143,7 +143,7 @@
     "Face used for a column marker.  Usually a background color.
 Changing this directly affects only new markers.")
 
-(defface column-marker-2 '((t (:background "cyan3")))
+(defface column-marker-2 '((t (:background "#5f5f5f")))
   "Face used for a column marker.  Usually a background color."
   :group 'faces)
 
@@ -151,7 +151,7 @@ Changing this directly affects only new markers.")
     "Face used for a column marker.  Usually a background color.
 Changing this directly affects only new markers." )
 
-(defface column-marker-3 '((t (:background "orchid3")))
+(defface column-marker-3 '((t (:background "#ac7373")))
   "Face used for a column marker.  Usually a background color."
   :group 'faces)
 
