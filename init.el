@@ -341,7 +341,7 @@ If point was already at that position, move point to beginning of line."
   (eshell-command
   ;;(message
    ;;(format "ctags %s -f %s/TAGS -e -R %s" path-to-ctags dir-name (directory-file-name dir-name)))
-   (format "ctags -e -R \"%s\"" (directory-file-name dir-name)))
+   (format "cd \"%s\"; ctags -e -R \"%s\"" dir-name (directory-file-name dir-name)))
   )
 
 ;; ido makes competing buffers and finding files easier

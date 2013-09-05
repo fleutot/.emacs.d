@@ -554,6 +554,8 @@ Turning on git commit calls the hooks in `git-commit-mode-hook'."
   (interactive)
   (kill-all-local-variables)
   (use-local-map git-commit-map)
+  (turn-on-auto-fill)
+  (setq fill-column 70)
   (setq font-lock-multiline t)
   (setq font-lock-defaults '(git-commit-font-lock-keywords t))
   (make-local-variable 'comment-start-skip)
