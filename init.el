@@ -56,7 +56,7 @@
 ;; New window pop-up vertical split threshold.
 ;; Windows with a fewer number of visible lines may not be split vertically.
 (setq split-height-threshold 120)
-(setq split-width-threshold 90)
+(setq split-width-threshold 150)
 
 ;; Smart kill-line on end of line, strips white space from following line.
 (defadvice kill-line (after kill-line-cleanup-whitespace activate compile)
@@ -207,7 +207,7 @@ kernel."
 (setq tab-width 4)
 ; indent C preprocessor macros together with the code.
 (c-set-offset (quote cpp-macro) 0 nil)
-(setq indent-line-function 'insert-tab)
+;(setq indent-line-function 'insert-tab)
 (setq asm-indent-level 4)
 
 
@@ -560,3 +560,7 @@ in any form without prior written permission from Bellman & Symfon AB.
    kept-new-versions 6
    kept-old-versions 2
    version-control t)       ; use versioned backups
+
+;; Don't convert _ and ^ unless surrounded by braces
+(setq org-export-with-sub-superscripts '{})
+(add-hook 'org-mode-hook 'auto-fill-mode)
