@@ -58,6 +58,23 @@
 (setq split-height-threshold 120)
 (setq split-width-threshold 150)
 
+
+;;;;;;;;;;;;;;; EXPERIMENTAL, not working ;;;;;;;;;;;;;;;;
+;; Change background color for read-only buffers
+;;(add-hook 'find-file-hooks
+;;          (lambda ()
+;;            (when buffer-read-only
+;;              (set-background-color "black"))))
+;;
+;;(defadvice toogle-read-only (after toggle-read-only-color)
+;;  "Toggle background color for read-only buffer"
+;;  (lambda ()
+;;    (when buffer-read-only
+;;      (message "the advice is there!"))))
+;;      ;(set-background-color "black"))))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
 ;; Smart kill-line on end of line, strips white space from following line.
 (defadvice kill-line (after kill-line-cleanup-whitespace activate compile)
       "cleanup whitespace on kill-line"
@@ -86,7 +103,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(ansi-color-names-vector ["#2d3743" "#ff4242" "#74af68" "#dbdb95" "#34cae2" "#008b8b" "#00ede1" "#e1e1e0"])
- '(ansi-term-color-vector ["#3f3f3f" "#cc9393" "#7f9f7f" "#f0dfaf" "#8cd0d3" "#dc8cc3" "#93e0e3" "#dcdccc"])
+ '(ansi-term-color-vector ["#3f3f3f" "#cc9393" "#7f9f7f" "#f0dfaf" "#8cd0d3" "#dc8cc3" "#93e0e3" "#dcdccc"] t)
  '(compilation-scroll-output t)
  '(custom-safe-themes (quote ("c77a31867f444e1c82bacd22146cb2d781a471168305e1660558b2b54ec016b7" "01a269e63522c39b95bee8df829ae8633ea372fd1921487cd6ccac42b1bf1cb9" "36a309985a0f9ed1a0c3a69625802f87dee940767c9e200b89cdebdb737e5b29" default)))
  '(egg-enable-tooltip t)
@@ -94,6 +111,9 @@
  '(fci-rule-color "#383838")
  '(global-hl-line-mode nil)
  '(magit-git-executable "c:/Programx86/git/bin/git.exe")
+ '(sml/active-background-color "#dd7d37")
+ '(sml/active-foreground-color "white")
+ '(sml/inactive-background-color "gray38")
  '(tab-stop-list (quote (4 8 12 16 20 24 28 32 36 40 44 48 52 56 60 64 68 72 76 80 84 88 92 96 100 104 108 112 116 120))))
 ;(custom-set-faces
   ;; custom-set-faces was added by Custom.
@@ -163,12 +183,25 @@ kernel."
 
 ; Color theme
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
+
+;;Emacs.pane.menubar.* does not seem to work?
+;(setq Emacs.pane.menubar.background 'darkGrey)
+;Emacs.pane.menubar.foreground: black
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(hl-line ((t (:inherit highlight :background "gray10")))))
+ '(hl-line ((t (:inherit highlight :background "gray10"))))
+ '(sml/col-number ((t (:inherit sml/global))))
+ '(sml/filename ((t (:inherit sml/global :foreground "white" :weight bold))))
+ '(sml/global ((t (:foreground "gray89"))))
+ '(sml/modified ((t (:inherit sml/global :foreground "blue" :weight bold)))))
+
+; Smart mode line
+(require 'smart-mode-line)
+(sml/setup)
 
 (if (< emacs-major-version 24)
   (progn
@@ -179,13 +212,6 @@ kernel."
     )
   (load-theme 'zenburn t)
 )
-;;Emacs.pane.menubar.* does not seem to work?
-;(setq Emacs.pane.menubar.background 'darkGrey)
-;Emacs.pane.menubar.foreground: black
-
-; Smart mode line
-(require 'smart-mode-line)
-(sml/setup)
 
 
 ; no electric mode in c
