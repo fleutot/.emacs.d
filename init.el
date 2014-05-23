@@ -84,9 +84,8 @@
 
 ;(set-default-font "-outline-Lucida Console-normal-normal-normal-mono-11-*-*-*-c-*-iso8859-1")
 ; Default font 9 pt
-;(set-face-attribute 'default nil :height 90)
 ;(set-default-font "-outline-Lucida Console-normal-normal-normal-mono-11-*-*-*-c-*-iso8859-1")
-(set-default-font "Lucida Console-9")
+;(set-default-font "Lucida Console-9")
 ;(set-face-attribute 'default nil :height 90)
 
 
@@ -107,10 +106,10 @@
  '(compilation-scroll-output t)
  '(custom-safe-themes (quote ("c77a31867f444e1c82bacd22146cb2d781a471168305e1660558b2b54ec016b7" "01a269e63522c39b95bee8df829ae8633ea372fd1921487cd6ccac42b1bf1cb9" "36a309985a0f9ed1a0c3a69625802f87dee940767c9e200b89cdebdb737e5b29" default)))
  '(egg-enable-tooltip t)
- '(egg-git-command "c:\\Program Files (x86)\\git\\bin\\git")
+ '(egg-git-command "git")
  '(fci-rule-color "#383838")
  '(global-hl-line-mode nil)
- '(magit-git-executable "c:/Programx86/git/bin/git.exe")
+ '(magit-git-executable "git")
  '(sml/active-background-color "#dd7d37")
  '(sml/active-foreground-color "white")
  '(sml/inactive-background-color "gray38")
@@ -125,7 +124,7 @@
 
 
 (global-set-key [C-tab] 'other-window)
-(global-set-key [C-S-tab] (lambda () (interactive) (other-window -1)))
+(global-set-key [C-S-iso-lefttab] (lambda () (interactive) (other-window -1)))
 
 
 (defun linux-c-mode ()
@@ -336,22 +335,18 @@ If point was already at that position, move point to beginning of line."
 ;; Better buffer list functionality.
 (require 'ibuffer)
 (setq ibuffer-saved-filter-groups
-  (quote (("default"
-            ("Belasigna"
-              (filename . "work/bs200/"))
-            ("PIC"
-              (filename . "*.asm"))
-            ("Assembly" ;; all org-related buffers
-              (mode . asm-mode))
-            ("Programming" ;; prog stuff not already in MyProjectX
-              (or
-                (mode . c-mode)
-                (mode . perl-mode)
-                (mode . python-mode)
-                (mode . emacs-lisp-mode)
-                ;; etc
-                ))
-            ))))
+      (quote (("default"
+               ("Assembly" (mode . asm-mode))
+               ("Programming" (or
+                               (mode . c-mode)
+                               (mode . perl-mode)
+                               (mode . python-mode)
+                               (mode . emacs-lisp-mode)))
+               ("org" (filename . ".*\.org"))
+               ("text" (or
+                        (filename . ".*\.txt")
+                        (filename . ".*\.log")))
+               ("Emacs" (name . "^\\*.*\\*$"))))))
 
 (add-hook 'ibuffer-mode-hook
   (lambda ()
@@ -472,9 +467,10 @@ If point was already at that position, move point to beginning of line."
   "Insert a C file header."
   (interactive)
   (insert "/*----------------------------------------------------------------------------
-Copyright (c) 2013 Bellman & Symfon AB
-This code is the property of Bellman & Symfon AB and may not be redistributed
-in any form without prior written permission from Bellman & Symfon AB.
+Copyright (c) 2013 Cipherstone Technologies AB
+This code is the property of Cipherstone Technologies AB and may not be
+redistributed in any form without prior written permission from
+Cipherstone Technologies AB.
 ----------------------------------------------------------------------------*/
 
 //******************************************************************************
@@ -503,9 +499,10 @@ in any form without prior written permission from Bellman & Symfon AB.
   "Insert a H file header."
   (interactive)
   (insert "/*----------------------------------------------------------------------------
-Copyright (c) 2013 Bellman & Symfon AB
-This code is the property of Bellman & Symfon AB and may not be redistributed
-in any form without prior written permission from Bellman & Symfon AB.
+Copyright (c) 2013 Cipherstone Technologies AB
+This code is the property of Cipherstone Technologies AB and may not be
+redistributed in any form without prior written permission from
+Cipherstone Technologies AB.
 ----------------------------------------------------------------------------*/
 
 #ifndef _INCLUDED
@@ -590,3 +587,4 @@ in any form without prior written permission from Bellman & Symfon AB.
 ;; Don't convert _ and ^ unless surrounded by braces
 (setq org-export-with-sub-superscripts '{})
 (add-hook 'org-mode-hook 'auto-fill-mode)
+
