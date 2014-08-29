@@ -76,7 +76,7 @@
   (copy-thing 'beginning-of-string 'end-of-string arg)
   (paste-to-mark arg)
   )
-(global-set-key (kbd "C-c s")         (quote thing-copy-string-to-mark))
+; (global-set-key (kbd "C-c s")         (quote thing-copy-string-to-mark))
 
 
 
@@ -100,6 +100,6 @@
   (copy-thing 'beginning-of-parenthesis 'end-of-parenthesis arg)
   (paste-to-mark arg)
   )
-(global-set-key (kbd "C-c a")         (quote thing-copy-parenthesis-to-mark))
+; (global-set-key (kbd "C-c a")         (quote thing-copy-parenthesis-to-mark))
 
 (provide 'copy)

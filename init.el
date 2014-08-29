@@ -86,8 +86,12 @@
 ; Default font 9 pt
 ;(set-default-font "-outline-Lucida Console-normal-normal-normal-mono-11-*-*-*-c-*-iso8859-1")
 ;(set-default-font "Lucida Console-9")
-;(set-face-attribute 'default nil :height 90)
+;(set-face-attribute 'default nil :height 100)
 
+; For use in Unity with scaling 0.75
+(set-default-font "Ubuntu Mono-13")
+; For use without scaling
+;(set-default-font "Ubuntu Mono-10")
 
 
 (defun my-compilation-mode-hook ()
@@ -110,6 +114,8 @@
  '(fci-rule-color "#383838")
  '(global-hl-line-mode nil)
  '(magit-git-executable "git")
+ '(message-send-mail-function (quote message-send-mail-with-sendmail))
+ '(send-mail-function (quote mailclient-send-it))
  '(sml/active-background-color "#dd7d37")
  '(sml/active-foreground-color "white")
  '(sml/inactive-background-color "gray38")
@@ -319,8 +325,11 @@ If point was already at that position, move point to beginning of line."
 ;; (defvar column-marker-2-face ((t (:background "#5f5f5f"))))
 ;; (defvar column-marker-3-face ((t (:background "#8c5353"))))
 
-;; Always longlines-mode for text files
-(add-hook 'text-mode-hook 'longlines-mode)
+;; Always longlines-mode and spell checking for text files
+(add-hook 'text-mode-hook 'longlines-mode 'flyspell-mode)
+
+;; Always spell checking for prog files
+(add-hook 'prog-mode-hook 'flyspell-prog-mode)
 
 ;; Ack as a replacement for grep
 (global-set-key "\M-s" 'ack)
@@ -330,6 +339,18 @@ If point was already at that position, move point to beginning of line."
 ;; (autoload 'ack "full-ack" nil t)
 ;; (autoload 'ack-find-same-file "full-ack" nil t)
 ;; (autoload 'ack-find-file "full-ack" nil t)
+
+;; Better ack-mode?
+;(load '"ack-mode/ack-mode.el")
+
+;; ANSI colors, first added for search results from ack. Need to call the
+;; function automatically on ack buffer. Links still not working, so continue
+;; calling ack with --group --no-color --no-heading
+(require 'ansi-color)
+(defun display-ansi-colors ()
+  (interactive)
+  (let ((inhibit-read-only t))
+    (ansi-color-apply-on-region (point-min) (point-max))))
 
 
 ;; Better buffer list functionality.
@@ -587,4 +608,14 @@ Cipherstone Technologies AB.
 ;; Don't convert _ and ^ unless surrounded by braces
 (setq org-export-with-sub-superscripts '{})
 (add-hook 'org-mode-hook 'auto-fill-mode)
+(setq org-startup-indented t)
+(setq org-ellipsis " \u25bc")
 
+(require 'notmuch)
+
+(setq mail-user-agent 'message-user-agent)
+(setq user-mail-address "g.ostervall@cipherstone.com"
+      user-full-name "Gauthier Östervall")
+(setq smtpmail-smtp-server "smtp.cipherstone.com")
+; Line below gives warning at startup, wront number of arguments?
+;(message-send-mail-function 'message-smtpmail-send-it)
