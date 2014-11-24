@@ -49,7 +49,7 @@
 
 ;; Deactivate closing all with C-x C-c, replace with M-<f4>.
 (global-set-key "\C-x\C-c" 'null)
-(global-set-key (kbd "M-<f4>") 'save-buffers-kill-emacs)
+;;(global-set-key (kbd "M-<f4>") 'save-buffers-kill-emacs)
 
 (show-paren-mode 1)
 
@@ -89,10 +89,10 @@
 ;(set-face-attribute 'default nil :height 100)
 
 ; For use in Unity with scaling 0.75
-(set-default-font "Ubuntu Mono-13")
+;(set-default-font "Ubuntu Mono-13")
 ; For use without scaling
-;(set-default-font "Ubuntu Mono-10")
-
+(set-default-font "Ubuntu Mono-10")
+(add-to-list 'default-frame-alist '(font . "Ubuntu Mono-10"))
 
 (defun my-compilation-mode-hook ()
   (setq truncate-lines t)
@@ -105,10 +105,14 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ansi-color-names-vector ["#2d3743" "#ff4242" "#74af68" "#dbdb95" "#34cae2" "#008b8b" "#00ede1" "#e1e1e0"])
- '(ansi-term-color-vector ["#3f3f3f" "#cc9393" "#7f9f7f" "#f0dfaf" "#8cd0d3" "#dc8cc3" "#93e0e3" "#dcdccc"] t)
+ '(ansi-color-names-vector
+   ["#2d3743" "#ff4242" "#74af68" "#dbdb95" "#34cae2" "#008b8b" "#00ede1" "#e1e1e0"])
+ '(ansi-term-color-vector
+   ["#3f3f3f" "#cc9393" "#7f9f7f" "#f0dfaf" "#8cd0d3" "#dc8cc3" "#93e0e3" "#dcdccc"] t)
  '(compilation-scroll-output t)
- '(custom-safe-themes (quote ("c77a31867f444e1c82bacd22146cb2d781a471168305e1660558b2b54ec016b7" "01a269e63522c39b95bee8df829ae8633ea372fd1921487cd6ccac42b1bf1cb9" "36a309985a0f9ed1a0c3a69625802f87dee940767c9e200b89cdebdb737e5b29" default)))
+ '(custom-safe-themes
+   (quote
+    ("78d52aa5167b609a9163ea32bf8fb9e8304ae71e518bf20a6631d64a3bb405c4" "9273b34a1dddcf4b54a83e28751a37478e132f0d7a23eef6cf0a46e26fa20b35" "ac548cdf0d61acbc93f8bb6ea1eaec389de1466274414322dae6f47e6a96d774" "675fcf7e38164ca90e0583eaf131b442ecd07afb17abbe1c700c8ebc09469ea3" "c77a31867f444e1c82bacd22146cb2d781a471168305e1660558b2b54ec016b7" "01a269e63522c39b95bee8df829ae8633ea372fd1921487cd6ccac42b1bf1cb9" "36a309985a0f9ed1a0c3a69625802f87dee940767c9e200b89cdebdb737e5b29" default)))
  '(egg-enable-tooltip t)
  '(egg-git-command "git")
  '(fci-rule-color "#383838")
@@ -116,10 +120,14 @@
  '(magit-git-executable "git")
  '(message-send-mail-function (quote message-send-mail-with-sendmail))
  '(send-mail-function (quote mailclient-send-it))
- '(sml/active-background-color "#dd7d37")
+ '(sml/active-background-color "#E05A2B")
  '(sml/active-foreground-color "white")
  '(sml/inactive-background-color "gray38")
- '(tab-stop-list (quote (4 8 12 16 20 24 28 32 36 40 44 48 52 56 60 64 68 72 76 80 84 88 92 96 100 104 108 112 116 120))))
+ '(sml/inactive-foreground-color "gray45")
+ '(sml/show-client t)
+ '(tab-stop-list
+   (quote
+    (4 8 12 16 20 24 28 32 36 40 44 48 52 56 60 64 68 72 76 80 84 88 92 96 100 104 108 112 116 120))))
 ;(custom-set-faces
   ;; custom-set-faces was added by Custom.
   ;; If you edit it by hand, you could mess it up, so be careful.
@@ -202,7 +210,8 @@ kernel."
  '(sml/col-number ((t (:inherit sml/global))))
  '(sml/filename ((t (:inherit sml/global :foreground "white" :weight bold))))
  '(sml/global ((t (:foreground "gray89"))))
- '(sml/modified ((t (:inherit sml/global :foreground "blue" :weight bold)))))
+ '(sml/modified ((t (:inherit sml/global :foreground "blue" :weight bold))))
+ '(sml/prefix ((t (:inherit sml/global :foreground "light blue")))))
 
 ; Smart mode line
 (require 'smart-mode-line)
@@ -218,9 +227,10 @@ kernel."
   (load-theme 'zenburn t)
 )
 
+;; no electric mode in c
+(if (< emacs-major-version 25)
+    (c-toggle-electric-state -1))
 
-; no electric mode in c
-(c-toggle-electric-state -1)
 ; indent the current line only if the cursor is at the beginning of the line
 (setq-default c-tab-always-indent nil)
 (setq-default c-indent-level 4)
@@ -328,8 +338,8 @@ If point was already at that position, move point to beginning of line."
 ;; Always longlines-mode and spell checking for text files
 (add-hook 'text-mode-hook 'longlines-mode 'flyspell-mode)
 
-;; Always spell checking for prog files
-(add-hook 'prog-mode-hook 'flyspell-prog-mode)
+;; Always can after enabling flyspell
+(add-hook 'flyspell-mode-hook 'flyspell-buffer)
 
 ;; Ack as a replacement for grep
 (global-set-key "\M-s" 'ack)
@@ -383,7 +393,8 @@ If point was already at that position, move point to beginning of line."
   (eshell-command
   ;;(message
    ;;(format "ctags %s -f %s/TAGS -e -R %s" path-to-ctags dir-name (directory-file-name dir-name)))
-   (format "cd \"%s\"; ctags -e -R \"%s\"" dir-name (directory-file-name dir-name)))
+   ;;(format "cd \"%s\"; ctags -e -R \"%s\"" dir-name (directory-file-name dir-name)))
+   (format "ctags -eR %s" (directory-file-name dir-name)));; require exuberant-ctags
   )
 
 ;; ido makes competing buffers and finding files easier
@@ -583,7 +594,11 @@ Cipherstone Technologies AB.
 
 
 ;; Start server to allow for emacsclient to use this.
+;; Somehow, starting the server (emacs --daemon) from a terminal or Ubuntu's
+;; startup applicactions does not seem to work for the emacs 25 I have.
 (server-start)
+
+;; Server now started by the daemon at my log in.
 (put 'downcase-region 'disabled nil)
 
 
@@ -611,7 +626,7 @@ Cipherstone Technologies AB.
 (setq org-startup-indented t)
 (setq org-ellipsis " \u25bc")
 
-(require 'notmuch)
+;;(require 'notmuch)
 
 (setq mail-user-agent 'message-user-agent)
 (setq user-mail-address "g.ostervall@cipherstone.com"
@@ -619,3 +634,9 @@ Cipherstone Technologies AB.
 (setq smtpmail-smtp-server "smtp.cipherstone.com")
 ; Line below gives warning at startup, wront number of arguments?
 ;(message-send-mail-function 'message-smtpmail-send-it)
+
+;; For visual-line-mode, to set a right margin
+;; visual-wrap-column-set
+(require 'visual)
+
+(require 'google-c-style)

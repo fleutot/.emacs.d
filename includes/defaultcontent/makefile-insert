@@ -1,0 +1,17 @@
+CC = gcc
+CFLAGS = -g -Wall -Wextra -Werror -O3 -lrt
+TARGETS = ######
+
+all: $(TARGETS)
+
+###executable: object.o###
+	$(CC) $^ -o $@ $(CFLAGS)
+
+###executable: object.o###
+	$(CC) $^ -o $@ $(CFLAGS)
+
+.c.o:
+	$(CC) -c $< -o $@ $(CFLAGS)
+
+clean:
+	$(RM) *.o $(TARGETS)
