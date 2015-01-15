@@ -91,8 +91,10 @@
 ; For use in Unity with scaling 0.75
 ;(set-default-font "Ubuntu Mono-13")
 ; For use without scaling
-(set-default-font "Ubuntu Mono-10")
-(add-to-list 'default-frame-alist '(font . "Ubuntu Mono-10"))
+;(set-frame-font "Ubuntu Mono-10")
+(set-frame-font "-xos4-Terminus-normal-normal-normal-*-12-*-*-*-c-60-iso10646-1")
+;(add-to-list 'default-frame-alist '(font . "Ubuntu Mono-10"))
+(add-to-list 'default-frame-alist '(font . "-xos4-Terminus-normal-normal-normal-*-12-*-*-*-c-60-iso10646-1"))
 
 (defun my-compilation-mode-hook ()
   (setq truncate-lines t)
@@ -112,7 +114,7 @@
  '(compilation-scroll-output t)
  '(custom-safe-themes
    (quote
-    ("78d52aa5167b609a9163ea32bf8fb9e8304ae71e518bf20a6631d64a3bb405c4" "9273b34a1dddcf4b54a83e28751a37478e132f0d7a23eef6cf0a46e26fa20b35" "ac548cdf0d61acbc93f8bb6ea1eaec389de1466274414322dae6f47e6a96d774" "675fcf7e38164ca90e0583eaf131b442ecd07afb17abbe1c700c8ebc09469ea3" "c77a31867f444e1c82bacd22146cb2d781a471168305e1660558b2b54ec016b7" "01a269e63522c39b95bee8df829ae8633ea372fd1921487cd6ccac42b1bf1cb9" "36a309985a0f9ed1a0c3a69625802f87dee940767c9e200b89cdebdb737e5b29" default)))
+    ("b58a22c0cf8a9fe905e306d9fac01a2ae1c742e3d0e8dcf63d789d539ccde0bc" "bf51e072aa61d3158147622e989fc8b719781daa1622304e9d4b9a77f8a04af6" "65734302cb6ca5d16191622c5767913e76f5da66d960c61ecfd4e9b091d9c398" "78d52aa5167b609a9163ea32bf8fb9e8304ae71e518bf20a6631d64a3bb405c4" "9273b34a1dddcf4b54a83e28751a37478e132f0d7a23eef6cf0a46e26fa20b35" "ac548cdf0d61acbc93f8bb6ea1eaec389de1466274414322dae6f47e6a96d774" "675fcf7e38164ca90e0583eaf131b442ecd07afb17abbe1c700c8ebc09469ea3" "c77a31867f444e1c82bacd22146cb2d781a471168305e1660558b2b54ec016b7" "01a269e63522c39b95bee8df829ae8633ea372fd1921487cd6ccac42b1bf1cb9" "36a309985a0f9ed1a0c3a69625802f87dee940767c9e200b89cdebdb737e5b29" default)))
  '(egg-enable-tooltip t)
  '(egg-git-command "git")
  '(fci-rule-color "#383838")
@@ -190,6 +192,10 @@ kernel."
 
 (add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
 (add-hook 'c-mode-common-hook 'auto-fill-mode)
+; No extra indent in an extern block (#ifdef __cplusplus)
+(add-hook 'c-mode-common-hook
+          (lambda()
+                 (c-set-offset 'inextern-lang 0)))
 
 (setq-default buffer-file-coding-system 'dos)
 
@@ -224,7 +230,7 @@ kernel."
     (color-theme-zenburn)
     ;(color-theme-pok-wog)
     )
-  (load-theme 'zenburn t)
+  (load-theme 'bisque t)
 )
 
 ;; no electric mode in c
@@ -483,17 +489,28 @@ If point was already at that position, move point to beginning of line."
   "Insert a C function header above the current function."
   (interactive)
   (beginning-of-defun)  ; leave mark at the old location
-  (insert "//  ----------------------------------------------------------------------------
-/// \\brief  
-/// \\param  
-/// \\return 
-//  ----------------------------------------------------------------------------
+  (insert "/**
+ * @brief
+ * @param
+ * @return
+ */
 ")
   (word-search-backward "brief")
   (move-end-of-line nil))
-
 (define-key global-map "\C-x\C-hf" 'insert-function-header)
 
+(defun insert-prototype-header()
+  "Insert a C prototype header here."
+  (interactive)
+  (insert "/**
+ * @brief
+ * @param
+ * @return
+ */
+")
+  (word-search-backward "brief")
+  (move-end-of-line nil))
+(define-key global-map "\C-x\C-hp" 'insert-prototype-header)
 
 (defun insert-c-file-header()
   "Insert a C file header."
