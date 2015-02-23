@@ -61,7 +61,9 @@ Windows, use forward slashes like: c:/foo/bar/baz ")
     ("[I]?[Mm]akefile" . "makefile-insert")
     ("\\.scm$"         (dc-fill-initial-content-of-file))
     ("\\.el$"          (dc-fill-initial-content-of-file))
-    ("\\.bib$"         . "bib-insert.bib") )
+    ("\\.bib$"         . "bib-insert.bib")
+    ("\\.asd$"         . "asdf-insert")
+    ("\\.gitignore$"   . "gitignore-insert"))
   "An Alist specifying text to insert by default into a new file.
 Elements look like (REGEXP . FILENAME) or (REGEXP LISP-CODE ...);
 if the new file's name matches REGEXP, then the file FILENAME is

@@ -1,4 +1,5 @@
-;;; bisque-theme.el --- A low contrast color theme for Emacs.
+;;; bisque-theme.el --- Based on:
+;;; zenburn-theme.el --- A low contrast color theme for Emacs.
 
 ;; Copyright (C) 2011-2013 Bozhidar Batsov
 
@@ -35,11 +36,12 @@
 (let ((class '((class color) (min-colors 89)))
       ;; Zenburn palette
       ;; colors with +x are lighter, colors with -x are darker
-      (bisque-fg "bisque3")
-      (bisque-fg-1 "#bisque4")
+      ;; #ac9a85 = (bisque3 + bisque4) / 2
+      (bisque-fg "#ac9a85")
+      (bisque-fg-1 "bisque4")
       (bisque-bg-1 "#2b2b2b")
       (bisque-bg-05 "#383838")
-      (bisque-bg "#3f3f3f")
+      (bisque-bg "#45423f")
       (bisque-bg+1 "#4f4f4f")
       (bisque-bg+2 "#5f5f5f")
       (bisque-bg+3 "#6f6f6f")
@@ -69,7 +71,7 @@
       (bisque-blue-5 "#366060")
       (bisque-magenta "#dc8cc3"))
   (custom-theme-set-faces
-   'zenburn
+   'bisque
    '(button ((t (:underline t))))
    `(link ((t (:foreground ,bisque-yellow :underline t :weight bold))))
    `(link-visited ((t (:foreground ,bisque-yellow-2 :underline t :weight normal))))
@@ -638,7 +640,7 @@
 
   ;;; custom theme variables
   (custom-theme-set-variables
-   'zenburn
+   'bisque
    `(ansi-color-names-vector [,bisque-bg ,bisque-red ,bisque-green ,bisque-yellow
                                           ,bisque-blue ,bisque-magenta ,bisque-cyan ,bisque-fg])
    `(ansi-term-color-vector [,bisque-bg ,bisque-red ,bisque-green ,bisque-yellow

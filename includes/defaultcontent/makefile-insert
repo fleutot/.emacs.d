@@ -1,5 +1,6 @@
+# Template for programs  ----------------------------------------------------
 CC = gcc
-CFLAGS = -g -Wall -Wextra -Werror -O3 -lrt
+CFLAGS = -g -Wall -Wextra -Werror -O3 -std=c99 -lrt
 TARGETS = ######
 
 all: $(TARGETS)
@@ -15,3 +16,70 @@ all: $(TARGETS)
 
 clean:
 	$(RM) *.o $(TARGETS)
+
+test: $(TARGETS)
+	$(MAKE) -Ctest test
+
+# Template for libs ----------------------------------------------------
+CC = gcc
+CFLAGS = -g -Wall -Wextra -Werror -O3 -std=c99
+OBJS = ###.o
+INCS = ###.h
+CP = cp
+
+# For Generating a static lib
+AR = ar
+ARFLAGS = -cvqD
+LIB = lib###.a
+INC = ###.h
+
+# Default project root and directories if not already defined
+ifndef PROJ_ROOT
+	PROJ_ROOT = $(shell pwd)
+	LIB_DIR = $(PROJ_ROOT)/lib
+	INC_DIR = $(PROJ_ROOT)/inc
+endif
+# Display the project root path
+# $(info ${PROJ_ROOT})
+
+# Install targets
+LIBTARGET = $(LIB_DIR)/$(LIB)
+INCTARGET = $(INC_DIR)/$(INC)
+
+all: $(LIB)
+
+# --- Build --------------------------------------
+$(LIB): $(OBJS)
+	$(AR) $(ARFLAGS) $(LIB) $^
+
+.c.o:
+	$(CC) -c $< -o $@ $(CFLAGS)
+
+# --- Clean ---------------------------------------
+clean:
+	$(RM) *.o $(OBJTARGET) $(LIB)
+
+local_clean:
+	$(RM) lib/*
+	$(RM) inc/*
+
+very_clean: clean local_clean
+	$(RM) $(LIBTARGET)
+	$(RM) $(INCTARGET)
+
+# --- Test ----------------------------------------
+test: $(LIB)
+	$(MAKE) -Ctest test
+
+# --- Install -------------------------------------
+install: $(LIBTARGET) $(INCTARGET)
+
+# Create the lib target's directory if necessary, copy the built lib there.
+$(LIBTARGET): $(LIB)
+	mkdir -p $(@D)
+	$(CP) $(LIB) $@
+
+# Create the inc target's directory if necessary, copy the inc there.
+$(INCTARGET): $(INC)
+	mkdir -p $(@D)
+	$(CP) $(INC) $@
