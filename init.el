@@ -13,6 +13,8 @@
 (package-initialize)
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.org/packages/") t)
 (package-initialize)
 
 ; Give back a hard newline with no indentation. Use C-j for newline-and-indent.
@@ -49,7 +51,7 @@
 
 ;; Deactivate closing all with C-x C-c, replace with M-<f4>.
 (global-set-key "\C-x\C-c" 'null)
-;;(global-set-key (kbd "M-<f4>") 'save-buffers-kill-emacs)
+(global-set-key (kbd "M-<f4>") 'save-buffers-kill-emacs)
 
 (show-paren-mode 1)
 
@@ -116,7 +118,7 @@
  '(compilation-scroll-output t)
  '(custom-safe-themes
    (quote
-    ("fd98fe5ad72432fde6d75fdaed432abab31d2020a584799f487fa2134554ba78" "6e4b0714df5cb9527106181f3ae7b3fd8d8dff6de5ddadbe8ef94e5b170185c7" "aef56024ff845bfe4ea2394247501d659ca45ddd28ae31982b29b1cb43e2b2f5" "067e5e21a9b8af74094c4c67f2468669c8e92743b19b658b458fa0146b6fe56e" "c90696c8d95e6f165ceeced9f35b200fe4c4c0eaff6dd6a0e6ea69f96ad200a9" "d64aea67b62b5219247814ff95026c1119bd328612b005fc9594dc22896735f6" "9b0fb159ce03afc785ebed71d80e2b3c64a99a2b616c293c9b16a1fbf85170d7" "4753abba0ea8b1214e9859beefa2448a8cb84cf0d6ff372d54faad67328adb59" "4905b46c5114003d08de39aa69f5171b6276c3562f17167f28322fb1dbbfc696" "be0a93110ce776fa2f1ab7cdc94ae3918ced4c57f365d994b4f5427b73f13e6e" "0917d7c62178351ead0f505ca97a4cef83b848d840701ccee24d8b2180efb920" "c728708eae31c8eec7a9d406e604bcb692f2727579fc154622b9c7a2a03fcbf6" "3b06158f1acc3f1602b2dc6f00c762e05219f600a296bbea2b02b2a10cc8e7f9" "6cf6b1d1bc1e0990b8236a7a3d22162722df470dfdd641f367a0ef1a66cb59af" "c40cd311cc4dac6a69a06cb58f626f41751378414f87660da8bb698e2035b653" "b1648b05c88763790f9ada18824bda2beb68744bedc280c3048194e874f1e2b1" "39c5fa26b66e6341dae664281ae9d951221ce15f82d1bb403307184b582d1ce5" "943c9fe92be754292152765052f554caf74e03a45596468108c71b9adfc526c2" "b58a22c0cf8a9fe905e306d9fac01a2ae1c742e3d0e8dcf63d789d539ccde0bc" "bf51e072aa61d3158147622e989fc8b719781daa1622304e9d4b9a77f8a04af6" "65734302cb6ca5d16191622c5767913e76f5da66d960c61ecfd4e9b091d9c398" "78d52aa5167b609a9163ea32bf8fb9e8304ae71e518bf20a6631d64a3bb405c4" "9273b34a1dddcf4b54a83e28751a37478e132f0d7a23eef6cf0a46e26fa20b35" "ac548cdf0d61acbc93f8bb6ea1eaec389de1466274414322dae6f47e6a96d774" "675fcf7e38164ca90e0583eaf131b442ecd07afb17abbe1c700c8ebc09469ea3" "c77a31867f444e1c82bacd22146cb2d781a471168305e1660558b2b54ec016b7" "01a269e63522c39b95bee8df829ae8633ea372fd1921487cd6ccac42b1bf1cb9" "36a309985a0f9ed1a0c3a69625802f87dee940767c9e200b89cdebdb737e5b29" default)))
+    ("bfc3d92754a1f0af6bc3653b363f6cf3a0bd608f8a715a42e1bb416cc35e6b01" "36f3f367fc24b73917831203d0b2ef688e96da0315bccfe1a20cb48b8b6b2b7a" "d4b199a40ea2b66d80580ed16a9284244b34d62d6f85cc491e983c0870d6aad6" "b6d776913491a9ff9d24d893f72cf7d0054c079f646b2a9e5c915ce6b0f4fad7" "cfb6f9e7117a4cbc25b668ea5810d2e51795fca610ecdd5375af1e47f11a2d7b" "65426191cc767ef46550316aaedb390c964ff5106fb4915ced70d54b788585ee" "fd98fe5ad72432fde6d75fdaed432abab31d2020a584799f487fa2134554ba78" "6e4b0714df5cb9527106181f3ae7b3fd8d8dff6de5ddadbe8ef94e5b170185c7" "aef56024ff845bfe4ea2394247501d659ca45ddd28ae31982b29b1cb43e2b2f5" "067e5e21a9b8af74094c4c67f2468669c8e92743b19b658b458fa0146b6fe56e" "c90696c8d95e6f165ceeced9f35b200fe4c4c0eaff6dd6a0e6ea69f96ad200a9" "d64aea67b62b5219247814ff95026c1119bd328612b005fc9594dc22896735f6" "9b0fb159ce03afc785ebed71d80e2b3c64a99a2b616c293c9b16a1fbf85170d7" "4753abba0ea8b1214e9859beefa2448a8cb84cf0d6ff372d54faad67328adb59" "4905b46c5114003d08de39aa69f5171b6276c3562f17167f28322fb1dbbfc696" "be0a93110ce776fa2f1ab7cdc94ae3918ced4c57f365d994b4f5427b73f13e6e" "0917d7c62178351ead0f505ca97a4cef83b848d840701ccee24d8b2180efb920" "c728708eae31c8eec7a9d406e604bcb692f2727579fc154622b9c7a2a03fcbf6" "3b06158f1acc3f1602b2dc6f00c762e05219f600a296bbea2b02b2a10cc8e7f9" "6cf6b1d1bc1e0990b8236a7a3d22162722df470dfdd641f367a0ef1a66cb59af" "c40cd311cc4dac6a69a06cb58f626f41751378414f87660da8bb698e2035b653" "b1648b05c88763790f9ada18824bda2beb68744bedc280c3048194e874f1e2b1" "39c5fa26b66e6341dae664281ae9d951221ce15f82d1bb403307184b582d1ce5" "943c9fe92be754292152765052f554caf74e03a45596468108c71b9adfc526c2" "b58a22c0cf8a9fe905e306d9fac01a2ae1c742e3d0e8dcf63d789d539ccde0bc" "bf51e072aa61d3158147622e989fc8b719781daa1622304e9d4b9a77f8a04af6" "65734302cb6ca5d16191622c5767913e76f5da66d960c61ecfd4e9b091d9c398" "78d52aa5167b609a9163ea32bf8fb9e8304ae71e518bf20a6631d64a3bb405c4" "9273b34a1dddcf4b54a83e28751a37478e132f0d7a23eef6cf0a46e26fa20b35" "ac548cdf0d61acbc93f8bb6ea1eaec389de1466274414322dae6f47e6a96d774" "675fcf7e38164ca90e0583eaf131b442ecd07afb17abbe1c700c8ebc09469ea3" "c77a31867f444e1c82bacd22146cb2d781a471168305e1660558b2b54ec016b7" "01a269e63522c39b95bee8df829ae8633ea372fd1921487cd6ccac42b1bf1cb9" "36a309985a0f9ed1a0c3a69625802f87dee940767c9e200b89cdebdb737e5b29" default)))
  '(egg-enable-tooltip t)
  '(egg-git-command "git")
  '(fci-rule-color "#383838")
@@ -256,7 +258,7 @@ kernel."
 (setq-default transient-mark-mode nil)
 ; These commands I read about on the web, but they don't work?
 ;(highlight-tabs)
-;(highlight-trailing_whitespace)
+;(highlight-trailing-whitespace)
 
 (setq c-default-style "k&r")
 (setq tab-width 4)
@@ -365,7 +367,10 @@ If point was already at that position, move point to beginning of line."
 ;; (autoload 'ack-find-file "full-ack" nil t)
 
 ;; Better ack-mode?
-;(load '"ack-mode/ack-mode.el")
+;;(load '"ack-mode/ack-mode.el")
+;; install from ELPA instead!:
+;; M-x package-install RET ack RET
+;; coloring works there.
 
 ;; ANSI colors, first added for search results from ack. Need to call the
 ;; function automatically on ack buffer. Links still not working, so continue
@@ -376,6 +381,7 @@ If point was already at that position, move point to beginning of line."
   (let ((inhibit-read-only t))
     (ansi-color-apply-on-region (point-min) (point-max))))
 
+(add-hook 'ack-mode-hook 'display-ansi-colors)
 
 ;; Better buffer list functionality.
 (require 'ibuffer)
@@ -401,14 +407,12 @@ If point was already at that position, move point to beginning of line."
 
 
 ;; Tags
+;; Shell command: find . -type f \( -name '*.cpp' -o -name '*.[ch]pp' \) | etags -
 (defun create-tags (dir-name)
   "Create tags file."
   (interactive "DDirectory: ")
   (eshell-command
-  ;;(message
-   ;;(format "ctags %s -f %s/TAGS -e -R %s" path-to-ctags dir-name (directory-file-name dir-name)))
-   ;;(format "cd \"%s\"; ctags -e -R \"%s\"" dir-name (directory-file-name dir-name)))
-   (format "ctags -eR %s" (directory-file-name dir-name)));; require exuberant-ctags
+   (format "find %s -type f \\( -name \'*.[ch]\' -o -name \'*.[ch]pp\' \\) | etags -" dir-name))
   )
 
 ;; ido makes competing buffers and finding files easier
@@ -448,7 +452,7 @@ If point was already at that position, move point to beginning of line."
 
 ;; Fringes are the margin areas where truncate or wrap arrows are shown.
 ;; Set their size here.
-(set-fringe-mode '(4 . 2))
+(set-fringe-mode '(8 . 2))
 
 (put 'dired-find-alternate-file 'disabled nil)
 
@@ -472,10 +476,10 @@ If point was already at that position, move point to beginning of line."
 
 
 ;; iPython integration
- (add-to-list 'interpreter-mode-alist '("python" . python-mode))
- (require 'ipython)
- (setq py-python-command-args '("-pylab" "-colors" "LightBG"))
- (setq ipython-command "ipython")
+;; (add-to-list 'interpreter-mode-alist '("python" . python-mode))
+;; (require 'ipython)
+;; (setq py-python-command-args '("-pylab" "-colors" "LightBG"))
+;; (setq ipython-command "ipython")
 
  ;;(when (executable-find "ipython")
  ;;    (require 'ipython nil 'noerror))
@@ -665,3 +669,23 @@ Cipherstone Technologies AB.
 (require 'visual)
 
 (require 'google-c-style)
+
+;; Find File
+(setq cc-search-directories '("."
+                              "../inc" "../inc/*" "../../inc/*" "../../../inc/*"
+                              "../../inc/*/*" "../../../inc/*/*/*"
+                              "../src" "../src/*" "../../src/*" "../../../src/*"
+                              "../../src/*/*" "../../../src/*/*/*"
+                              "/usr/include" "/usr/local/include/*"))
+
+(defun find-other-file-no-include ()
+  (interactive)
+  (ff-find-other-file nil t))
+(global-set-key (kbd "M-o") 'find-other-file-no-include)
+
+(defun find-other-file-no-include-other-window ()
+  (interactive)
+  (ff-find-other-file t t))
+(global-set-key (kbd "M-O") 'find-other-file-no-include-other-window)
+
+
