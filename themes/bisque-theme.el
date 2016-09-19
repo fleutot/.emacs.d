@@ -82,8 +82,8 @@
    `(escape-glyph ((t (:foreground ,bisque-yellow :bold t))))
    `(fringe ((t (:foreground ,bisque-fg :background ,bisque-bg+1))))
    `(header-line ((t (:foreground ,bisque-yellow
-                                  :background ,bisque-bg-1
-                                  :box (:line-width -1 :style released-button)))))
+                                  :background ,bisque-bg-1))))
+                                  ;;:box (:line-width -1 :style released-button)))))
    `(highlight ((t (:background ,bisque-bg-05))))
 
    ;;; compilation
@@ -115,14 +115,14 @@
    `(minibuffer-prompt ((t (:foreground ,bisque-yellow))))
    `(mode-line
      ((,class (:foreground ,bisque-green+4
-                           :background ,bisque-bg-1
-                           :box (:line-width -1 :style released-button)))
+                           :background ,bisque-bg-1))
+                           ;;:box (:line-width -1 :style released-button)))
       (t :inverse-video t)))
    `(mode-line-buffer-id ((t (:foreground ,bisque-yellow :weight bold))))
    `(mode-line-inactive
      ((t (:foreground ,bisque-green-1
-                      :background ,bisque-bg-05
-                      :box (:line-width -1 :style released-button)))))
+                      :background ,bisque-bg-05))))
+                      ;;:box (:line-width -1 :style released-button)))))
    `(region ((,class (:background ,bisque-bg-1))
              (t :inverse-video t)))
    `(secondary-selection ((t (:background ,bisque-bg+2))))
