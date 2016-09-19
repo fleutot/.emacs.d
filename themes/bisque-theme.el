@@ -80,7 +80,7 @@
    `(default ((t (:foreground ,bisque-fg :background ,bisque-bg))))
    `(cursor ((t (:foreground ,bisque-fg :background "white"))))
    `(escape-glyph ((t (:foreground ,bisque-yellow :bold t))))
-   `(fringe ((t (:foreground ,bisque-fg :background ,bisque-bg+1))))
+   `(fringe ((t (:foreground ,bisque-fg :background ,bisque-bg))))
    `(header-line ((t (:foreground ,bisque-yellow
                                   :background ,bisque-bg-1))))
                                   ;;:box (:line-width -1 :style released-button)))))
