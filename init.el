@@ -122,9 +122,9 @@
  '(egg-enable-tooltip t)
  '(egg-git-command "git")
  '(fci-rule-color "#383838")
- '(fringe-mode (quote (8 . 2)) nil (fringe))
+ '(fringe-mode (quote (1 . 1)) nil (fringe))
  '(global-hl-line-mode nil)
- '(indicate-empty-lines t)
+ '(indicate-empty-lines nil)
  '(magit-git-executable "git")
  '(message-send-mail-function (quote message-send-mail-with-sendmail))
  '(safe-local-variable-values
@@ -224,7 +224,7 @@ kernel."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(fringe ((t nil)))
+ '(fringe ((t (:background "#45423f" :foreground "#ac9a85"))))
  '(hl-line ((t (:inherit highlight :background "gray10"))))
  '(mode-line ((t (:background "#E05A2B" :foreground "white"))))
  '(mode-line-inactive ((t (:background "gray38" :foreground "gray45"))))
