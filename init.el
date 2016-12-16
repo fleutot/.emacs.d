@@ -689,4 +689,25 @@ Cipherstone Technologies AB.
   (ff-find-other-file t t))
 (global-set-key (kbd "M-O") 'find-other-file-no-include-other-window)
 
-
+;; Zoom on all frame
+; Taken from a comment in package frame-cmds.el (elpa). Probably not working for versions under 22.
+(defun my-enlarge-font (&optional increment frame)
+    "Increase size of font in FRAME by INCREMENT.
+Interactively, INCREMENT is given by the prefix argument.
+Optional FRAME parameter defaults to current frame."
+    (interactive "p")
+    (setq frame  (or frame  (selected-frame)))
+    (set-face-attribute
+     'default frame :height (+ (* 10 increment)
+                               (face-attribute 'default :height frame 'default))))
+(defun my-zoom-in ()
+  (interactive)
+  (my-enlarge-font 2))
+(defun my-zoom-out ()
+  (interactive)
+  (my-enlarge-font -2))
+(global-set-key (kbd "C-x C-+") 'my-zoom-in)
+(global-set-key (kbd "C-x C-=") 'my-zoom-in)
+(global-set-key (kbd "C-x C--") 'my-zoom-out)
+(global-set-key (kbd "C-x -") 'my-zoom-out)
+(global-set-key (kbd "C-x C-0") 'my-zoom-out)
