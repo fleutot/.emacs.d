@@ -9,7 +9,7 @@
 (setq auto-mode-alist  (cons '(".rb$" . ruby-mode) auto-mode-alist))
 (setq auto-mode-alist  (cons '(".rhtml$" . html-mode) auto-mode-alist))
 
-
+(setq package-enable-at-startup nil)
 (package-initialize)
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.milkbox.net/packages/") t)
@@ -50,8 +50,8 @@
 (global-set-key "\C-c\C-c" 'compile)
 
 ;; Deactivate closing all with C-x C-c, replace with M-<f4>.
-(global-set-key "\C-x\C-c" 'null)
-(global-set-key (kbd "M-<f4>") 'save-buffers-kill-emacs)
+;(global-set-key "\C-x\C-c" 'null)
+;(global-set-key (kbd "M-<f4>") 'save-buffers-kill-emacs)
 
 (show-paren-mode 1)
 
@@ -101,6 +101,12 @@
   (set-frame-font "-xos4-Terminus-normal-normal-normal-*-12-*-*-*-c-60-iso10646-1")
   (add-to-list 'default-frame-alist '(font . "-xos4-Terminus-normal-normal-normal-*-12-*-*-*-c-60-iso10646-1")))
 
+(when (eq system-type 'darwin)
+  ;; on a mac, SF Mono installed by selecting all otf files in /Applications/Utilities/Temrinal.app/Contents/Resources/Fonts/,
+  ;; right-click, Open, then select all and Install.
+  (set-face-attribute 'default nil
+                      :font "Monaco-10:antialias=false"))
+
 (defun my-compilation-mode-hook ()
   (setq truncate-lines t)
   ;(setq truncate-partial-width-windows nil)
@@ -125,10 +131,14 @@
  '(egg-git-command "git")
  '(fci-rule-color "#383838")
  '(fringe-mode (quote (1 . 1)) nil (fringe))
+; '(fuzzy-format-default-indent-tabs-mode t)
  '(global-hl-line-mode nil)
  '(indicate-empty-lines nil)
  '(magit-git-executable "git")
  '(message-send-mail-function (quote message-send-mail-with-sendmail))
+ '(package-selected-packages
+   (quote
+    (dtrt-indent blank-mode exec-path-from-shell yaml-mode markdown-mode rainbow-mode magit highlight-symbol ack)))
  '(safe-local-variable-values
    (quote
     ((eval when
@@ -168,9 +178,8 @@ kernel."
   (setq c-argdecl-indent 8)
   (setq c-label-offset -8)
   (setq c-continued-statement-offset 8)
-  (setq indent-tabs-mode nil)
+  (setq indent-tabs-mode t)
   (setq tab-width 8))
-
 
 ; Warn in C for while();, if(x=0), ...
 (global-cwarn-mode 1)
@@ -255,26 +264,48 @@ kernel."
     (c-toggle-electric-state -1))
 
 ; indent the current line only if the cursor is at the beginning of the line
-(setq-default c-tab-always-indent nil)
-(setq-default c-indent-level 4)
-(setq-default tab-width 4)
-(setq-default indent-tabs-mode nil)
-(setq-default c-basic-offset 4)
-(setq-default c-basic-indent 4)
+;(setq-default c-tab-always-indent nil)
+;(setq-default c-indent-level 4)
+;(setq-default tab-width 4)
+;(setq-default indent-tabs-mode nil)
+;(setq-default c-basic-offset 4)
+;(setq-default c-basic-indent 4)
 (setq-default truncate-lines t)
 (setq-default transient-mark-mode nil)
 ; These commands I read about on the web, but they don't work?
 ;(highlight-tabs)
 ;(highlight-trailing-whitespace)
 
-(setq c-default-style "k&r")
+;(setq c-default-style "k&r")
 (setq tab-width 4)
 ; indent C preprocessor macros together with the code.
 (c-set-offset (quote cpp-macro) 0 nil)
 ;(setq indent-line-function 'insert-tab)
 (setq asm-indent-level 4)
 (c-set-offset 'innamespace 0)
+(setq c-auto-align-backslashes nil)
 
+(defconst eclipse-c-style
+  '((c-basic-offset . 4)
+    (indent-tabs-mode . t)
+    (tab-width . 4)
+    (c-comment-only-line-offset . (0 . 0))
+    (c-offsets-alist . ((topmost-intro-cont    . +)
+                        (statement-block-intro . +)
+                        (knr-argdecl-intro     . 5)
+                        (substatement-open     . +)
+                        (substatement-label    . +)
+                        (label                 . +)
+                        (statement-case-open   . +)
+                        (statement-cont        . +)
+                        (arglist-intro  . c-lineup-arglist-intro-after-paren)
+                        (arglist-close  . c-lineup-arglist)
+                        (access-label   . 0)
+                        (arglist-cont-nonempty . ++)
+                        )))
+  "Eclipse C Programming Style")
+(c-add-style "Eclipse C" eclipse-c-style)
+(setq c-default-style "Eclipse C")
 
 ;; Remove lull: scroll bar, tool bar, menu bar.
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
@@ -303,9 +334,8 @@ kernel."
 (add-hook 'window-size-change-functions 'save-window-size-if-changed)
 
 
-;; Refresh on F5
-;;(global-set-key (kbd "M-<f4>") 'save-buffers-kill-emacs)
-(global-set-key (kbd "<f5>") '(lambda () (interactive) (revert-buffer nil t nil)))
+;; Refresh
+(global-set-key (kbd "C-c R") '(lambda () (interactive) (revert-buffer nil t nil)))
 (defun revert-all-buffers ()
   "Refreshes all open buffers from their respective files."
   (interactive)
@@ -314,7 +344,7 @@ kernel."
       (when (and (buffer-file-name) (not (buffer-modified-p)))
         (revert-buffer t t t) )))
   (message "Refreshed open files.") )
-(global-set-key (kbd "C-<f5>") '(lambda () (interactive) (revert-all-buffers)))
+(global-set-key (kbd "C-c r") '(lambda () (interactive) (revert-all-buffers)))
 
 
 ;; smart home behaviour
@@ -531,10 +561,9 @@ If point was already at that position, move point to beginning of line."
   "Insert a C file header."
   (interactive)
   (insert "/*----------------------------------------------------------------------------
-Copyright (c) 2013 Cipherstone Technologies AB
-This code is the property of Cipherstone Technologies AB and may not be
-redistributed in any form without prior written permission from
-Cipherstone Technologies AB.
+Copyright (c) 2013 LumenRadio AB
+This code is the property of Lumenradio AB and may not be redistributed in any
+form without prior written permission from LumenRadio AB.
 ----------------------------------------------------------------------------*/
 
 //******************************************************************************
@@ -563,10 +592,9 @@ Cipherstone Technologies AB.
   "Insert a H file header."
   (interactive)
   (insert "/*----------------------------------------------------------------------------
-Copyright (c) 2013 Cipherstone Technologies AB
-This code is the property of Cipherstone Technologies AB and may not be
-redistributed in any form without prior written permission from
-Cipherstone Technologies AB.
+Copyright (c) 2013 LumenRadio AB
+This code is the property of LumenRadio AB and may not be redistributed in any
+form without prior written permission from LumenRadio AB.
 ----------------------------------------------------------------------------*/
 
 #ifndef _INCLUDED
@@ -602,11 +630,11 @@ Cipherstone Technologies AB.
 (require 'copy)
 
 (require 'highlight-symbol)
-(global-set-key [(control f3)] 'highlight-symbol-at-point)
-(global-set-key [f3] 'highlight-symbol-next)
-(global-set-key [(shift f3)] 'highlight-symbol-prev)
-(global-set-key [(meta f3)] 'highlight-symbol-remove-all)
-(global-set-key [(control meta f3)] 'highlight-symbol-query-replace)
+(global-set-key (kbd "C-c h") 'highlight-symbol-at-point)
+(global-set-key (kbd "C-c n") 'highlight-symbol-next)
+(global-set-key (kbd "C-c p") 'highlight-symbol-prev)
+(global-set-key (kbd "C-c H") 'highlight-symbol-remove-all)
+;(global-set-key [(control meta f3)] 'highlight-symbol-query-replace)
 
 ;; Interface to git
 (require 'egg)
@@ -640,7 +668,7 @@ Cipherstone Technologies AB.
 ;; UTF-8 as default (mostly for encoding swedish characters correctly)
 (prefer-coding-system 'utf-8)
 
-(setq-default fill-column 100)
+(setq-default fill-column 80)
 
 
 (setq
@@ -661,9 +689,9 @@ Cipherstone Technologies AB.
 ;;(require 'notmuch)
 
 (setq mail-user-agent 'message-user-agent)
-(setq user-mail-address "g.ostervall@cipherstone.com"
+(setq user-mail-address "gauthier.ostervall@lumenradio.com"
       user-full-name "Gauthier Östervall")
-(setq smtpmail-smtp-server "smtp.cipherstone.com")
+(setq smtpmail-smtp-server "smtp.lumenradio.com") ; not tested
 ; Line below gives warning at startup, wront number of arguments?
 ;(message-send-mail-function 'message-smtpmail-send-it)
 
@@ -675,6 +703,7 @@ Cipherstone Technologies AB.
 
 ;; Find File
 (setq cc-search-directories '("."
+							  "../include" "../source"
                               "../inc" "../inc/*" "../../inc/*" "../../../inc/*"
                               "../../inc/*/*" "../../../inc/*/*/*"
                               "../src" "../src/*" "../../src/*" "../../../src/*"
@@ -711,5 +740,30 @@ Optional FRAME parameter defaults to current frame."
 (global-set-key (kbd "C-x C-+") 'my-zoom-in)
 (global-set-key (kbd "C-x C-=") 'my-zoom-in)
 (global-set-key (kbd "C-x C--") 'my-zoom-out)
-(global-set-key (kbd "C-x -") 'my-zoom-out)
 (global-set-key (kbd "C-x C-0") 'my-zoom-out)
+
+;; key bindings for Mac
+;;(when (eq system-type 'darwin) ;; mac specific settings
+;;  (setq mac-option-modifier 'meta)
+;;  (setq mac-command-modifier 'control)
+;;  (global-set-key [kp-delete] 'delete-char) ;; sets fn-delete to be right-delete
+;;  )
+
+;; robot framework major mode
+(load "robot-mode.el")
+(add-to-list 'auto-mode-alist '("\\.robot\\'" . robot-mode))
+
+;; Import important environment variables from shell, for Mac OS
+(when (memq window-system '(mac ns))
+  (exec-path-from-shell-initialize)
+  (exec-path-from-shell-copy-envs '("LANG" "LC_ALL"))
+  (message "Initialized PATH and other variables from SHELL."))
+
+;; Waiting for an answer on http://emacs.stackexchange.com/questions/31577/dir-local-el-misunderstanding
+;; Doing this globally instead of specific to mira project.
+;(setq-default indent-tabs-mode t)
+(require 'dtrt-indent)
+(dtrt-indent-mode t)
+
+;; Display whitespace characters.
+(global-set-key (kbd "C-c b") 'blank-mode)
