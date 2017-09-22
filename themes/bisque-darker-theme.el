@@ -40,6 +40,7 @@
       ;; #ac9a85 = (bisque3 + bisque4) / 2
       (bisque-fg "#ac8a75")
       (bisque-fg-1 "bisque4")
+      (bisque-fg-2 "#5f5549")
       (bisque-bg-1 "#1b1b1b")
       (bisque-bg-05 "#282828")
       (bisque-bg "#35322f")
@@ -81,11 +82,12 @@
    `(default ((t (:foreground ,bisque-fg :background ,bisque-bg))))
    `(cursor ((t (:foreground ,bisque-fg :background "white"))))
    `(escape-glyph ((t (:foreground ,bisque-yellow :bold t))))
-   `(fringe ((t (:foreground ,bisque-fg :background ,bisque-bg))))
+   `(fringe ((t (:foreground ,bisque-red :background ,bisque-bg))))
    `(header-line ((t (:foreground ,bisque-yellow
-                                  :background ,bisque-bg-1))))
-                                  ;;:box (:line-width -1 :style released-button)))))
+                                  :background ,bisque-bg-1
+                                  :box nil))))
    `(highlight ((t (:background ,bisque-bg-05))))
+   `(vertical-border ((t (:foreground ,bisque-fg-2))))
 
    ;;; compilation
    `(compilation-column-face ((t (:foreground ,bisque-yellow))))
@@ -116,14 +118,14 @@
    `(minibuffer-prompt ((t (:foreground ,bisque-yellow))))
    `(mode-line
      ((,class (:foreground ,bisque-green+4
-                           :background ,bisque-bg-1))
-                           ;;:box (:line-width -1 :style released-button)))
-      (t :inverse-video t)))
+                           :background ,bisque-bg-1
+                           :box nil)
+      (t :inverse-video t))))
    `(mode-line-buffer-id ((t (:foreground ,bisque-yellow :weight bold))))
    `(mode-line-inactive
      ((t (:foreground ,bisque-green-1
-                      :background ,bisque-bg-05))))
-                      ;;:box (:line-width -1 :style released-button)))))
+                      :background ,bisque-bg-05
+                      :box nil))))
    `(region ((,class (:background ,bisque-bg-1))
              (t :inverse-video t)))
    `(secondary-selection ((t (:background ,bisque-bg+2))))
