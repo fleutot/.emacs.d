@@ -52,8 +52,8 @@ not set 4 spaces are used.
  "
  (if indent-tabs-mode
      "\t"
-   (make-string (if (boundp 'c-basic-offset) 
-		    c-basic-offset 4) 
+   (make-string (if (eq c-basic-offset 'set-from-style)
+                    4 c-basic-offset)
 		?\ )
    )
  )
