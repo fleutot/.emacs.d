@@ -1,11 +1,11 @@
 /*----------------------------------------------------------------------------
-Copyright (c) 2017 LumenRadio AB
+Copyright (c) 2018 LumenRadio AB
 This code is the property of Lumenradio AB and may not be redistributed in any
 form without prior written permission from LumenRadio AB.
 ----------------------------------------------------------------------------*/
 
-#ifndef _INCLUDED
-#define _INCLUDED
+#ifndef _H
+#define _H
 
 #ifdef __cplusplus
 extern "C" {
@@ -17,4 +17,4 @@ extern "C" {
 }
 #endif
 
-#endif // _INCLUDED
+#endif

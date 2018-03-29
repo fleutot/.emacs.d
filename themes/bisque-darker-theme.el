@@ -661,6 +661,25 @@
    `(tabbar-unselected ((t (:foreground ,bisque-fg
                                         :background ,bisque-bg+1
                                         :box (:line-width -1 :style released-button)))))
+   ;; term
+   `(term-color-black ((t (:foreground ,bisque-bg
+                                       :background ,bisque-bg-1))))
+   `(term-color-red ((t (:foreground ,bisque-red-2
+                                       :background ,bisque-red-4))))
+   `(term-color-green ((t (:foreground ,bisque-green
+                                       :background ,bisque-green+2))))
+   `(term-color-yellow ((t (:foreground ,bisque-orange
+                                       :background ,bisque-yellow))))
+   `(term-color-blue ((t (:foreground ,bisque-blue-1
+                                      :background ,bisque-blue-4))))
+   `(term-color-magenta ((t (:foreground ,bisque-magenta
+                                         :background ,bisque-red))))
+   `(term-color-cyan ((t (:foreground ,bisque-cyan
+                                       :background ,bisque-blue-1))))
+   `(term-color-white ((t (:foreground ,bisque-fg
+                                       :background ,bisque-fg-1))))
+   '(term-default-fg-color ((t (:inherit term-color-white))))
+   '(term-default-bg-color ((t (:inherit term-color-black))))
 
    ;; volatile-highlights
    `(vhl/default-face ((t (:background ,bisque-bg+1))))
@@ -734,8 +753,8 @@
    'bisque-darker
    `(ansi-color-names-vector [,bisque-bg ,bisque-red ,bisque-green ,bisque-yellow
                                           ,bisque-blue ,bisque-magenta ,bisque-cyan ,bisque-fg])
-   `(ansi-term-color-vector [,bisque-bg ,bisque-red ,bisque-green ,bisque-yellow
-                                         ,bisque-blue ,bisque-magenta ,bisque-cyan ,bisque-fg])
+   ;;;;`(ansi-term-color-vector [,bisque-bg ,bisque-red ,bisque-green ,bisque-yellow
+   ;;;;                                      ,bisque-blue ,bisque-magenta ,bisque-cyan ,bisque-fg])
 
    ;; fill-column-indicator
    `(fci-rule-color ,bisque-bg-05)))
