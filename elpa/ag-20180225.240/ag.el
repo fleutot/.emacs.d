@@ -191,8 +191,7 @@ different window, according to `ag-reuse-window'."
                                                 'ag/compilation-match-grouped-filename 1 2))))
   (set (make-local-variable 'compilation-error-face) 'ag-hit-face)
   (set (make-local-variable 'next-error-function) #'ag/next-error-function)
-  (set (make-local-variable 'compilation-finish-functions)
-       #'ag/run-finished-hook)
+  (set (make-local-variable 'compilation-finish-functions) #'ag/run-finished-hook)
   (add-hook 'compilation-filter-hook 'ag-filter nil t))
 
 (define-key ag-mode-map (kbd "p") #'compilation-previous-error)

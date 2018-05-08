@@ -448,20 +448,24 @@ and `:slant'."
 
 (defface magit-diff-added
   '((((class color) (background light))
-     :background "#ddffdd"
+     ;;:background "#ddffdd"
+     :background "#113311"
      :foreground "#22aa22")
     (((class color) (background dark))
-     :background "#335533"
+     ;;:background "#335533"
+     :background "#113311"
      :foreground "#ddffdd"))
   "Face for lines in a diff that have been added."
   :group 'magit-faces)
 
 (defface magit-diff-removed
  '((((class color) (background light))
-    :background "#ffdddd"
+    ;;:background "#ffdddd"
+    :background "#331111"
     :foreground "#aa2222")
    (((class color) (background dark))
-    :background "#553333"
+    ;;:background "#553333"
+    :background "#331111"
     :foreground "#ffdddd"))
   "Face for lines in a diff that have been removed."
   :group 'magit-faces)
