@@ -200,15 +200,17 @@
    `(clojure-test-success-face ((t (:foreground ,bisque-green+1 :weight bold :underline t))))
 
    ;; diff
-   `(diff-added ((,class (:foreground ,bisque-green+4))
+   `(diff-added ((,class (:foreground ,bisque-green+1))
                  (t (:foreground ,bisque-green-1))))
+   `(diff-context ((,class (:foreground, bisque-fg))
+                   (t (:foreground ,bisque-fg-1))))
    `(diff-changed ((t (:foreground ,bisque-yellow))))
-   `(diff-removed ((,class (:foreground ,bisque-red))
+   `(diff-removed ((,class (:foreground ,bisque-red-1))
                    (t (:foreground ,bisque-red-3))))
-   `(diff-header ((,class (:background ,bisque-bg+2))
+   `(diff-header ((,class (:background ,bisque-blue-4 :foreground ,bisque-blue-2)) ;;((,class (:background ,bisque-bg+1))
                   (t (:background ,bisque-fg :foreground ,bisque-bg))))
    `(diff-file-header
-     ((,class (:background ,bisque-bg+2 :foreground ,bisque-fg :bold t))
+     ((,class (:background ,bisque-blue-4 :foreground ,bisque-bg :bold t)) ;;  (:background ,bisque-bg+1 :foreground ,bisque-fg :bold t))
       (t (:background ,bisque-fg :foreground ,bisque-bg :bold t))))
 
    ;; ert
@@ -345,6 +347,9 @@
    `(helm-visible-mark ((t (:foreground ,bisque-bg :background ,bisque-yellow-2))))
    `(helm-candidate-number ((t (:foreground ,bisque-green+4 :background ,bisque-bg-1))))
 
+   ;; highlight-symbol
+   `(highlight-symbol-face ((t (:background ,bisque-bg-1))))
+
    ;; hl-line-mode
    `(hl-line-face ((,class (:background ,bisque-bg+05))
                    (t :weight bold)))
@@ -398,19 +403,21 @@
    `(magit-diff-file-heading-selection ((t (:background ,bisque-bg+05
                                                         :foreground ,bisque-orange :weight bold))))
    `(magit-diff-hunk-heading           ((t (:background ,bisque-bg+1))))
-   `(magit-diff-hunk-heading-highlight ((t (:background ,bisque-bg+2))))
+   `(magit-diff-hunk-heading-highlight ((t (:background ,bisque-bg+2 :foreground ,bisque-fg+1))))
    `(magit-diff-hunk-heading-selection ((t (:background ,bisque-bg+2
                                                         :foreground ,bisque-orange))))
    `(magit-diff-lines-heading          ((t (:background ,bisque-orange
                                                         :foreground ,bisque-bg+2))))
-   `(magit-diff-context-highlight      ((t (:background ,bisque-bg+05
-                                                        :foreground "grey70"))))
+   `(magit-diff-context                ((t (:foreground ,bisque-fg))))
+   `(magit-diff-context-highlight      ((t (:background ,bisque-bg
+                                                        :foreground ,bisque-fg))))
    `(magit-diff-added      ((t (:foreground ,bisque-green))))
-   `(magit-diff-removed      ((t (:foreground ,bisque-red-1
-                                              ))))
+   `(magit-diff-added-highlight      ((t (:foreground ,bisque-green :background ,bisque-bg))))
+   `(magit-diff-removed      ((t (:foreground ,bisque-red-1))))
+   `(magit-diff-removed-highlight      ((t (:foreground ,bisque-red-1 :background ,bisque-bg))))
 
-   `(magit-diffstat-added   ((t (:foreground ,bisque-green+4))))
-   `(magit-diffstat-removed ((t (:foreground ,bisque-red))))
+   `(magit-diffstat-added   ((t (:foreground ,bisque-green))))
+   `(magit-diffstat-removed ((t (:foreground ,bisque-red-1))))
    ;;; popup
    `(magit-popup-heading             ((t (:foreground ,bisque-yellow  :weight bold))))
    `(magit-popup-key                 ((t (:foreground ,bisque-blue    :weight bold))))
@@ -574,7 +581,7 @@
    `(org-table ((t (:foreground ,bisque-green+2))))
    `(org-tag ((t (:bold t :weight bold))))
    `(org-time-grid ((t (:foreground ,bisque-orange))))
-   `(org-todo ((t (:bold t :foreground ,bisque-red :weight bold))))
+   `(org-todo ((t (:bold t :foreground ,bisque-red :weight bold :inverse-video))))
    `(org-upcoming-deadline ((t (:inherit font-lock-keyword-face))))
    `(org-warning ((t (:bold t :foreground ,bisque-red :weight bold :underline nil))))
    `(org-column ((t (:background ,bisque-bg-1))))

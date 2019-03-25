@@ -39,9 +39,12 @@
       ;; #ac9a85 = (bisque3 + bisque4) / 2
       (bisque-fg "#ac9a85")
       (bisque-fg-1 "bisque4")
+      (bisque-fg-2 "#5f5549")
+      (bisque-fg+1 "#ccab95")
       (bisque-bg-1 "#2b2b2b")
       (bisque-bg-05 "#383838")
       (bisque-bg "#45423f")
+      (bisque-bg+05 "#404040")
       (bisque-bg+1 "#4f4f4f")
       (bisque-bg+2 "#5f5f5f")
       (bisque-bg+3 "#6f6f6f")
@@ -52,6 +55,7 @@
       (bisque-red-3 "#9c6363")
       (bisque-red-4 "#8c5353")
       (bisque-orange "#dfaf8f")
+      (bisque-yellow+1 "#e0d370")
       (bisque-yellow "#f0dfaf")
       (bisque-yellow-1 "#e0cf9f")
       (bisque-yellow-2 "#d0bf8f")
@@ -339,6 +343,9 @@
    `(helm-visible-mark ((t (:foreground ,bisque-bg :background ,bisque-yellow-2))))
    `(helm-candidate-number ((t (:foreground ,bisque-green+4 :background ,bisque-bg-1))))
 
+   ;; highlight-symbol
+   `(highlight-symbol-face ((t (:background ,bisque-bg-1))))
+   
    ;; hl-line-mode
    `(hl-line-face ((,class (:background ,bisque-bg-05))
                    (t :weight bold)))
@@ -383,6 +390,90 @@
    `(magit-section-title ((t (:foreground ,bisque-yellow :weight bold))))
    `(magit-branch ((t (:foreground ,bisque-orange :weight bold))))
    `(magit-item-highlight ((t (:background ,bisque-bg+1))))
+   ;;; headings and diffs
+   `(magit-section-highlight           ((t (:background ,bisque-bg+05))))
+   `(magit-section-heading             ((t (:foreground ,bisque-yellow+1 :weight bold))))
+   `(magit-section-heading-selection   ((t (:foreground ,bisque-orange :weight bold))))
+   `(magit-diff-file-heading           ((t (:foreground ,bisque-bg :background ,bisque-blue-3  :weight bold))))
+   `(magit-diff-file-heading-highlight ((t (:foreground, bisque-bg :background ,bisque-blue-2  :weight bold))))
+   `(magit-diff-file-heading-selection ((t (:background ,bisque-bg+05
+                                                        :foreground ,bisque-orange :weight bold))))
+   `(magit-diff-hunk-heading           ((t (:background ,bisque-bg+1))))
+   `(magit-diff-hunk-heading-highlight ((t (:background ,bisque-bg+2 :foreground ,bisque-fg+1))))
+   `(magit-diff-hunk-heading-selection ((t (:background ,bisque-bg+2
+                                                        :foreground ,bisque-orange))))
+   `(magit-diff-lines-heading          ((t (:background ,bisque-orange
+                                                        :foreground ,bisque-bg+2))))
+   `(magit-diff-context                ((t (:foreground ,bisque-fg))))
+   `(magit-diff-context-highlight      ((t (:background ,bisque-bg
+                                                        :foreground ,bisque-fg))))
+   `(magit-diff-added      ((t (:foreground ,bisque-green))))
+   `(magit-diff-added-highlight      ((t (:foreground ,bisque-green :background ,bisque-bg))))
+   `(magit-diff-removed      ((t (:foreground ,bisque-red-1))))
+   `(magit-diff-removed-highlight      ((t (:foreground ,bisque-red-1 :background ,bisque-bg))))
+
+   `(magit-diffstat-added   ((t (:foreground ,bisque-green))))
+   `(magit-diffstat-removed ((t (:foreground ,bisque-red-1))))
+   ;;; popup
+   `(magit-popup-heading             ((t (:foreground ,bisque-yellow  :weight bold))))
+   `(magit-popup-key                 ((t (:foreground ,bisque-blue    :weight bold))))
+   `(magit-popup-argument            ((t (:foreground ,bisque-green   :weight bold))))
+   `(magit-popup-disabled-argument   ((t (:foreground ,bisque-fg-1    :weight normal))))
+   `(magit-popup-option-value        ((t (:foreground ,bisque-blue-2  :weight bold))))
+   ;;; process
+   `(magit-process-ok    ((t (:foreground ,bisque-green  :weight bold))))
+   `(magit-process-ng    ((t (:foreground ,bisque-red    :weight bold))))
+   ;;; log
+   `(magit-log-author    ((t (:foreground ,bisque-orange))))
+   `(magit-log-date      ((t (:foreground ,bisque-fg-1))))
+   `(magit-log-graph     ((t (:foreground ,bisque-fg+1))))
+   ;;; sequence
+   `(magit-sequence-pick ((t (:foreground ,bisque-yellow-2))))
+   `(magit-sequence-stop ((t (:foreground ,bisque-green))))
+   `(magit-sequence-part ((t (:foreground ,bisque-yellow))))
+   `(magit-sequence-head ((t (:foreground ,bisque-blue))))
+   `(magit-sequence-drop ((t (:foreground ,bisque-red))))
+   `(magit-sequence-done ((t (:foreground ,bisque-fg-1))))
+   `(magit-sequence-onto ((t (:foreground ,bisque-fg-1))))
+   ;;; bisect
+   `(magit-bisect-good ((t (:foreground ,bisque-green))))
+   `(magit-bisect-skip ((t (:foreground ,bisque-yellow))))
+   `(magit-bisect-bad  ((t (:foreground ,bisque-red))))
+   ;;; blame
+   `(magit-blame-heading ((t (:background ,bisque-bg-1 :foreground ,bisque-blue-2))))
+   `(magit-blame-hash    ((t (:background ,bisque-bg-1 :foreground ,bisque-blue-2))))
+   `(magit-blame-name    ((t (:background ,bisque-bg-1 :foreground ,bisque-orange))))
+   `(magit-blame-date    ((t (:background ,bisque-bg-1 :foreground ,bisque-orange))))
+   `(magit-blame-summary ((t (:background ,bisque-bg-1 :foreground ,bisque-blue-2
+                                          :weight bold))))
+   ;;; references etc
+   `(magit-dimmed         ((t (:foreground ,bisque-bg+3))))
+   `(magit-hash           ((t (:foreground ,bisque-bg+3))))
+   `(magit-tag            ((t (:foreground ,bisque-orange :weight bold))))
+   `(magit-branch-remote  ((t (:foreground ,bisque-green  :weight bold))))
+   `(magit-branch-local   ((t (:foreground ,bisque-blue   :weight bold))))
+   `(magit-branch-current ((t (:foreground ,bisque-blue   :weight bold :box t))))
+   `(magit-head           ((t (:foreground ,bisque-blue   :weight bold))))
+   `(magit-refname        ((t (:background ,bisque-bg+2 :foreground ,bisque-fg :weight bold))))
+   `(magit-refname-stash  ((t (:background ,bisque-bg+2 :foreground ,bisque-fg :weight bold))))
+   `(magit-refname-wip    ((t (:background ,bisque-bg+2 :foreground ,bisque-fg :weight bold))))
+   `(magit-signature-good      ((t (:foreground ,bisque-green))))
+   `(magit-signature-bad       ((t (:foreground ,bisque-red))))
+   `(magit-signature-untrusted ((t (:foreground ,bisque-yellow))))
+   `(magit-signature-expired   ((t (:foreground ,bisque-orange))))
+   `(magit-signature-revoked   ((t (:foreground ,bisque-magenta))))
+   '(magit-signature-error     ((t (:inherit    magit-signature-bad))))
+   `(magit-cherry-unmatched    ((t (:foreground ,bisque-cyan))))
+   `(magit-cherry-equivalent   ((t (:foreground ,bisque-magenta))))
+   `(magit-reflog-commit       ((t (:foreground ,bisque-green))))
+   `(magit-reflog-amend        ((t (:foreground ,bisque-magenta))))
+   `(magit-reflog-merge        ((t (:foreground ,bisque-green))))
+   `(magit-reflog-checkout     ((t (:foreground ,bisque-blue))))
+   `(magit-reflog-reset        ((t (:foreground ,bisque-red))))
+   `(magit-reflog-rebase       ((t (:foreground ,bisque-magenta))))
+   `(magit-reflog-cherry-pick  ((t (:foreground ,bisque-green))))
+   `(magit-reflog-remote       ((t (:foreground ,bisque-cyan))))
+   `(magit-reflog-other        ((t (:foreground ,bisque-cyan))))
 
    ;; message-mode
    `(message-cited-text ((t (:inherit font-lock-comment))))
@@ -486,7 +577,7 @@
    `(org-table ((t (:foreground ,bisque-green+2))))
    `(org-tag ((t (:bold t :weight bold))))
    `(org-time-grid ((t (:foreground ,bisque-orange))))
-   `(org-todo ((t (:bold t :foreground ,bisque-red :weight bold))))
+   `(org-todo ((t (:bold t :foreground ,bisque-red :weight bold :inverse-video t))))
    `(org-upcoming-deadline ((t (:inherit font-lock-keyword-face))))
    `(org-warning ((t (:bold t :foreground ,bisque-red :weight bold :underline nil))))
    `(org-column ((t (:background ,bisque-bg-1))))
