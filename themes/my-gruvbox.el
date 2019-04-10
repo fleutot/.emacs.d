@@ -125,6 +125,9 @@ Should contain 2 %s constructs to allow for theme name and directory/prefix")
      (homoglyph                                         (:foreground gruvbox-bright_yellow))
      (match                                             (:foreground gruvbox-dark0 :background gruvbox-bright_blue))
 
+     ;; Blank face, for showing whitespace. From blank-mode.el
+     ;;(blank-space                                       (:foreground gruvbox-bright_blue :background gruvbox-dark0_hard))
+
      ;; Customize faces
      (widget-field                                      (:background gruvbox-dark3))
      (custom-group-tag                                  (:foreground gruvbox-bright_blue :weight 'bold))
