@@ -104,7 +104,7 @@ Should contain 2 %s constructs to allow for theme name and directory/prefix")
      ;; Built-in syntax
 
      (font-lock-builtin-face                            (:foreground gruvbox-bright_orange))
-     (font-lock-constant-face                           (:foreground gruvbox-bright_purple))
+     (font-lock-constant-face                           (:foreground gruvbox-faded_purple))
      (font-lock-comment-face                            (:foreground gruvbox-dark4))
      (font-lock-function-name-face                      (:foreground gruvbox-bright_yellow))
      (font-lock-keyword-face                            (:foreground gruvbox-bright_red))
@@ -112,6 +112,7 @@ Should contain 2 %s constructs to allow for theme name and directory/prefix")
      (font-lock-variable-name-face                      (:foreground gruvbox-bright_blue))
      (font-lock-type-face                               (:foreground gruvbox-bright_purple))
      (font-lock-warning-face                            (:foreground gruvbox-bright_red :bold t))
+     (font-lock-doc-face                                (:foreground gruvbox-light2))
 
      ;; Basic faces
      (error                                             (:foreground gruvbox-bright_red :bold t))
@@ -169,6 +170,9 @@ Should contain 2 %s constructs to allow for theme name and directory/prefix")
      ;; Highlight indentation mode
      (highlight-indentation-current-column-face (:background gruvbox-dark2))
      (highlight-indentation-face                (:background gruvbox-dark1))
+
+     ;; Highligh symbol
+     (highlight-symbol-face                     (:background gruvbox-dark2 :foreground gruvbox-light0))
 
      ;; smartparens
      (sp-pair-overlay-face                      (:background gruvbox-dark2))
@@ -450,13 +454,11 @@ Should contain 2 %s constructs to allow for theme name and directory/prefix")
      (magit-diff-base-highlight                 (:background gruvbox-faded_yellow :foreground gruvbox-light0))
      (magit-diff-context                        (:foreground gruvbox-dark1  :foreground gruvbox-light1))
      (magit-diff-context-highlight              (:background gruvbox-dark1 :foreground gruvbox-light0))
-;; These magit-diff-file-* can't seem to bite...
-     (magit-diff-file-heading                   (:background gruvbox-lightblue4 :foreground gruvbox-light0))
-     (magit-diff-file-heading-highlight         (:background gruvbox-turquoise4 :foreground gruvbox-light0))
-     (magit-diff-file-heading-selection         (:background gruvbox-turquoise4 :foreground gruvbox-light0))
-;;
-     (magit-diff-hunk-heading                   (:background gruvbox-dark3 :foreground gruvbox-light2))
-     (magit-diff-hunk-heading-highlight         (:background gruvbox-dark2 :foreground gruvbox-light0))
+     (magit-diff-file-heading                   (:background gruvbox-faded_blue :foreground gruvbox-dark1))
+     (magit-diff-file-heading-highlight         (:background gruvbox-bright_blue :foreground gruvbox-bg))
+     (magit-diff-file-heading-selection         (:background gruvbox-turquoise4 :foreground gruvbox-bg))
+     (magit-diff-hunk-heading                   (:background gruvbox-light4 :foreground gruvbox-dark1))
+     (magit-diff-hunk-heading-highlight         (:background gruvbox-light1 :foreground gruvbox-dark1))
      (magit-diff-hunk-heading-selection         (:background gruvbox-dark2 :foreground gruvbox-bright_orange))
      (magit-diff-lines-heading                  (:background gruvbox-faded_orange :foreground gruvbox-light0))
      (magit-diff-removed                        (:foreground gruvbox-bright_red))
@@ -480,9 +482,9 @@ Should contain 2 %s constructs to allow for theme name and directory/prefix")
      (magit-reflog-remote                       (:foreground gruvbox-bright_blue))
      (magit-reflog-reset                        (:foreground gruvbox-bright_red))
      (magit-refname                             (:foreground gruvbox-light4))
-     (magit-section-heading                     (:foreground gruvbox-bright_yellow :weight 'bold))
+     (magit-section-heading                     (:foreground gruvbox-bg :weight 'bold :background gruvbox-faded_yellow))
      (magit-section-heading-selection           (:foreground gruvbox-faded_yellow))
-     (magit-section-highlight                   (:background gruvbox-dark1))
+     (magit-section-highlight                   (:background gruvbox-bright_yellow))
      (magit-sequence-drop                       (:foreground gruvbox-faded_yellow))
      (magit-sequence-head                       (:foreground gruvbox-bright_aqua))
      (magit-sequence-part                       (:foreground gruvbox-bright_yellow))
