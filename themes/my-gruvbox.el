@@ -397,9 +397,9 @@ Should contain 2 %s constructs to allow for theme name and directory/prefix")
      (powerline-inactive2                       (:background gruvbox-dark0 :foreground gruvbox-light4))
 
      ;; isearch
-     (isearch                                   (:foreground gruvbox-black :background gruvbox-bright_orange))
-     (lazy-highlight                            (:foreground gruvbox-black :background gruvbox-bright_yellow))
-     (isearch-fail                              (:foreground gruvbox-light0 :background gruvbox-bright_red))
+     (isearch                                   (:foreground gruvbox-dark0 :background gruvbox-faded_orange))
+     (lazy-highlight                            (:foreground gruvbox-dark0 :background gruvbox-faded_yellow))
+     (isearch-fail                              (:foreground gruvbox-dark0 :background gruvbox-faded_red))
 
      ;; markdown-mode
      (markdown-header-face-1                    (:foreground gruvbox-bright_blue))
@@ -408,6 +408,8 @@ Should contain 2 %s constructs to allow for theme name and directory/prefix")
      (markdown-header-face-4                    (:foreground gruvbox-bright_red))
      (markdown-header-face-5                    (:foreground gruvbox-bright_green))
      (markdown-header-face-6                    (:foreground gruvbox-bright_aqua))
+     (markdown-inline-code-face                 (:foreground gruvbox-bright_purple))
+     (markdown-pre-face                         (:foreground gruvbox-bright_purple))
 
      ;; anzu-mode
      (anzu-mode-line                            (:foreground gruvbox-bright_yellow :weight 'bold))
@@ -461,7 +463,7 @@ Should contain 2 %s constructs to allow for theme name and directory/prefix")
      (magit-diff-file-heading-highlight         (:background gruvbox-bright_blue :foreground gruvbox-bg))
      (magit-diff-file-heading-selection         (:background gruvbox-turquoise4 :foreground gruvbox-bg))
      (magit-diff-hunk-heading                   (:background gruvbox-light4 :foreground gruvbox-dark1))
-     (magit-diff-hunk-heading-highlight         (:background gruvbox-light1 :foreground gruvbox-dark1))
+     (magit-diff-hunk-heading-highlight         (:background gruvbox-light2 :foreground gruvbox-dark1))
      (magit-diff-hunk-heading-selection         (:background gruvbox-dark2 :foreground gruvbox-bright_orange))
      (magit-diff-lines-heading                  (:background gruvbox-faded_orange :foreground gruvbox-light0))
      (magit-diff-removed                        (:foreground gruvbox-bright_red))
