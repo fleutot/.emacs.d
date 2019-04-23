@@ -50,7 +50,7 @@
 (eval-when-compile
   (require 'cl-lib))
 
-(require 'my-gruvbox)
+(require 'my-gruvbox "../themes/my-gruvbox.el")
 
 (my-gruvbox-deftheme
  gruvbox-light-softer
