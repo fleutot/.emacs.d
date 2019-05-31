@@ -48,6 +48,7 @@
       (bisque-bg+1 "#4f4f4f")
       (bisque-bg+2 "#5f5f5f")
       (bisque-bg+3 "#6f6f6f")
+      (bisque-red+2 "#ff8383")
       (bisque-red+1 "#dca3a3")
       (bisque-red "#cc9393")
       (bisque-red-1 "#bc8383")
@@ -55,6 +56,7 @@
       (bisque-red-3 "#9c6363")
       (bisque-red-4 "#8c5353")
       (bisque-orange "#dfaf8f")
+      (bisque-orange-1 "#cf9f7f")
       (bisque-yellow+1 "#e0d370")
       (bisque-yellow "#f0dfaf")
       (bisque-yellow-1 "#e0cf9f")
@@ -73,7 +75,10 @@
       (bisque-blue-3 "#5c888b")
       (bisque-blue-4 "#4c7073")
       (bisque-blue-5 "#366060")
-      (bisque-magenta "#dc8cc3"))
+      (bisque-magenta "#dc8cc3")
+      (bisque-magenta-1 "#c878b0")
+      (bisque-magenta-2 "#b868a0")
+      )
   (custom-theme-set-faces
    'bisque
    '(button ((t (:underline t))))
@@ -111,12 +116,12 @@
    `(match ((t (:background ,bisque-bg-1 :foreground ,bisque-orange :weight bold))))
 
    ;; faces used by isearch
-   `(isearch ((t (:foreground ,bisque-yellow :background ,bisque-bg-1))))
-   `(isearch-fail ((t (:foreground ,bisque-fg :background ,bisque-red-4))))
-   `(lazy-highlight ((t (:foreground ,bisque-yellow :background ,bisque-bg+2))))
+   `(isearch ((t (:foreground ,bisque-bg :background ,bisque-orange))))
+   `(isearch-fail ((t (:foreground ,bisque-bg :background ,bisque-red))))
+   `(lazy-highlight ((t (:foreground ,bisque-bg :background ,bisque-yellow-2))))
 
    `(menu ((t (:foreground ,bisque-fg :background ,bisque-bg))))
-   `(minibuffer-prompt ((t (:foreground ,bisque-yellow))))
+   `(minibuffer-prompt ((t (:foreground ,bisque-green :background ,bisque-bg))))
    `(mode-line
      ((,class (:foreground ,bisque-green+4
                            :background ,bisque-bg-1))
@@ -130,7 +135,7 @@
    `(region ((,class (:background ,bisque-bg-1))
              (t :inverse-video t)))
    `(secondary-selection ((t (:background ,bisque-bg+2))))
-   `(trailing-whitespace ((t (:background ,bisque-red))))
+   `(trailing-whitespace ((t (:background ,bisque-red+2))))
    `(vertical-border ((t (:foreground ,bisque-fg))))
 
    ;;; font lock
@@ -424,7 +429,7 @@
    `(magit-process-ok    ((t (:foreground ,bisque-green  :weight bold))))
    `(magit-process-ng    ((t (:foreground ,bisque-red    :weight bold))))
    ;;; log
-   `(magit-log-author    ((t (:foreground ,bisque-orange))))
+   `(magit-log-author    ((t (:foreground ,bisque-orange-1))))
    `(magit-log-date      ((t (:foreground ,bisque-fg-1))))
    `(magit-log-graph     ((t (:foreground ,bisque-fg+1))))
    ;;; sequence
@@ -474,6 +479,15 @@
    `(magit-reflog-cherry-pick  ((t (:foreground ,bisque-green))))
    `(magit-reflog-remote       ((t (:foreground ,bisque-cyan))))
    `(magit-reflog-other        ((t (:foreground ,bisque-cyan))))
+
+   `(markdown-header-face-1    ((t (:foreground ,bisque-blue))))
+   `(markdown-header-face-2    ((t (:foreground ,bisque-blue-1))))
+   `(markdown-header-face-3    ((t (:foreground ,bisque-blue-2))))
+   `(markdown-header-face-4    ((t (:foreground ,bisque-blue-3))))
+   `(markdown-header-face-5    ((t (:foreground ,bisque-blue-4))))
+   `(markdown-header-face-6    ((t (:foreground ,bisque-blue-5))))
+   `(markdown-inline-code-face ((t (:foreground ,bisque-magenta-1))))
+   `(markdown-pre-face         ((t (:foreground ,bisque-red))))
 
    ;; message-mode
    `(message-cited-text ((t (:inherit font-lock-comment))))
@@ -592,6 +606,10 @@
    `(outline-3 ((t (:inherit outline-4 :height 1.0))))
    `(outline-2 ((t (:inherit outline-3 :height 1.0))))
    `(outline-1 ((t (:inherit outline-2 :height 1.0))))
+
+   ;; python specific faces
+   `(py-builtins-face ((t (:foreground ,bisque-yellow))))
+   `(py-pseudo-keyword-face ((t (:foreground ,bisque-yellow))))
 
    ;; rainbow-delimiters
    `(rainbow-delimiters-depth-1-face ((t (:foreground ,bisque-fg))))
