@@ -222,17 +222,25 @@ kernel."
 
 (setq highlight-symbol-idle-delay 0.3)
 (add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
-(add-hook 'c-mode-common-hook 'auto-fill-mode)
-(add-hook 'c-mode-common-hook 'ws-trim-mode)
-(add-hook 'c-mode-common-hook 'highlight-symbol-mode)
-(add-hook 'c-mode-common-hook 'fci-mode)
-(add-hook 'c-mode-common-hook 'flyspell-prog-mode)
 ; No extra indent in an extern block (#ifdef __cplusplus)
 (add-hook 'c-mode-common-hook
           (lambda()
                  (c-set-offset 'inextern-lang 0)))
 
-(add-hook 'pyton-mode-hook 'fci-mode)
+(add-hook 'markdown-mode-hook 'auto-fill-mode)
+(add-hook 'markdown-mode-hook 'flyspell-mode)
+
+(defun my-prog-mode-hook ()
+  (setq show-trailing-whitespace t))
+
+(add-hook 'prog-mode-hook 'my-prog-mode-hook)
+(add-hook 'prog-mode-hook 'ws-trim-mode)
+(add-hook 'prog-mode-hook 'highlight-symbol-mode)
+(add-hook 'prog-mode-hook 'flyspell-prog-mode)
+(add-hook 'prog-mode-hook 'fci-mode)
+(add-hook 'prog-mode-hook 'auto-fill-mode)
+(add-hook 'prog-mode-hook 'writegood-mode)
+
 ;;(setq-default buffer-file-coding-system 'dos)
 
 
@@ -278,7 +286,7 @@ kernel."
   )
 
 (require 'color)
-(setq fci-rule-color (color-darken-name (face-attribute 'default :background) 4))
+(setq fci-rule-color (color-darken-name (face-attribute 'default :background) 2))
 
 ;; no electric mode in c
 (if (< emacs-major-version 25)
@@ -335,6 +343,7 @@ kernel."
     (tab-width . 7)
     (c-comment-only-line-offset . (0 . 0))
     (c-lineup-C-comments . 0)
+    (c-electric-pound-behavior. alignleft) ; Pre-processor macros go to column 0
     (paragraph-start . "[ 	]*\\(//+\\|\\**\\)[ 	]*$\\|@param\\)\\|^")
     (c-offsets-alist . ((topmost-intro-cont    . 0)
                         (statement-block-intro . +)
@@ -531,12 +540,6 @@ If point was already at that position, move point to beginning of line."
 (require 'darkroom-mode)
 
 (put 'dired-find-alternate-file 'disabled nil)
-
-;; alternative python mode
- (require 'python-mode)
- (autoload 'python-mode "python-mode.el"
-   "Major mode for editing Python source." t)
- (add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
 
 ;; pymacs
  (setenv "PYMACS_PYTHON" "c:/program/python2.7")
