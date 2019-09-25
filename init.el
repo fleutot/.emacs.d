@@ -279,9 +279,9 @@ kernel."
     (color-theme-zenburn)
     ;(color-theme-pok-wog)
     )
-  ;(load-theme 'bisque t)
+  (load-theme 'bisque t)
   ;(load-theme 'ample-light t)
-  (load-theme 'gruvbox-light-softer t)
+  ;(load-theme 'gruvbox-light-softer t)
   ;(load-theme 'poet t) This is nice, maybe, but changes fonts for keywords
   )
 
