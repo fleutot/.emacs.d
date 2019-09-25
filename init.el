@@ -216,30 +216,30 @@ kernel."
   nil)
 
 (defun my-c-mode-common-hook ()
+  (c-set-offset 'inextern-lang 0) ; No extra indent in an extern block (#ifdef __cplusplus)
   (font-lock-add-keywords
    nil
    '((my-c-mode-font-lock-if0 (0 font-lock-comment-face prepend))) 'add-to-end))
-
-(setq highlight-symbol-idle-delay 0.3)
 (add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
-; No extra indent in an extern block (#ifdef __cplusplus)
-(add-hook 'c-mode-common-hook
-          (lambda()
-                 (c-set-offset 'inextern-lang 0)))
+
+(setq highlight-symbol-idle-delay 0.8)
 
 (add-hook 'markdown-mode-hook 'auto-fill-mode)
 (add-hook 'markdown-mode-hook 'flyspell-mode)
 
 (defun my-prog-mode-hook ()
-  (setq show-trailing-whitespace t))
-
+  (setq show-trailing-whitespace t)
+  (ws-trim-mode)
+  (highlight-symbol-mode)
+  (flyspell-prog-mode)
+  (fci-mode)
+  (auto-fill-mode)
+  (writegood-mode)
+  ; Dupes highlight e.g. two `fi` in a row in bash
+  (writegood-duplicates-turn-off)
+  )
 (add-hook 'prog-mode-hook 'my-prog-mode-hook)
-(add-hook 'prog-mode-hook 'ws-trim-mode)
-(add-hook 'prog-mode-hook 'highlight-symbol-mode)
-(add-hook 'prog-mode-hook 'flyspell-prog-mode)
-(add-hook 'prog-mode-hook 'fci-mode)
-(add-hook 'prog-mode-hook 'auto-fill-mode)
-(add-hook 'prog-mode-hook 'writegood-mode)
+;(setq prog-mode-hook nil)
 
 ;;(setq-default buffer-file-coding-system 'dos)
 
@@ -668,9 +668,6 @@ form without prior written permission from LumenRadio AB.
 (if (< emacs-major-version 25)
     (global-set-key (kbd "C-.") 'find-tag-at-point)
   (global-set-key (kbd "M-*") 'pop-tag-mark))
-
-
-;(add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 (require 'ws-trim)
 (setq ws-trim-level 1) ; 1 -> only modified lines are trimmed.
