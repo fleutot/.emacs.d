@@ -567,15 +567,6 @@ If point was already at that position, move point to beginning of line."
  ;;  (autoload 'py-shell "ipython"
  ;;    "Use IPython as the Python interpreter." t))
 
-(setq load-path
-          (append (list nil "~/.emacs.d/includes/deft")
-                  load-path))
-(when (require 'deft nil 'noerror)
-  (setq
-   deft-directory "~/.deft")
-  (global-set-key (kbd "<f9>") 'deft))
-
-
 (defun insert-function-header()
   "Insert a C function header above the current function."
   (interactive)
