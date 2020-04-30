@@ -12,6 +12,7 @@
 (setq auto-mode-alist (cons '("COMMIT_EDITMSG" . git-commit-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '(".ts$" . c-mode) auto-mode-alist))
 (setq auto-mode-alist (append auto-mode-alist '(("\\.cflow$" . cflow-mode))))
+(add-to-list 'auto-mode-alist '("\\.bash_aliases\\'" . sh-mode))
 
 ;;(setq package-enable-at-startup nil)
 (package-initialize)
@@ -304,15 +305,6 @@ kernel."
 ; These commands I read about on the web, but they don't work?
 ;(highlight-tabs)
 ;(highlight-trailing-whitespace)
-
-;(setq c-default-style "k&r")
-(setq tab-width 4)
-; indent C preprocessor macros together with the code.
-(c-set-offset (quote cpp-macro) 0 nil)
-;(setq indent-line-function 'insert-tab)
-(setq asm-indent-level 4)
-(c-set-offset 'innamespace 0)
-(setq c-auto-align-backslashes nil)
 
 (defconst eclipse-c-style
   '((c-basic-offset . 4)
