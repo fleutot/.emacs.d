@@ -1,6 +1,9 @@
 ; Directory to put various el files into
 (add-to-list 'load-path "~/.emacs.d/includes")
 
+(eval-when-compile (require 'use-package))
+(package-initialize)
+
 ; Add file associations
 (setq auto-mode-alist (cons '(".ss$" . asm-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '(".inc$" . asm-mode) auto-mode-alist))
@@ -283,7 +286,7 @@ kernel."
  '(sml/read-only ((t (:inherit sml/global :foreground "deep sky blue" :inverse-video t :weight extra-bold)))))
 
 ; Smart mode line
-(require 'smart-mode-line)
+(use-package smart-mode-line)
 (sml/setup)
 
 (if (< emacs-major-version 24)
