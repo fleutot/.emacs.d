@@ -598,7 +598,7 @@ If point was already at that position, move point to beginning of line."
   "Insert a C file header."
   (interactive)
   (insert "/*----------------------------------------------------------------------------
-Copyright (c) 2019 LumenRadio AB
+Copyright (c) 2020 LumenRadio AB
 This code is the property of Lumenradio AB and may not be redistributed in any
 form without prior written permission from LumenRadio AB.
 ----------------------------------------------------------------------------*/
@@ -629,7 +629,7 @@ form without prior written permission from LumenRadio AB.
   "Insert a H file header."
   (interactive)
   (insert "/*----------------------------------------------------------------------------
-Copyright (c) 2019 LumenRadio AB
+Copyright (c) 2020 LumenRadio AB
 This code is the property of LumenRadio AB and may not be redistributed in any
 form without prior written permission from LumenRadio AB.
 ----------------------------------------------------------------------------*/
