@@ -708,14 +708,20 @@ form without prior written permission from LumenRadio AB.
 (setq-default fill-column 80)
 
 
+;; Backup and auto-save
+(require 'backup-each-save)
+(add-hook 'after-save-hook 'backup-each-save)
 (setq
    backup-by-copying t      ; don't clobber symlinks
-   backup-directory-alist
-    '(("." . "~/.saves"))    ; don't litter my fs tree
+   backup-directory-alist '(("." . "~/.saves"))    ; don't litter my fs tree
    delete-old-versions t
-   kept-new-versions 6
-   kept-old-versions 2
-   version-control t)       ; use versioned backups
+   kept-new-versions 9
+   kept-old-versions 6
+   version-control t        ; use versioned backups
+   auto-save-default t      ; auto-save every buffer that visits a file
+   auto-save-timeout 20     ; number of seconds idle time before auto-save (default: 30)
+   auto-save-interval 200   ; number of keystrokes between auto-saves (default: 300)
+   )
 
 ;; Don't convert _ and ^ unless surrounded by braces
 (setq org-export-with-sub-superscripts '{})
