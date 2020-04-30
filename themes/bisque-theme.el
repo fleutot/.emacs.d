@@ -55,12 +55,14 @@
       (bisque-red-2 "#ac7373")
       (bisque-red-3 "#9c6363")
       (bisque-red-4 "#8c5353")
+      (bisque-red-5 "#7c4343")
       (bisque-orange "#dfaf8f")
       (bisque-orange-1 "#cf9f7f")
       (bisque-yellow+1 "#e0d370")
       (bisque-yellow "#f0dfaf")
       (bisque-yellow-1 "#e0cf9f")
       (bisque-yellow-2 "#d0bf8f")
+      (bisque-green-2 "#4f6f4f")
       (bisque-green-1 "#5f7f5f")
       (bisque-green "#7f9f7f")
       (bisque-green+1 "#8fb28f")
@@ -87,9 +89,9 @@
 
    ;;; basic coloring
    `(default ((t (:foreground ,bisque-fg :background ,bisque-bg))))
-   `(cursor ((t (:foreground ,bisque-fg :background "white"))))
+   `(cursor ((t (:foreground ,bisque-fg :background ,bisque-yellow+1))))
    `(escape-glyph ((t (:foreground ,bisque-yellow :bold t))))
-   `(fringe ((t (:foreground ,bisque-fg :background ,bisque-bg))))
+   `(fringe ((t (:foreground ,bisque-yellow+1 :background ,bisque-bg))))
    `(header-line ((t (:foreground ,bisque-yellow
                                   :background ,bisque-bg-1))))
                                   ;;:box (:line-width -1 :style released-button)))))
@@ -336,21 +338,61 @@
      ((t (:foreground ,bisque-green
                       :background ,bisque-bg
                       :underline nil
-                      :box nil))))
+                      :box nil
+                      :extend t))))
    `(helm-source-header
      ((t (:foreground ,bisque-yellow
                       :background ,bisque-bg-1
                       :underline nil
                       :weight bold
-                      :box (:line-width -1 :style released-button)))))
+                      :box nil ;; (:line-width -1 :style released-button)
+                      :extend t))))
    `(helm-selection ((t (:background ,bisque-bg+1 :underline nil))))
    `(helm-selection-line ((t (:background ,bisque-bg+1))))
    `(helm-visible-mark ((t (:foreground ,bisque-bg :background ,bisque-yellow-2))))
    `(helm-candidate-number ((t (:foreground ,bisque-green+4 :background ,bisque-bg-1))))
+   `(helm-separator ((t (:foreground ,bisque-red+2 :background ,bisque-bg :extend t))))
+   `(helm-time-zone-current ((t (:foreground ,bisque-green+2 :background ,bisque-bg))))
+   `(helm-time-zone-home ((t (:foreground ,bisque-red :background ,bisque-bg))))
+   `(helm-bookmark-addressbook ((t (:foreground ,bisque-orange :background ,bisque-bg))))
+   `(helm-bookmark-directory ((t (:foreground nil :background nil :inherit helm-ff-directory))))
+   `(helm-bookmark-file ((t (:foreground nil :background nil :inherit helm-ff-file))))
+   `(helm-bookmark-gnus ((t (:foreground ,bisque-magenta :background ,bisque-bg))))
+   `(helm-bookmark-info ((t (:foreground ,bisque-green+2 :background ,bisque-bg))))
+   `(helm-bookmark-man ((t (:foreground ,bisque-yellow :background ,bisque-bg))))
+   `(helm-bookmark-w3m ((t (:foreground ,bisque-magenta :background ,bisque-bg))))
+   `(helm-buffer-not-saved ((t (:foreground ,bisque-red :background ,bisque-bg))))
+   `(helm-buffer-process ((t (:foreground ,bisque-cyan :background ,bisque-bg))))
+   `(helm-buffer-saved-out ((t (:foreground ,bisque-fg :background ,bisque-bg))))
+   `(helm-buffer-size ((t (:foreground ,bisque-fg-1 :background ,bisque-bg))))
+   `(helm-ff-directory ((t (:foreground ,bisque-cyan :background ,bisque-bg :weight bold))))
+   `(helm-ff-file ((t (:foreground ,bisque-fg :background ,bisque-bg :weight normal))))
+   `(helm-ff-executable ((t (:foreground ,bisque-green+2 :background ,bisque-bg :weight normal))))
+   `(helm-ff-invalid-symlink ((t (:foreground ,bisque-red :background ,bisque-bg :weight bold))))
+   `(helm-ff-symlink ((t (:foreground ,bisque-yellow :background ,bisque-bg :weight bold))))
+   `(helm-ff-prefix ((t (:foreground ,bisque-bg :background ,bisque-yellow :weight normal))))
+   `(helm-grep-cmd-line ((t (:foreground ,bisque-cyan :background ,bisque-bg))))
+   `(helm-grep-file ((t (:foreground ,bisque-fg :background ,bisque-bg))))
+   `(helm-grep-finish ((t (:foreground ,bisque-green+2 :background ,bisque-bg))))
+   `(helm-grep-lineno ((t (:foreground ,bisque-fg-1 :background ,bisque-bg))))
+   `(helm-grep-match ((t (:foreground nil :background nil :inherit helm-match))))
+   `(helm-grep-running ((t (:foreground ,bisque-red :background ,bisque-bg))))
+   `(helm-match ((t (:foreground ,bisque-orange :background ,bisque-bg-1 :weight bold))))
+   `(helm-moccur-buffer ((t (:foreground ,bisque-cyan :background ,bisque-bg))))
+   `(helm-mu-contacts-address-face ((t (:foreground ,bisque-fg-1 :background ,bisque-bg))))
+   `(helm-mu-contacts-name-face ((t (:foreground ,bisque-fg :background ,bisque-bg))))
+;;;;; helm-lxc
+   `(helm-lxc-face-frozen ((t (:foreground ,bisque-blue :background ,bisque-bg))))
+   `(helm-lxc-face-running ((t (:foreground ,bisque-green :background ,bisque-bg))))
+   `(helm-lxc-face-stopped ((t (:foreground ,bisque-red :background ,bisque-bg))))
+;;;;; helm-swoop
+   `(helm-swoop-target-line-face ((t (:foreground ,bisque-fg :background ,bisque-bg+1))))
+   `(helm-swoop-target-word-face ((t (:foreground ,bisque-yellow :background
+                                                  ,bisque-bg+2 :weight bold))))
 
    ;; highlight-symbol
    `(highlight-symbol-face ((t (:background ,bisque-bg-1))))
-   
+
    ;; hl-line-mode
    `(hl-line-face ((,class (:background ,bisque-bg-05))
                    (t :weight bold)))
@@ -487,7 +529,11 @@
    `(markdown-header-face-5    ((t (:foreground ,bisque-blue-4))))
    `(markdown-header-face-6    ((t (:foreground ,bisque-blue-5))))
    `(markdown-inline-code-face ((t (:foreground ,bisque-magenta-1))))
-   `(markdown-pre-face         ((t (:foreground ,bisque-red))))
+   `(markdown-pre-face         ((t (:foreground ,bisque-magenta-1))))
+
+   ;; smerge
+   `(smerge-refined-added      ((t (:background ,bisque-green-2))))
+   `(smerge-refined-removed    ((t (:background ,bisque-red-5))))
 
    ;; message-mode
    `(message-cited-text ((t (:inherit font-lock-comment))))
@@ -659,6 +705,9 @@
    `(rst-level-4-face ((t (:foreground ,bisque-yellow-2))))
    `(rst-level-5-face ((t (:foreground ,bisque-cyan))))
    `(rst-level-6-face ((t (:foreground ,bisque-green-1))))
+
+   ;; sh-mode
+   `(sh-heredoc ((t (:foreground ,bisque-green+2))))
 
    ;; show-paren
    `(show-paren-mismatch ((t (:foreground ,bisque-red-3 :background ,bisque-bg :weight bold))))
