@@ -156,7 +156,7 @@ Useful for highlighting an error after running 'next-error'"
  '(overflow-newline-into-fringe nil)
  '(package-selected-packages
    (quote
-    (magit lua-mode yaml-mode projectile git-timemachine poet-theme fill-column-indicator writegood-mode use-package ample-theme solarized-theme expand-region haskell-mode ag exec-path-from-shell markdown-mode rainbow-mode highlight-symbol)))
+    (magit lua-mode yaml-mode git-timemachine poet-theme fill-column-indicator writegood-mode use-package ample-theme solarized-theme haskell-mode ag exec-path-from-shell markdown-mode rainbow-mode highlight-symbol)))
  '(safe-local-variable-values
    (quote
     ((eval when
@@ -461,7 +461,8 @@ If point was already at that position, move point to beginning of line."
 ;; function automatically on ack buffer. Links still not working, so continue
 ;; calling ack with --group --no-color --no-heading
 ;; Could be removed, now that I am using ag?
-(use-package ansi-color)
+(use-package ansi-color
+  :ensure t)
 (defun display-ansi-colors ()
   (interactive)
   (let ((inhibit-read-only t))
@@ -469,7 +470,8 @@ If point was already at that position, move point to beginning of line."
 (add-hook 'ack-mode-hook 'display-ansi-colors)
 
 ;; Better buffer list functionality.
-(use-package ibuffer)
+(use-package ibuffer
+  :ensure t)
 (setq ibuffer-saved-filter-groups
       (quote (("default"
                ("Assembly" (mode . asm-mode))
@@ -521,14 +523,6 @@ If point was already at that position, move point to beginning of line."
 
 ;; when using ido, the confirmation is rather annoying...
  (setq confirm-nonexistent-file-or-buffer nil)
-
-
-(use-package revbufs)
-
-(use-package gas-mode)
-
-;; For fullscreen functionality
-(use-package darkroom-mode)
 
 (put 'dired-find-alternate-file 'disabled nil)
 
@@ -823,6 +817,8 @@ Optional FRAME parameter defaults to current frame."
 (remove-hook 'magit-section-highlight-hook 'magit-section-highlight)
 
 ;; Projectile
+(use-package projectile
+  :ensure t)
 (global-set-key (kbd "C-x C-S-f") 'projectile-find-file)
 
 ;; flx-ido
@@ -844,7 +840,8 @@ Optional FRAME parameter defaults to current frame."
 ;  (dumb-jump-mode t)
 ;  (setq dumb-jump-force-searcher nil))
 
-(use-package expand-region)
+(use-package expand-region
+  :ensure t)
 (global-set-key (kbd "C->") 'er/expand-region)
 (global-set-key (kbd "C-<") 'er/contract-region)
 
