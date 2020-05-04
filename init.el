@@ -454,7 +454,8 @@ If point was already at that position, move point to beginning of line."
 
 (setq ag-highlight-search t)
 (setq ag-ignore-list '("build" "tools/offnet/temp-plot.html" "vendor" "*/venv/*"))
-;;(use-package ag) ;; not needed since available from melpa?
+(use-package ag
+  :ensure t)
 
 ;; ANSI colors, first added for search results from ack. Need to call the
 ;; function automatically on ack buffer. Links still not working, so continue
