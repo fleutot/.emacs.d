@@ -17,14 +17,14 @@
 (require 'package)
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
-(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
 (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/"))
 (add-to-list 'package-archives '("melpamilk" . "http://melpa.milkbox.net/packages/"))
 (package-initialize)
+
 (unless package-archive-contents
   (package-refresh-contents))
 (unless (package-installed-p 'use-package)
-  (package-install use-package))
+  (package-install 'use-package))
 (require 'use-package)
 
 ;;;
@@ -156,7 +156,7 @@ Useful for highlighting an error after running 'next-error'"
  '(overflow-newline-into-fringe nil)
  '(package-selected-packages
    (quote
-    (magit lua-mode yaml-mode git-timemachine poet-theme fill-column-indicator writegood-mode use-package ample-theme solarized-theme haskell-mode ag exec-path-from-shell markdown-mode rainbow-mode highlight-symbol)))
+    (helm-swoop helm expand-region projectile dtrt-indent backup-each-save magit lua-mode yaml-mode git-timemachine poet-theme fill-column-indicator writegood-mode use-package ample-theme solarized-theme haskell-mode ag exec-path-from-shell markdown-mode rainbow-mode highlight-symbol)))
  '(safe-local-variable-values
    (quote
     ((eval when
@@ -649,10 +649,10 @@ form without prior written permission from LumenRadio AB.
     (global-set-key (kbd "C-.") 'find-tag-at-point)
   (global-set-key (kbd "M-*") 'pop-tag-mark))
 
-(use-package ws-trim)
+;; ws-trim is not in elpa, local include
+(require 'ws-trim)
 (setq ws-trim-level 1) ; 1 -> only modified lines are trimmed.
 (setq ws-trim-method-hook '(ws-trim-trailing ws-trim-tabs))
-;(global-ws-trim-mode t) ;; This was annoying for e.g. makefiles.
 
 (use-package copy)
 
