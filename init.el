@@ -218,7 +218,12 @@ kernel."
   nil)
 
 (use-package ggtags
-  :ensure t)
+  :ensure t
+  :config
+  ;; ggtags overrides M-< and M->. Restore.
+  (define-key ggtags-navigation-map "\M-<" nil)
+  (define-key ggtags-navigation-map "\M->" nil)
+  )
 (defun my-c-mode-common-hook ()
   (c-set-offset 'inextern-lang 0) ; No extra indent in an extern block (#ifdef __cplusplus)
   (when (derived-mode-p 'c-mode 'c++-mode 'java-mode)
@@ -229,8 +234,9 @@ kernel."
 (add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
 
 ;; ggtags overrides M-< and M->. Restore.
-(eval-after-load 'ggtags '(define-key ggtags-navigation-map "\M-<" nil))
-(eval-after-load 'ggtags '(define-key ggtags-navigation-map "\M->" nil))
+;; TESTING: moved to :config in use-package
+;;(eval-after-load 'ggtags '(define-key ggtags-navigation-map "\M-<" nil))
+;;(eval-after-load 'ggtags '(define-key ggtags-navigation-map "\M->" nil))
 
 (semantic-mode 1)
 (add-to-list 'semantic-default-submodes 'global-semantic-stickyfunc-mode)
@@ -449,8 +455,6 @@ If point was already at that position, move point to beginning of line."
 ;; Always can after enabling flyspell
 (add-hook 'flyspell-mode-hook 'flyspell-buffer)
 
-(global-set-key "\M-s" 'ag-project) ; Search the whole project (e.g. git repo)
-(global-set-key "\M-S" 'ag-regexp) ; Prompt for directory to search in
 
 (setq ag-highlight-search t)
 (setq ag-ignore-list '("build" "tools/offnet/temp-plot.html" "vendor" "*/venv/*"))
@@ -888,3 +892,6 @@ Optional FRAME parameter defaults to current frame."
 				   ; if empty.
 (setq helm-ag-ignore-patterns '("build" "vendor" "*/venv/*"))
 ;;;(global-set-key "\M-s" 'helm-ag-project-root)
+
+(global-set-key "\M-s" 'ag-project) ; Search the whole project (e.g. git repo)
+(global-set-key "\M-S" 'ag-regexp) ; Prompt for directory to search in
