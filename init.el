@@ -223,6 +223,7 @@ kernel."
   ;; ggtags overrides M-< and M->. Restore.
   (define-key ggtags-navigation-map "\M-<" nil)
   (define-key ggtags-navigation-map "\M->" nil)
+  (define-key ggtags-navigation-map "\M-s" nil)
   )
 (defun my-c-mode-common-hook ()
   (c-set-offset 'inextern-lang 0) ; No extra indent in an extern block (#ifdef __cplusplus)
@@ -232,11 +233,6 @@ kernel."
    nil
    '((my-c-mode-font-lock-if0 (0 font-lock-comment-face prepend))) 'add-to-end))
 (add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
-
-;; ggtags overrides M-< and M->. Restore.
-;; TESTING: moved to :config in use-package
-;;(eval-after-load 'ggtags '(define-key ggtags-navigation-map "\M-<" nil))
-;;(eval-after-load 'ggtags '(define-key ggtags-navigation-map "\M->" nil))
 
 (semantic-mode 1)
 (add-to-list 'semantic-default-submodes 'global-semantic-stickyfunc-mode)
