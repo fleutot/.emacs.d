@@ -140,7 +140,7 @@ Useful for highlighting an error after running 'next-error'"
    ["#968e75" "#ae2323" "#4f6f4f" "#f0dfaf" "#8cd0e3" "#dc8cc3" "#93e0e3" "#55524f"] t)
  '(compilation-context-lines 15)
  '(compilation-scroll-output (quote first-error))
- '(compile-command "make -C ~/src/mira -j5")
+ '(compile-command "make -C ~/src/airglow_fw/firmwares/airglow/ -j5")
  '(confirm-kill-emacs (quote y-or-n-p))
  '(custom-safe-themes
    (quote
@@ -156,7 +156,7 @@ Useful for highlighting an error after running 'next-error'"
  '(overflow-newline-into-fringe nil)
  '(package-selected-packages
    (quote
-    (helm-swoop helm expand-region projectile dtrt-indent backup-each-save magit lua-mode yaml-mode git-timemachine poet-theme fill-column-indicator writegood-mode use-package ample-theme solarized-theme haskell-mode ag exec-path-from-shell markdown-mode rainbow-mode highlight-symbol)))
+    (protobuf-mode helm-swoop helm expand-region projectile dtrt-indent backup-each-save magit lua-mode yaml-mode git-timemachine poet-theme fill-column-indicator writegood-mode use-package ample-theme solarized-theme ag exec-path-from-shell markdown-mode rainbow-mode highlight-symbol)))
  '(safe-local-variable-values
    (quote
     ((eval when
@@ -856,6 +856,9 @@ Optional FRAME parameter defaults to current frame."
 	     :config
 	     (add-to-list 'writegood-weasel-words "actionable"))
 
+(use-package protobuf-mode
+  :ensure t)
+
 (use-package fill-column-indicator
   :ensure t)
 
@@ -882,7 +885,11 @@ Optional FRAME parameter defaults to current frame."
 (helm-autoresize-mode t)
 (setq helm-buffers-fuzzy-matching t
       helm-recentf-fuzzy-match    t)
+
 ;; Helm-ag
+;;; I want this package for its refactoring ability (edit and apply on search results)
+(use-package helm-ag
+  :ensure t)
 ;;(setq helm-ag-insert-at-point 'symbol) ; Use M-n instead
 (setq helm-ag-insert-at-point nil) ; Use M-n instead, or my branch for default
 				   ; if empty.
