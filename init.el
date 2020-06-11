@@ -256,6 +256,9 @@ kernel."
   ; Dupes highlight e.g. two `fi` in a row in bash
   (writegood-duplicates-turn-off)
   )
+;; From https://www.emacswiki.org/emacs/FlySpell, flyspell is absurdly slow without
+(setq flyspell-issue-message-flag nil)
+
 (add-hook 'prog-mode-hook 'my-prog-mode-hook)
 ;(setq prog-mode-hook nil)
 
