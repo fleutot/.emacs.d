@@ -748,10 +748,10 @@
    `(w3m-lnum-minibuffer-prompt ((t (:foreground ,bisque-yellow))))
 
    ;; whitespace-mode
-   `(whitespace-space ((t (:background ,bisque-bg+1 :foreground ,bisque-bg+1))))
-   `(whitespace-hspace ((t (:background ,bisque-bg+1 :foreground ,bisque-bg+1))))
-   `(whitespace-tab ((t (:background ,bisque-red-1))))
-   `(whitespace-newline ((t (:foreground ,bisque-bg+1))))
+   `(whitespace-space ((t (:background ,bisque-bg :foreground ,bisque-blue-4))))
+   `(whitespace-hspace ((t (:background ,bisque-bg :foreground ,bisque-blue-4))))
+   `(whitespace-tab ((t (:background ,bisque-bg :foreground ,bisque-blue-4))))
+   `(whitespace-newline ((t (:background ,bisque-bg :foreground ,bisque-blue-4))))
    `(whitespace-trailing ((t (:background ,bisque-red))))
    `(whitespace-line ((t (:background ,bisque-bg :foreground ,bisque-magenta))))
    `(whitespace-space-before-tab ((t (:background ,bisque-orange :foreground ,bisque-orange))))
