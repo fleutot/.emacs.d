@@ -1,7 +1,0 @@
-*.o
-TAGS
-
-# emacs backup files
-*~
-*#
-.#*

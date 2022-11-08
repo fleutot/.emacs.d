@@ -39,12 +39,12 @@
       ;; #ac9a85 = (bisque3 + bisque4) / 2
       (bisque-fg "#ac9a85")
       (bisque-fg-1 "bisque4")
-      (bisque-fg-2 "#5f5549")
+      (bisque-fg-2 "#555549")
       (bisque-fg+1 "#ccab95")
       (bisque-bg-1 "#2b2b2b")
       (bisque-bg-05 "#383838")
       (bisque-bg "#45423f")
-      (bisque-bg+05 "#404040")
+      (bisque-bg+05 "#484848")
       (bisque-bg+1 "#4f4f4f")
       (bisque-bg+2 "#5f5f5f")
       (bisque-bg+3 "#6f6f6f")
@@ -63,7 +63,7 @@
       (bisque-yellow-1 "#e0cf9f")
       (bisque-yellow-2 "#d0bf8f")
       (bisque-green-2 "#4f6f4f")
-      (bisque-green-1 "#5f7f5f")
+      (bisque-green-1 "#688068")
       (bisque-green "#7f9f7f")
       (bisque-green+1 "#8fb28f")
       (bisque-green+2 "#9fc59f")
@@ -96,6 +96,7 @@
                                   :background ,bisque-bg-1))))
                                   ;;:box (:line-width -1 :style released-button)))))
    `(highlight ((t (:background ,bisque-bg-05))))
+   `(shadow ((t (:foreground ,bisque-bg+05))))
 
    ;;; compilation
    `(compilation-column-face ((t (:foreground ,bisque-yellow))))
@@ -109,6 +110,9 @@
    `(compilation-line-number ((t (:foreground ,bisque-yellow))))
    `(compilation-message-face ((t (:foreground ,bisque-blue))))
    `(compilation-warning-face ((t (:foreground ,bisque-orange :weight bold :underline t))))
+
+   ;;; dired
+   `(dired-ignored ((t (:foreground ,bisque-fg-2))))
 
    ;;; grep
    `(grep-context-face ((t (:foreground ,bisque-fg))))
@@ -144,7 +148,7 @@
    `(font-lock-builtin-face ((t (:foreground ,bisque-cyan))))
    `(font-lock-comment-face ((t (:foreground ,bisque-green))))
    `(font-lock-comment-delimiter-face ((t (:foreground ,bisque-green))))
-   `(font-lock-constant-face ((t (:foreground ,bisque-green+4))))
+   `(font-lock-constant-face ((t (:foreground ,bisque-green+2))))
    `(font-lock-doc-face ((t (:foreground ,bisque-green+1))))
    `(font-lock-doc-string-face ((t (:foreground ,bisque-blue-2))))
    `(font-lock-function-name-face ((t (:foreground ,bisque-blue))))
@@ -234,8 +238,16 @@
    `(eshell-ls-symlink ((t (:foreground ,bisque-cyan :weight bold))))
 
    ;; flycheck
-   `(flycheck-error-face ((t (:foreground ,bisque-red-1 :weight bold :underline t))))
-   `(flycheck-warning-face ((t (:foreground ,bisque-orange :weight bold :underline t))))
+   `(flycheck-error ((t (:foreground ,bisque-red-2 :weight bold :underline t))))
+   `(flycheck-warning ((t (:foreground ,bisque-orange-1 :weight
+                                       bold))))
+   `(flycheck-info ((t (:foreground ,bisque-green+1 :weight bold))))
+   `(flycheck-posframe-error-face ((t (:foreground ,bisque-red-1))))
+   `(flycheck-posframe-warning-face ((t (:foreground ,bisque-orange))))
+   `(flycheck-posframe-info-face ((t (:foreground ,bisque-green))))
+   `(flycheck-posframe-background-face ((t (:background ,bisque-bg-05))))
+   `(flycheck-posframe-border-face ((t (:foreground ,bisque-bg+1))))
+
 
    ;; flymake
    `(flymake-errline ((t (:foreground ,bisque-red-1 :weight bold :underline t))))
@@ -529,6 +541,7 @@
    `(markdown-header-face-5    ((t (:foreground ,bisque-blue-4))))
    `(markdown-header-face-6    ((t (:foreground ,bisque-blue-5))))
    `(markdown-inline-code-face ((t (:foreground ,bisque-magenta-1))))
+   `(markdown-markup-face      ((t (:foreground ,bisque-fg-2))))
    `(markdown-pre-face         ((t (:foreground ,bisque-magenta-1))))
 
    ;; smerge
@@ -607,6 +620,9 @@
    `(mumamo-background-chunk-submode3 ((t (:background ,bisque-bg+3))))
    `(mumamo-background-chunk-submode4 ((t (:background ,bisque-bg+1))))
 
+   ;; occur
+   ;;; See at the end of the let statement
+
    ;; org-mode
    `(org-agenda-date-today
      ((t (:foreground "white" :slant italic :weight bold))) t)
@@ -619,7 +635,7 @@
    `(org-deadline-announce ((t (:foreground ,bisque-red-1))))
    `(org-done ((t (:bold t :weight bold :foreground ,bisque-green+3))))
    `(org-formula ((t (:foreground ,bisque-yellow-2))))
-   `(org-headline-done ((t (:foreground ,bisque-green+3))))
+   `(org-headline-done ((t (:foreground ,bisque-green-1))))
    `(org-hide ((t (:foreground ,bisque-bg-1))))
    `(org-level-1 ((t (:foreground ,bisque-orange))))
    `(org-level-2 ((t (:foreground ,bisque-green+1))))
@@ -711,7 +727,9 @@
 
    ;; show-paren
    `(show-paren-mismatch ((t (:foreground ,bisque-red-3 :background ,bisque-bg :weight bold))))
-   `(show-paren-match ((t (:foreground ,bisque-blue-1 :background ,bisque-bg :weight bold))))
+   `(show-paren-match ((t (:foreground ,bisque-bg :background ,bisque-blue-1
+                                       :weight bold))))
+   `(show-paren-match-expression ((t (:background ,bisque-bg+05))))
 
    ;; sml-mode-line
    '(sml-modeline-end-face ((t :inherit default :width condensed)))
@@ -728,6 +746,13 @@
    `(tabbar-unselected ((t (:foreground ,bisque-fg
                                         :background ,bisque-bg+1
                                         :box (:line-width -1 :style released-button)))))
+
+   ;; tree-sitter
+   `(tree-sitter-hl-face:function.call ((t (:foreground
+                                            ,bisque-orange-1))))
+   `(tree-sitter-hl-face:operator ((t (:foreground ,bisque-fg))))
+   `(tree-sitter-hl-face:property ((t (:foreground ,bisque-fg))))
+   `(tree-sitter-hl-face:label ((t (:foreground ,bisque-green+4))))
 
    ;; volatile-highlights
    `(vhl/default-face ((t (:background ,bisque-bg+1))))
@@ -796,13 +821,22 @@
    `(yascroll:thumb-fringe ((t (:background ,bisque-bg-1 :foreground ,bisque-bg-1))))
    )
 
+  ;; occur
+  ;; The faces of occur are weird, they cannot be changed in custom-set-faces??
+  ;; Needs a setq, says a comment here: https://emacs.stackexchange.com/q/70731/6655
+  (defface occur-buffer-name '((t (:foreground "#5c888b" :inverse-video t)))
+    "Occur buffer name lineface"
+    :group 'basic-faces)
+  (setq list-matching-lines-buffer-name-face 'occur-buffer-name)
+
   ;;; custom theme variables
   (custom-theme-set-variables
    'bisque
    `(ansi-color-names-vector [,bisque-bg ,bisque-red ,bisque-green ,bisque-yellow
                                           ,bisque-blue ,bisque-magenta ,bisque-cyan ,bisque-fg])
    `(ansi-term-color-vector [,bisque-bg ,bisque-red ,bisque-green ,bisque-yellow
-                                         ,bisque-blue ,bisque-magenta ,bisque-cyan ,bisque-fg])
+                                         ,bisque-blue ,bisque-magenta
+                                         ,bisque-cyan ,bisque-fg])
 
    ;; fill-column-indicator
    `(fci-rule-color ,bisque-bg-05)))
@@ -815,6 +849,7 @@
                    (file-name-directory load-file-name))))
 
 (provide-theme 'bisque)
+
 
 ;; Local Variables:
 ;; no-byte-compile: t

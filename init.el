@@ -1,24 +1,7 @@
-; Directory to put various el files into
-(add-to-list 'load-path "~/.emacs.d/includes")
-
-; Add file associations
-(setq auto-mode-alist (cons '(".ss$" . asm-mode) auto-mode-alist))
-(setq auto-mode-alist (cons '(".inc$" . asm-mode) auto-mode-alist))
-(setq auto-mode-alist (cons '(".m$" . octave-mode) auto-mode-alist))
-(autoload 'ruby-mode "ruby-mode" "Major mode for editing ruby scripts." t)
-(setq auto-mode-alist (cons '(".rb$" . ruby-mode) auto-mode-alist))
-(setq auto-mode-alist (cons '(".rhtml$" . html-mode) auto-mode-alist))
-(setq auto-mode-alist (cons '("Makefile\\." . makefile-mode) auto-mode-alist))
-;;;(setq auto-mode-alist (cons '("COMMIT_EDITMSG" . git-commit-mode) auto-mode-alist))
-(setq auto-mode-alist (cons '(".ts$" . c-mode) auto-mode-alist))
-(setq auto-mode-alist (append auto-mode-alist '(("\\.cflow$" . cflow-mode))))
-(add-to-list 'auto-mode-alist '("\\.bash_aliases\\'" . sh-mode))
-
 (require 'package)
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
 (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/"))
-(add-to-list 'package-archives '("melpamilk" . "http://melpa.milkbox.net/packages/"))
 (package-initialize)
 
 (unless package-archive-contents
@@ -27,146 +10,114 @@
   (package-install 'use-package))
 (require 'use-package)
 
-;;;
-; Give back a hard newline with no indentation. Use C-j for newline-and-indent.
-(eval-after-load 'asm
-  '(define-key asm-mode-map (kbd "RET") 'newline))
+;; For local libs
+(add-to-list 'load-path "~/.emacs.d/includes")
 
-; loads ruby mode when a .rb file is opened.
-(add-hook 'ruby-mode-hook
-          (lambda()
-            (add-hook 'local-write-file-hooks
-                      '(lambda()
-                         (save-excursion
-                           (untabify (point-min) (point-max))
-                           (delete-trailing-whitespace)
-                           )))
-            (set (make-local-variable 'indent-tabs-mode) 'nil)
-            (set (make-local-variable 'tab-width) 2)
-            (imenu-add-to-menubar "IMENU")
-            (define-key ruby-mode-map "\C-m" 'newline-and-indent) ;Not sure if this line is 100% right but it works!
-            (use-package ruby-electric)
-            (ruby-electric-mode t)
-            ))
+;; Remove unnecessary GUI elements
+(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 
-; Install mode-compile to give friendlier compiling support!
-(autoload 'mode-compile "mode-compile"
-   "Command to compile current buffer file based on the major mode" t)
-(global-set-key "\C-cc" 'mode-compile)
-(autoload 'mode-compile-kill "mode-compile"
- "Command to kill a compilation launched by `mode-compile'" t)
-(global-set-key "\C-ck" 'mode-compile-kill)
-
-(global-set-key "\C-cm" 'compile)
-
-;; Deactivate closing all with C-x C-c, replace with M-<f4>.
-;(global-set-key "\C-x\C-c" 'null)
-;(global-set-key (kbd "M-<f4>") 'save-buffers-kill-emacs)
-
-(show-paren-mode 1)
+(setq confirm-kill-emacs 'y-or-n-p)
 
 ;; New window pop-up vertical split threshold.
-;; Windows with a fewer number of visible lines may not be split vertically.
+;; Windows with a fewer number of visible lines may not be split.
 (setq split-height-threshold 120)
 (setq split-width-threshold 150)
 
-
-;;;;;;;;;;;;;;; EXPERIMENTAL, not working ;;;;;;;;;;;;;;;;
-;; Change background color for read-only buffers
-;;(add-hook 'find-file-hooks
-;;          (lambda ()
-;;            (when buffer-read-only
-;;              (set-background-color "black"))))
-;;
-;;(defadvice toogle-read-only (after toggle-read-only-color)
-;;  "Toggle background color for read-only buffer"
-;;  (lambda ()
-;;    (when buffer-read-only
-;;      (message "the advice is there!"))))
-;;      ;(set-background-color "black"))))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-
-;; Smart kill-line on end of line, strips white space from following line.
-(defadvice kill-line (after kill-line-cleanup-whitespace activate compile)
-      "cleanup whitespace on kill-line"
-      (if (not (bolp))
-	  (delete-region (point) (progn (skip-chars-forward " \t") (point)))))
-
-
-;(set-default-font "-outline-Lucida Console-normal-normal-normal-mono-11-*-*-*-c-*-iso8859-1")
-; Default font 9 pt
-;(set-default-font "-outline-Lucida Console-normal-normal-normal-mono-11-*-*-*-c-*-iso8859-1")
-;(set-default-font "Lucida Console-9")
-;(set-face-attribute 'default nil :height 100)
-
-; For use in Unity with scaling 0.75
-;(set-default-font "Ubuntu Mono-13")
-; For use without scaling
-(when (member "Ubuntu Mono-10" (font-family-list))
-  (set-frame-font "Ubuntu Mono-10")
-  (add-to-list 'default-frame-alist '(font . "Ubuntu Mono-10")))
-;; set a default font
 (when (member "Terminus" (font-family-list))
   (set-frame-font "-xos4-Terminus-normal-normal-normal-*-12-*-*-*-c-60-iso10646-1")
   (add-to-list 'default-frame-alist '(font . "-xos4-Terminus-normal-normal-normal-*-12-*-*-*-c-60-iso10646-1")))
 
-(when (eq system-type 'darwin)
-  ;; on a mac, SF Mono installed by selecting all otf files in /Applications/Utilities/Temrinal.app/Contents/Resources/Fonts/,
-  ;; right-click, Open, then select all and Install.
-  (set-face-attribute 'default nil
-                      :font "Monaco-10:antialias=false"))
+(setq auto-mode-alist (cons '("Makefile\\." . makefile-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '(".ts$" . c-mode) auto-mode-alist))
+(setq auto-mode-alist (append auto-mode-alist '(("\\.cflow$" . cflow-mode))))
+(add-to-list 'auto-mode-alist '("\\.bash_aliases\\'" . sh-mode))
 
-; From https://emacs.stackexchange.com/a/13137/6655
-(defun highlight-selected-error ()
-  "Highlight the line selected in the buffer in compilation mode.
-Useful for highlighting an error after running 'next-error'"
-  (with-current-buffer next-error-last-buffer
-    (hl-line-mode 1)))
-(add-hook 'next-error-hook 'highlight-selected-error)
 
-(add-hook 'compilation-mode-hook (lambda () (visual-line-mode 1)))
-(add-hook 'compilation-mode-hook (lambda () (hl-line-mode 1)))
-(add-hook 'compilation-minor-mode-hook (lambda () (visual-line-mode 1)))
+;;; ----- Modes ---------------------------------------------------
+;;; See https://emacs.stackexchange.com/questions/73080/indent-region-does-not-respect-my-c-mode-style
+(use-package lsp-mode
+  :init
+  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+  (setq lsp-keymap-prefix "C-c l")
+  (setq lsp-enable-indentation nil)
+  (setq lsp-enable-on-type-formatting nil)
+  (setq lsp-headerline-breadcrumb-enable nil)
+  (setq lsp-headerline-breadcrumb-enable-diagnostics nil)
+  :hook (
+         (c-mode . lsp-deferred)
+         (lsp-mode . lsp-enable-which-key-integration))
+  :commands (lsp lsp-deferred)
+  ;:bind ("M-." . lsp-find-definition)
+  :ensure t)
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(ansi-color-names-vector
-   ["#2d3743" "#ff4242" "#74af68" "#dbdb95" "#34cae2" "#008b8b" "#00ede1" "#e1e1e0"])
- '(ansi-term-color-vector
-   ["#968e75" "#ae2323" "#4f6f4f" "#f0dfaf" "#8cd0e3" "#dc8cc3" "#93e0e3" "#55524f"] t)
- '(compilation-context-lines 15)
- '(compilation-scroll-output 'first-error)
- '(compile-command "make -C ~/src/airglow_fw/firmwares/airglow/ -j5")
- '(confirm-kill-emacs 'y-or-n-p)
- '(custom-safe-themes
-   '("3346f0098a27c74b3e101a7c6b5e57a55cd073a8837b5932bff3d00faa9b76d0" "79586dc4eb374231af28bbc36ba0880ed8e270249b07f814b0e6555bdcb71fab" "ec320e19c0e684efec37f46cdcf7949bd626040f082d6d8cb8cfa827670b914a" "a06658a45f043cd95549d6845454ad1c1d6e24a99271676ae56157619952394a" "4cf9ed30ea575fb0ca3cff6ef34b1b87192965245776afa9e9e20c17d115f3fb" "939ea070fb0141cd035608b2baabc4bd50d8ecc86af8528df9d41f4d83664c6a" "8ee80023dbcda34e94459eb137e6065fa15baebeda57c9d09d56a9486a1a62e9" "8091f5cc8b4ec5ea783e8d7eba9679b46e7f1dda08a1456f145711d2a78ddd06" "edbc0529117980429c64006c439eea8183a648c43f417b99fce51461e17efcb8" "7c97821e7516daadce6cfc488f286eb0a3b487c5a731e165be383daa5ea1df61" "780bcf007ba097619e92564be067bcfaa94a2271321e40d5471de2670a0d483c" "95f840a5e836d18fead5a48df88d4a4b96742b4cfcd7d2cb7cf75d5075f867c5" "64b3a500614b424c2ac0444721d8fc8b48638abf345d5cc6309eedd550d55f97" "825049fa08f2ab2cb9993c80e49d0dae8f803175dbae5b2c715f3e71e2f20a70" "cc22043b80f243abbd2fa038bb3a053c58e6fcb210a4b3c9db298986c238e34a" "cd694bb0945900b9da16e013335fab4be1d9ac268db1ea75a373d6df4de561ec" "c0b27f12d9cd58bc5d4da7f4a21a0c9993861c296180b7e77091112f1253a6db" "12a18526c5a7c548560299d5cfeeb77cf59f42d7f5cdee196c0734229c2c4cc1" "e61224c19c40b0cc43377f26a32a36c019f36413f336f10a5ead45037704ddec" "4bf6a52d26ff48bba515edfd17611ba6270a5b383081b0ef839b12332232503d" "f30ccc3e7f584765545bb8582b26564a77cfcdb783f7de4e5b1dbadd7b4aff3e" "418b9bcdcc0edebe21ee59e7115e81ae57ba71a21e9ae5e59d07733458e9c2a6" "4b2aec310f18dbe60540506f4a38ba65c8837ba03fe0309a773627aa45ce62a5" "4a0b36506f43a1ceb15f205f3268eb7a6c31707b9f60761fd6e01e472ce40262" "929bab546e681021f68c6ad3348e9725fa30f9ee5a6b870092b67888e959fcce" "a0d10df0a9a922a8665cea74b9464b2a5ac4f5a487fc5bd8c4cb813223be8382" "9680c70f0a68e4dc34d3dda5a3a2f7edfb6d74e5eca2c8214ab66bed8c5e96c1" "c93a31afab8f891180d0cb65d69ab00712e579db7a80b91a3855f63af918cb08" "c78e1b2e7736bb2f8be77b39adab3322d7db28cf502f05dc45f12337cbdd89f9" "a2a3d60d041948f2ffca30e5e66c87e5823ffba06966c2310292c838e05b07c9" "403b9ea1a6adb01f325867f97eb4202c27fdf61cd2c924580a51bced1c974868" "88c3a714aa039dc1c37af02721f4f9aa976c57695a40c30a775e2b533214e1b8" "df5e4564039fc675415824d5dd8c94e6e166c244f8100eeb5f2b87cfe2f8d532" "eb541991f28003959ccd78ad5eeeea16bc76010c5229b58d89da08a258c3bf92" "74a92b91c7868ec700b0e03c7a4ff73c99d6d231b9bd4f326577919ca9a326e7" "c5718937ee68c7663a2ac686f25ae0ea2f6887e041e07428e6e7059005ba52c7" "f3914871932ec70d390a1f2d26a8a4edc876e0abfb4779fca2fef67a8ca06ab8" "287ec9af2734bef9b6570cdf98f32ff5597e1e99a04810a8444a9b6fd13a6905" "1793247a0e1c966950e7ddf39d1ab9a053bcf26a1fb974f96945c226e1f53eeb" "2154d980bf3b50b7815c32db06ccd957dd2930379052bd44dc6e52fef9eb4c61" "642cc84578e4bb52478cc4a79f0de63c03cef45fe6277edae8516c681ae5c6ed" "e2548c2e53f85ebdc32e03b2599d09b0d3a795d5728a0bfdbe7141c4f2fe6ebd" "9bb8030a9fe51759b28afb5523735ead93abf0faac7da564f8856356b5668693" "9950332bf9618701b73af661c2b99f942e8250b7445ff9f647793a8d4d8dc22a" "45f3ec1ec33305f7a7b633cef8d40697f8ad250c871390eaac58967818d81dab" "c10675628e275a1b005aa6b50d76cbd7dc24187b626b982daa142bb7fefce7fc" "a5a2e9eadfd77b0d077b72035126d229b51a0ff5cdd0db12a38d3b0bcdcf8310" "92ecc1af2212e91b92667425a2790edc35c5857c50244752b7069ba0c1330d41" "55dd57d9fd4a9b9ee5b7995a01a2726824d25a0761913c2c39bbb22bfad43f19" "4f44319b3378943cd777380beccf255720ec4fdc597e287f1376eb8c212347fd" "5222eb9c7b0e8c05bce702f96022ee7dc7a8c3d2da38406c53192b8016cd613e" "3fea5980c8608fe9aaa250aa921d0a0811f4575ff82cebff8a1863f1f7f21c46" "3d898723f4ecd85e6e87dc23d7fcdb900e3d67de72c377c2d5cac5cb313412e4" "a20289551f96587594647407801c462d8f57dda5bc0bb1654548806318d89735" "a857f6b77a38ff6ee0dddc69448d665134c0b6318a7335975f227688d9edd8b4" "ca0301f76201a67e56a01b9c92fa25d3a6c96f80c0eea1b6bd2706bba7f4cb7d" "1377aa4bb9b657c66cf957311e176cad53a915f60b01d2636492e618409c411a" "9386acec5d182f600dcefe97b09877a74153421e3a364628d93fa7830529bb23" "1ded5de94564c3cb1d22b0f2f94f594d619966d0dd32c50b198f75541bf33135" "5ebe1739db5bf850189a1438aee41a6e9c6b44e2b92b4df2f2655278e6808c4f" "8dccb2953ab9d6685ce12d86b60e32e099e8c768004c96986cd28f8bbb0db2af" "90733f8a75acb9b0fcf41a6cedae9eb9f714ec915c8cdcf03a24996a03e61630" "fdfc5beeb8564877ebe477b6499162af8a2338fe7ba068a2d20086e36343b387" "99a33d04f5b206f53b5869f673579c18f5ca928b450dc455054e860c9b74f1ac" "918899a1a0916efaca6ba860939980b5392ebced3e37f37b1aee7125a6c0a364" "7c52761b0b4fc9b0e8ad58d5b39aba0ea5cb2b4daa26b34178ff7e7af10bff18" "e6774504021ae3c41172abe2ccf9d90a731431ad2b2b3f2107d23bd185b01c3f" "bce5cb0c20a45a099a1c034e8a5a98aaf29a4817ace377ddf5c80218d7066b74" "a93707716dd1e624234fedf6c5636018759e8762f94fde0add47c85a8acec421" "087d1837db3398d1269ebacc0e3fee0a87caacfb8037d4c4214cd03ad63612fe" "c1f6bc3407847b97cddaca338c17afef8932a0a3e0471af14ba127be0dcb271a" "e5430562e4881e0cae0f05c87f13c5508876180de32d00447947817e172f032e" "9864426a7a5ced10eedb63d94c857eec2f9fc0f88556dd32e5c2139c014f3ba5" "9129c2759b8ba8e8396fe92535449de3e7ba61fd34569a488dd64e80f5041c9f" "8e797edd9fa9afec181efbfeeebf96aeafbd11b69c4c85fa229bb5b9f7f7e66c" "73a1cd974bbed4ee1d5737567ca9aa99ab90ef34f0c53a6d71f70e9f0d2c6dd0" "6cbd3c46292ae892c007c6200573db5cbb151bfdfa0341568a41d4ca92946fcc" "4d2f1a9197e8fcd007bbad6880ff66f3e8da6571d33f81649c26886274f132b5" "a859af323e0fbb9439fa28a7973729794a106b170c371c55c350aa01e13572ea" "f78b6e1f2a32558f8f97f0de6b308ee7385cf457ebe8caf9ad665c489f95b32b" "7e9d5d7730d544388759dbf7d38ab85d6817802b53ce7d31849195c341b4880d" "eb50e3b46a65c5613becb79933c3e3fd27e748327443fe7b6acba99c1fd8f823" "1f3c31fcef0251705a8cd1d4e2e0273fa2ad2ad2c1ea4387b6ddfb95403e7a6a" "59ffb92dbc4289db7cd79752125135be7f15755b7db30a0486a5242c5c6c29db" "4694489d078a680500f69ce7628b0cec8e4c36e97aa6096d25087fc935d4e6d0" "3b8010aa0ca9514e49b8b58ed5e722d73ce8d8a5a55ec9c9c5cb7549f3b32704" "da7b6a9ffef6e5ddb90ae939b0f4d656c3e58c433e13984858967678f40bc1c0" "ec1572b17860768fb3ce0fe0148364b7bec9581f6f1a08b066e13719c882576f" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "bf798e9e8ff00d4bf2512597f36e5a135ce48e477ce88a0764cfb5d8104e8163" "659075ad50e70a9d7f4b7c938ea44cbe7139dcafa4bfa1e61aed52d2c63d1995" "6a314fd8998d7f6ab367e5f669e587ed4551c1c051dcc2793538607ebc792212" "7f1df5f3c06d6f22186607bcb81d7cbf323bf3f4a61b47175697f7d23caae831" "43b97f79379c4026e511aef877bdab307a6a1c34de85f7d0e112e7663f17b4ee" "bed8cd8ef0073dc124f2f906419f8f9809fdf9de65dd40b4b74451e516e03b62" "7115fa316a1744d582504eb013d14ba17f3f4ab4c925ace5015fbb0bd3cebadf" "86e67f4402004edf77d00960ee42e6bf9e9b6c134fd25fb058416268c564044c" "8846d6405ddf6b08ca267d37d0aaff902e0fcafa333159346a32fe043cc07f90" "bbc163a136167ba5790d030d5fb552c0373a9b790fcaf559941103cdf373327b" "19dcfd45bf17489c4d2cc97d7c150e20ebe0368398d5de7f84dfb803001e496a" "62c19ecba69eec2ff6bf30d2bfff0920902d74d488a5e92275d9209fe5ae110c" "f565b4425a5b1991bbcfe54662d10ff2194e832e38b26edd30871a8cb0ec4bc5" "86bb4d2542806614a41e4ab4d06f034da702da20e6e8aa1a369d3e1fd8aa6dfb" "cf2b4e2fd45a4e9f325028da96e53f29b81a94dee8f5743368cc03f1d70ca875" "8b99393d3c36f1eb7ceec2aafd2513e47f439705d8d2ee69280df2312224c186" "54dec3fa16f5f9b2ce8f1db56fe004be602a9d98eaaf0c3d0d24d08abf2003be" "da164ebc03ea9ef520e60da31787635e4571d83e88a3c32f065f83863f9612d8" "fc74a89df396396f7eeb2135b226e5a8e6c8048b329890911abd63d7058edf5d" "d30005720928614e87e2c0590b29ee6b62b5e4f81d9443fa1e6f341c656b7098" "293258e026355445d9648c40f11e49c6c563a03d5068d23eb1efecc166073825" "97ec953afbcfdd562b51753b5c9a7e127d35ec1826c3f82406b2d476e9e21d6e" "9a10bf1c11a8fdbd54188157e3679535b7b708a9d6f5231acc10e3123edc9561" "35b81ea5065adab81a8c952d5d082c178b1eb03070a1cc83293a3c24f63f248f" "7d884f65f2a46cc2b81f2eda346f6a70f82797a8cf762b43a3266c68f47217f1" "beeff3a6863357e4dc1d443a31ccaeed1718974d6a4b2faceba5fbd02a0d297b" "50afcb262688467c180951a2d9222a4a686ea3f8ed10daecd798bf86ea2a2d7d" "8f868050b93ae9a2e16a03f7a45675da161077f3e8bb70486096e76a40ba8c92" "ae131ed15754d3ce6b5915c9bfb7874d6a924a1c3ae051cbadb1818e82f33ce9" "9af691590d23f258ff78c63cfd661afb3aa296a93c442577b484e213a249825e" "23494e48b8ef148dc4589a2925c73373c12557d71b7a3f95ce3f9837de37b614" "029189abfb0a4460b52b71e76c73b347606502f337f041846ab0c2b060f89dfc" "7a7746ce901804e9cbdbd172c98c07f5b56caf458cc7fc02da6313f6a6dcdb69" "d728a7607c4db58d28723ac6ad28fb7dd2cfd786bb08e1118d3a985023e9e437" "14ed5fda7496d2f0b9ae972bdcd47c8d89c40dd182d0086c6eed41674bf3b1c6" "acf990f6f67a92194b6cd577cce1e2d2413a692c552ed3fd467004f84a44bd6c" "290cd3d52b145de4599dcade6078b285fdd4e6ffd91396cc525c0395e94e1b51" "a9ac9b650de338a4555f8ede1c198df6ccdb03d3da9c63b59c0c84d78c0b99df" "d70f00294e9128f0984e04ff95861ec45473c9ada2b7e739878c0ee3191fbc05" "3ea5184ecb0576c2650d05c59664ae51eba8c7eccd68878530bf351f8c443a31" "85e125707dd13ef4f0d4ece3665b84e6b69b7f9118aaf4c1e31e40ba4327ce32" "0b6ee64e7c4ca68eacc5a7e111d594ce6286997156b6b25eca08aa41f3d2be11" "d97b03d1f991e112d801f080fee93e49861920b4cb293d3158ad90484dca5bf0" "f69ed3207907d45543d289c65eb7e931cedde13cdfc8b01f311c29a6721ac0e0" "eb5f99a7b9f5c3a190e2f501e45c6ff9403f1681f98befddf2fbd0c32b11bd3f" "4fdcd70eae5e6c91488cfd8f5181f543b2ddcfc1ce51a643caef9021798a7653" "4e6b10fa3568c284b1e228c90339bbabd1a4049998efc4d61e98080b18382de0" "a97673ac68f5874959189ea5392af91a8aa3108066f515ea1dfde7ceed66e3eb" "abf3138b20f86500c056806e2055ff0e9169a9edb44b393125759e7dcce9ae38" "9afa499fa688cc01d394ebcde709c247964cc0bc251b2e7bfd9757ac02ad4c3d" "131a22c5c56613646d1aad3ac1586f1165e60996db0dd2b8cb6772e6dd886a55" "5dcd12e865596e9653d34bb6e35937ec77c9ab15e66c2703b4ae911cf9a99812" "cf5a02828c16542c83adb52c5662ea1b49fc1461626d19fc7073c0e39f5e78b6" "3a32de2a4d748eb0f8736e6cc43b2a0756d1428d513573182836eb4d53d214ed" "b2c122b0526f3c475767667cedcd5f99ab20e1d4e4972255abaef45173ae53b2" "99410a536f8e65655c47dd2d86c838dcaca3278e6123106c445bf7b6ff0fe535" "82f798ffb844e819e8b1c7a1b8189ec47a476ede7de365d36e4cfb063f61e502" "e745eaaf22c2c7b57ec64dd7d5c2d9cdb5f53a5fdbbe79d870e2d5941e633417" "bdd8bdf0582a48b14443fce6df668c88eb4af30b41f2ae3253a53f860ccb1dfb" "3e6097eeb8b13417299e85e6f70df4d2a5f551e7ea23710280e5e24b85befbb8" "3fb2692635aa3a586c06927bd3c4499416b4671845411c4e7b304f7159e0862f" "2bfb0b73a3954ac0a8d24e2d051dd64ec1cece4044f192755dc236d5144d487e" "6f2a4af1268cc6c039cbd7e99589befeed5473b207ba704592738d825a08b304" "f0810859a2413353062a1ee64660fc7d692dc9d807a0fcdbaa8c5440c13a7dc8" "f4bad575271c75f4b289b6d08a71c534feef130f0a3aaf3d3100302e939d481d" "8ebc2294f45e93d12cb3c4427677b8ccfd39ab42b03b8c972d45aecfc80ded62" "061434f3e534b498828adc626e87dc0a78510c9b875f516a70a64dd9b123d2c1" "abbb4aae1bc5793473d9eded06187e56a58f8954989b7a034f958ac8686e6a21" "3913e7a00d03d30b128c78244586add22c8746bee6ea780aabd4da3776b8f8b3" "1574e7f585086ddc046786456430232322e2bbe453c07c8c4eeb04c000045937" "65dfecde0ade57145baf2dddc994122998df196956bc7a8567ac81693879c914" "f3dfabf0305c76140b0238ce663fff300cfc9e696b9e0a393d8bc2b27e431393" "3805745a0440d404f19fbdf82261ff176676220d37a29dbb1ef9758efa9362c7" "a665a17f0c0dcb626ce2140aaf6107ba43e95d75f5a00c1f617c252714cfd0cc" "8a9a43ff0c3e9da06da0fac51ecfe3520494144471734dcbb2f2448ea1ca6194" "1af8253e1e8aafa70ee72f3dd9b69604ea92412ff24c78fb1b6d1e341af55272" "f06add643615294e65d7c886bb7913432a1d6e59fd80e0e498fd81342c9057b3" "35068482c5374f259dcb7d3a2a6cfbfbd82ec12491e9130332711a38c4a78703" "fbadfaa790a5f0fc7b884781000236bcb87503a539f8c9571533de30bf29665b" "8decf4470bb3d30bc54c835bc7d3ed246cfde63d7a6267711e19f5f282cdf76d" "e6f803d7c8439ac1c2805fcc8a95a79250e129ce2d8f00344a0484b8ebc6ced2" "e15a578d4e2d8ef761019bc84b07bbe0642a36ea735626c35bb0f7dfae8b5f73" "3fd0fda6c3842e59f3a307d01f105cce74e1981c6670bb17588557b4cebfe1a7" "bfc3d92754a1f0af6bc3653b363f6cf3a0bd608f8a715a42e1bb416cc35e6b01" "36f3f367fc24b73917831203d0b2ef688e96da0315bccfe1a20cb48b8b6b2b7a" "d4b199a40ea2b66d80580ed16a9284244b34d62d6f85cc491e983c0870d6aad6" "b6d776913491a9ff9d24d893f72cf7d0054c079f646b2a9e5c915ce6b0f4fad7" "cfb6f9e7117a4cbc25b668ea5810d2e51795fca610ecdd5375af1e47f11a2d7b" "65426191cc767ef46550316aaedb390c964ff5106fb4915ced70d54b788585ee" "fd98fe5ad72432fde6d75fdaed432abab31d2020a584799f487fa2134554ba78" "6e4b0714df5cb9527106181f3ae7b3fd8d8dff6de5ddadbe8ef94e5b170185c7" "aef56024ff845bfe4ea2394247501d659ca45ddd28ae31982b29b1cb43e2b2f5" "067e5e21a9b8af74094c4c67f2468669c8e92743b19b658b458fa0146b6fe56e" "c90696c8d95e6f165ceeced9f35b200fe4c4c0eaff6dd6a0e6ea69f96ad200a9" "d64aea67b62b5219247814ff95026c1119bd328612b005fc9594dc22896735f6" "9b0fb159ce03afc785ebed71d80e2b3c64a99a2b616c293c9b16a1fbf85170d7" "4753abba0ea8b1214e9859beefa2448a8cb84cf0d6ff372d54faad67328adb59" "4905b46c5114003d08de39aa69f5171b6276c3562f17167f28322fb1dbbfc696" "be0a93110ce776fa2f1ab7cdc94ae3918ced4c57f365d994b4f5427b73f13e6e" "0917d7c62178351ead0f505ca97a4cef83b848d840701ccee24d8b2180efb920" "c728708eae31c8eec7a9d406e604bcb692f2727579fc154622b9c7a2a03fcbf6" "3b06158f1acc3f1602b2dc6f00c762e05219f600a296bbea2b02b2a10cc8e7f9" "6cf6b1d1bc1e0990b8236a7a3d22162722df470dfdd641f367a0ef1a66cb59af" "c40cd311cc4dac6a69a06cb58f626f41751378414f87660da8bb698e2035b653" "b1648b05c88763790f9ada18824bda2beb68744bedc280c3048194e874f1e2b1" "39c5fa26b66e6341dae664281ae9d951221ce15f82d1bb403307184b582d1ce5" "943c9fe92be754292152765052f554caf74e03a45596468108c71b9adfc526c2" "b58a22c0cf8a9fe905e306d9fac01a2ae1c742e3d0e8dcf63d789d539ccde0bc" "bf51e072aa61d3158147622e989fc8b719781daa1622304e9d4b9a77f8a04af6" "65734302cb6ca5d16191622c5767913e76f5da66d960c61ecfd4e9b091d9c398" "78d52aa5167b609a9163ea32bf8fb9e8304ae71e518bf20a6631d64a3bb405c4" "9273b34a1dddcf4b54a83e28751a37478e132f0d7a23eef6cf0a46e26fa20b35" "ac548cdf0d61acbc93f8bb6ea1eaec389de1466274414322dae6f47e6a96d774" "675fcf7e38164ca90e0583eaf131b442ecd07afb17abbe1c700c8ebc09469ea3" "c77a31867f444e1c82bacd22146cb2d781a471168305e1660558b2b54ec016b7" "01a269e63522c39b95bee8df829ae8633ea372fd1921487cd6ccac42b1bf1cb9" "36a309985a0f9ed1a0c3a69625802f87dee940767c9e200b89cdebdb737e5b29" default))
- '(egg-enable-tooltip t)
- '(egg-git-command "git")
- '(fci-rule-color "#383838")
- '(fringe-mode '(0 . 1) nil (fringe))
- '(global-hl-line-mode nil)
- '(helm-completion-style 'emacs)
- '(indicate-empty-lines nil)
- '(message-send-mail-function 'message-send-mail-with-sendmail)
- '(overflow-newline-into-fringe nil)
- '(package-selected-packages
-   '(origami bicycle magit centered-cursor-mode helm-ag dtrt-indent robot-mode ws-butler gruvbox-theme csharp-mode protobuf-mode helm-swoop helm expand-region projectile backup-each-save lua-mode yaml-mode git-timemachine poet-theme fill-column-indicator writegood-mode use-package ample-theme solarized-theme ag exec-path-from-shell markdown-mode rainbow-mode highlight-symbol))
- '(safe-local-variable-values '((eval when (fboundp 'rainbow-mode) (rainbow-mode 1))))
- '(send-mail-function 'mailclient-send-it)
- '(sml/active-background-color "#E05A2B")
- '(sml/active-foreground-color "white")
- '(sml/inactive-background-color "gray38")
- '(sml/inactive-foreground-color "gray45")
- '(sml/show-client t)
- '(tab-stop-list
-   '(4 8 12 16 20 24 28 32 36 40 44 48 52 56 60 64 68 72 76 80 84 88 92 96 100 104 108 112 116 120)))
+(use-package lsp-ui
+  :commands lsp-ui-mode
+  :init
+  (setq lsp-ui-sideline-show-hover nil)
+  (setq lsp-ui-doc-show-with-mouse nil)
+  :ensure t)
 
-(global-set-key [C-tab] 'other-window)
-(global-set-key [C-S-iso-lefttab] (lambda () (interactive) (other-window -1)))
+(use-package flycheck
+  :ensure t)
+;; Show flyckeck diagnostics at location in a little frame
+;;;(use-package flycheck-posframe
+;;;  :ensure t
+;;;  :after flycheck
+;;;  :config (add-hook 'flycheck-mode-hook #'flycheck-posframe-mode))
+
+
+(use-package dap-mode
+  :ensure t)
+(require 'dap-gdb-lldb)
+;; This seems required too: M-x dap-gdb-lldb-setup
+;; Project specific debug template (should be in the project itself?):
+(dap-register-debug-template
+ "GDB::dwm"
+ (list
+  :type "gdb" :request "launch" :name "GDB::Run"
+  :args "DISPLAY=:1" ;; this line breaks it. But how to I pass DISPLAY?
+  :target "/home/gauthier/src/dwm/dwm" :cwd "."))
+
+(use-package treemacs
+  :ensure t)
+
+(use-package counsel
+  :ensure t)
+
+(use-package dtrt-indent
+  :ensure t)
+
+;;; I get a "Cannot load" on that??
+;;(use-package which-key
+;;    :config
+;;    (which-key-mode))
+
+;;;; How to install languages??
+(use-package tree-sitter-langs
+  :ensure t)
+
+(use-package tree-sitter
+  :init
+  (tree-sitter-require 'c-sharp)
+  (tree-sitter-require 'c)
+  :ensure t)
+
+(use-package magit
+  :ensure t)
+
+(use-package highlight-symbol
+  :ensure t
+  :config
+  (setq highlight-symbol-idle-delay 0)
+  (setq highlight-symbol-on-navigation-p t)
+  (add-hook 'prog-mode-hook #'highlight-symbol-mode)
+  (add-hook 'prog-mode-hook #'highlight-symbol-nav-mode)
+  (global-set-key (kbd "C-c h") 'highlight-symbol-at-point)
+  (global-set-key (kbd "C-c n") 'highlight-symbol-next)
+  (global-set-key (kbd "C-c p") 'highlight-symbol-prev)
+  (global-set-key (kbd "C-c H") 'highlight-symbol-remove-all))
 
 (use-package robot-mode
   :ensure t)
@@ -174,22 +125,170 @@ Useful for highlighting an error after running 'next-error'"
 (use-package haskell-mode
   :ensure t)
 
-(defun linux-c-mode ()
-  "C mode with adjusted defaults for use with the Linux
-kernel."
-  (interactive)
-  (c-mode)
-  (setq c-indent-level 8)
-  (setq c-brace-imaginary-offset 0)
-  (setq c-brace-offset -8)
-  (setq c-argdecl-indent 8)
-  (setq c-label-offset -8)
-  (setq c-continued-statement-offset 8)
-  (setq indent-tabs-mode t)
-  (setq tab-width 8))
+(use-package intel-hex-mode
+  :ensure t)
 
-; Warn in C for while();, if(x=0), ...
-(global-cwarn-mode 1)
+;;; org mode
+;; Don't convert _ and ^ unless surrounded by braces
+(setq org-export-with-sub-superscripts '{})
+(add-hook 'org-mode-hook 'auto-fill-mode)
+(setq org-startup-indented t)
+(setq org-ellipsis " \u25bc")
+
+(use-package protobuf-mode
+  :ensure t)
+
+(use-package csharp-mode
+  :ensure t)
+
+(use-package ws-butler
+  :ensure t)
+
+(use-package writegood-mode
+	     :ensure t
+	     :bind ("C-c g" . writegood-mode)
+	     :config
+	     (add-to-list 'writegood-weasel-words "actionable"))
+
+;; ws-trim, unlike ws-butler, allows for trimming trailing whitespace
+;; already at moving from line.
+(require 'ws-trim)
+(setq ws-trim-level 1) ; 1 -> only modified lines are trimmed.
+(add-hook 'ws-trim-method-hook #'ws-trim-trailing)
+;;(setq ws-trim-method-hook '(ws-trim-trailing))
+
+(defun my-prog-mode-hook ()
+  (setq show-trailing-whitespace t)
+  (ws-butler-mode)
+  (highlight-symbol-mode)
+  ;;(flyspell-prog-mode) ;; This makes Python unusable (freeze)
+  (auto-fill-mode)
+  (writegood-mode)
+  (ws-trim-mode)
+  ; Dupes highlight e.g. two `fi` in a row in bash
+  (writegood-duplicates-turn-off)
+  ;;(dtrt-indent-mode)
+  (if (> emacs-major-version 26)
+      (progn
+        (display-fill-column-indicator-mode)
+        )
+    (fci-mode) ; fci and hl-block don't work well together
+    ))
+(add-hook 'prog-mode-hook 'my-prog-mode-hook)
+
+;; Display whitespace characters.
+(require 'whitespace) ;; builtin
+(global-set-key (kbd "C-c b") 'whitespace-mode)
+(delete 'indentation whitespace-style) ; no warning about indent with spaces
+(delete 'lines whitespace-style) ; remove whole highlight of long lines
+(add-to-list 'whitespace-style 'lines-tail) ; highlight the tail of long lines
+
+;; --- compilation mode ---
+;; From https://emacs.stackexchange.com/a/13137/6655
+(defun highlight-selected-error ()
+  "Highlight the line selected in the buffer in compilation mode.
+Useful for highlighting an error after running 'next-error'"
+  (with-current-buffer next-error-last-buffer
+    (hl-line-mode 1)))
+(add-hook 'next-error-hook 'highlight-selected-error)
+(add-hook 'compilation-mode-hook (lambda () (visual-line-mode 1)))
+(add-hook 'compilation-mode-hook (lambda () (hl-line-mode 1)))
+(add-hook 'compilation-minor-mode-hook (lambda () (visual-line-mode 1)))
+(setq compilation-scroll-output 'first-error)
+(setq compilation-context-lines 15)
+
+;;; I get a "Cannot load" on that??
+;;(use-package flycheck-mode
+;;  :ensure t)
+
+;; ido makes competing buffers and finding files easier
+(ido-mode 'both) ;; for buffers and files
+(setq
+  ido-save-directory-list-file "~/.emacs.d/cache/ido.last"
+
+  ido-ignore-buffers ;; ignore these guys
+  '("\\` " "^\*Mess" "^\*Back" ".*Completion" "^\*Ido" "^\*trace"
+     "^\*compilation" "^\*GTAGS" "^session\.*" "\*GNU Emacs\*")
+  ido-work-directory-list '("~/" "~/Desktop" "~/Documents" "~/src")
+  ido-case-fold  t                 ; be case-insensitiver
+
+  ido-enable-last-directory-history t ; remember last used dirs
+  ido-max-work-directory-list 30   ; should be enough
+  ido-max-work-file-list      50   ; remember many
+  ido-use-filename-at-point nil    ; don't use filename at point (annoying)
+  ido-use-url-at-point nil         ; don't use url at point (annoying)
+
+  ido-enable-flex-matching nil     ; don't try to be too smart
+  ido-max-prospects 8              ; don't spam my minibuffer
+  ido-confirm-unique-completion t) ; wait for RET, even with unique completion
+
+;; when using ido, the confirmation is rather annoying...
+(setq confirm-nonexistent-file-or-buffer nil)
+
+;; Unnecessary since the completing-read function below?
+;;;; ido completion for M-x
+;;(global-set-key
+;; "\M-x"
+;; (lambda ()
+;;   (interactive)
+;;   (call-interactively
+;;    (intern
+;;     (ido-completing-read
+;;      "M-x "
+;;      (all-completions "" obarray 'commandp))))))
+
+(defvar ido-enable-replace-completing-read t
+  "If t, use ido-completing-read instead of completing-read if possible.
+
+    Set it to nil using let in around-advice for functions where the
+    original completing-read is required.  For example, if a function
+    foo absolutely must use the original completing-read, define some
+    advice like this:
+
+    (defadvice foo (around original-completing-read-only activate)
+      (let (ido-enable-replace-completing-read) ad-do-it))")
+;; Replace completing-read wherever possible, unless directed otherwise
+(defadvice completing-read
+    (around use-ido-when-possible activate)
+  (if (or (not ido-enable-replace-completing-read) ; Manual override disable ido
+          (and (boundp 'ido-cur-list)
+               ido-cur-list)) ; Avoid infinite loop from ido calling this
+      ad-do-it
+    (let ((allcomp (all-completions "" collection predicate)))
+      (if allcomp
+          (setq ad-return-value
+                (ido-completing-read prompt
+                                     allcomp
+                                     nil require-match initial-input hist def))
+        ad-do-it))))
+
+;;; ----- Programming formatting -------------------------------------
+(defconst mira-c-style
+  '((c-basic-offset . 4)
+    (indent-tabs-mode . nil)
+    (tab-width . 7)
+    (c-comment-only-line-offset . (0 . 0))
+    (c-lineup-C-comments . 0)
+    (c-electric-pound-behavior. alignleft) ; Pre-processor macros go to column 0
+    (paragraph-start . "[ 	]*\\(//+\\|\\**\\)[ 	]*$\\|@param\\)\\|^")
+    (c-offsets-alist . ((topmost-intro-cont    . 0)
+                        (statement-block-intro . +)
+                        (knr-argdecl-intro     . 5)
+                        (substatement-open     . 0)
+                        (substatement-label    . +)
+                        (label                 . +)
+                        (statement-case-open   . +)
+                        (statement-cont        . +)
+                        (arglist-intro  . +)
+                        (arglist-close  . 0)
+                        (arglist-cont-nonempty . +)
+                        (access-label   . 0)
+                        (arglist-cont-nonempty . +)
+                        (cpp-macro . [0])
+                        )))
+  "Mira C Programming Style")
+(c-add-style "Mira C" mira-c-style)
+(setq c-default-style "Mira C")
 
 ; Color-coding #if 0 as comment.
 (defun my-c-mode-font-lock-if0 (limit)
@@ -215,31 +314,6 @@ kernel."
           (c-put-font-lock-face start (point) 'font-lock-comment-face)))))
   nil)
 
-(use-package ggtags
-  :ensure t
-  :config
-  ;; ggtags overrides M-< and M->. Restore.
-  (define-key ggtags-navigation-map "\M-<" nil)
-  (define-key ggtags-navigation-map "\M->" nil)
-  (define-key ggtags-navigation-map "\M-s" nil)
-  )
-;; Reposition after lookup, so that the whole looked up function shows
-(add-hook 'ggtags-find-tag-hook #'reposition-window)
-
-;;(defun my-beginning-of-defun ()
-;;  (interactive)
-;;  (beginning-of-defun)
-;;  (reposition-window))
-;;(global-set-key (kbd "C-M-a") 'my-beginning-of-defun) ;;; This doesn't bite!
-;;
-;;(defun c-beginning-of-defun ()
-;;  "The usual c-begninning-of-defun, but repositions window"
-;;  (interactive)
-;;  (c-beginning-of-defun)
-;;  (reposition-window))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;(advice-add 'c-beginning-of-defun :after #'reposition-window)
-
 (defun my-c-mode-common-hook ()
   (c-set-offset 'inextern-lang 0) ; No extra indent in an extern block (#ifdef __cplusplus)
   (when (derived-mode-p 'c-mode 'c++-mode 'java-mode))
@@ -248,181 +322,16 @@ kernel."
    '((my-c-mode-font-lock-if0 (0 font-lock-comment-face prepend))) 'add-to-end))
 (add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
 
-(semantic-mode 1)
-(add-to-list 'semantic-default-submodes 'global-semantic-stickyfunc-mode)
-(add-to-list 'semantic-default-submodes 'global-semantic-idle-summary-mode)
+;;; ----- Mode line --------------------------------------------------
+(setq column-number-mode t)
 
-(setq highlight-symbol-idle-delay 0.8)
-(global-set-key (kbd "M-n") 'highlight-symbol-next)
-(global-set-key (kbd "M-p") 'highlight-symbol-prev)
-
-(add-hook 'markdown-mode-hook 'auto-fill-mode)
-(add-hook 'markdown-mode-hook 'flyspell-mode)
-
-(defun my-prog-mode-hook ()
-  (setq show-trailing-whitespace t)
-  (ws-butler-mode)
-  (highlight-symbol-mode)
-  ;;(flyspell-prog-mode) ;; This makes Python unusable (freeze)
-  (fci-mode)
-  (auto-fill-mode)
-  (writegood-mode)
-  ; Dupes highlight e.g. two `fi` in a row in bash
-  (writegood-duplicates-turn-off)
-  (ggtags-mode)
-  (dtrt-indent-mode)
-  )
-;; From https://www.emacswiki.org/emacs/FlySpell, flyspell is absurdly slow without
-(setq flyspell-issue-message-flag nil)
-
-(add-hook 'prog-mode-hook 'my-prog-mode-hook)
-;(setq prog-mode-hook nil)
-
-;;(setq-default buffer-file-coding-system 'dos)
-
-
+;;; ----- Themes -----------------------------------------------------
 ; Color theme
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
-
-;;Emacs.pane.menubar.* does not seem to work?
-;(setq Emacs.pane.menubar.background 'darkGrey)
-;Emacs.pane.menubar.foreground: black
-
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(ag-match-face ((t (:inverse-video t))) nil "was formerly inherited from match face (probably form compile.el)")
- '(fringe ((t nil)))
- '(mode-line ((t (:background "#E05A2B" :foreground "white" :box nil))))
- '(mode-line-highlight ((t nil)))
- '(mode-line-inactive ((t (:background "gray38" :foreground "gray45"))))
- '(sml/col-number ((t (:inherit sml/global))))
- '(sml/filename ((t (:inherit sml/global :foreground "white" :weight bold))))
- '(sml/global ((t (:foreground "gray89"))))
- '(sml/modified ((t (:inherit sml/global :foreground "royal blue" :inverse-video t :weight ultra-bold))))
- '(sml/prefix ((t (:inherit sml/global :foreground "light blue"))))
- '(sml/read-only ((t (:inherit sml/global :foreground "deep sky blue" :inverse-video t :weight extra-bold)))))
-
-; Smart mode line
-(use-package smart-mode-line)
-(sml/setup)
-
 (load-theme 'bisque t)
-;;(load-theme 'ample-light t)
-;;(load-theme 'gruvbox-light-softer t)
-;;(load-theme 'poet t) This is nice, maybe, but changes fonts for keywords
 
-(use-package color)
-(setq fci-rule-color (color-darken-name (face-attribute 'default :background) 2))
-
-;; no electric mode in c
-(if (< emacs-major-version 25)
-    (c-toggle-electric-state -1))
-
-; indent the current line only if the cursor is at the beginning of the line
-;(setq-default c-tab-always-indent nil)
-;(setq-default c-indent-level 4)
-;(setq-default tab-width 4)
-;(setq-default indent-tabs-mode nil)
-;(setq-default c-basic-offset 4)
-;(setq-default c-basic-indent 4)
-(setq-default truncate-lines t)
-(setq-default transient-mark-mode nil)
-; These commands I read about on the web, but they don't work?
-;(highlight-tabs)
-;(highlight-trailing-whitespace)
-
-(defconst eclipse-c-style
-  '((c-basic-offset . 4)
-    (indent-tabs-mode . t)
-    (tab-width . 4)
-    (c-comment-only-line-offset . (0 . 0))
-    (c-offsets-alist . ((topmost-intro-cont    . +)
-                        (statement-block-intro . +)
-                        (knr-argdecl-intro     . 5)
-                        (substatement-open     . +)
-                        (substatement-label    . +)
-                        (label                 . +)
-                        (statement-case-open   . +)
-                        (statement-cont        . +)
-                        (arglist-intro  . c-lineup-arglist-intro-after-paren)
-                        (arglist-close  . c-lineup-arglist)
-                        (access-label   . 0)
-                        (arglist-cont-nonempty . ++)
-                        )))
-  "Eclipse C Programming Style")
-(c-add-style "Eclipse C" eclipse-c-style)
-;(setq c-default-style "Eclipse C")
-
-;;!!! setting paragraph-start here doesn't seem to work
-(defconst mira-c-style
-  '((c-basic-offset . 4)
-    (indent-tabs-mode . nil)
-    (tab-width . 7)
-    (c-comment-only-line-offset . (0 . 0))
-    (c-lineup-C-comments . 0)
-    (c-electric-pound-behavior. alignleft) ; Pre-processor macros go to column 0
-    (paragraph-start . "[ 	]*\\(//+\\|\\**\\)[ 	]*$\\|@param\\)\\|^")
-    (c-offsets-alist . ((topmost-intro-cont    . 0)
-                        (statement-block-intro . +)
-                        (knr-argdecl-intro     . 5)
-                        (substatement-open     . 0)
-                        (substatement-label    . +)
-                        (label                 . +)
-                        (statement-case-open   . +)
-			(statement-cont        . +)
-			(arglist-intro  . +)
-			(arglist-close  . 0)
-                        (access-label   . 0)
-                        (arglist-cont-nonempty . +)
-                        (cpp-macro . [0])
-                        )))
-  "Mira C Programming Style")
-(c-add-style "Mira C" mira-c-style)
-(setq c-default-style "Mira C")
-
-;; Remove lull: scroll bar, tool bar, menu bar.
-(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
-(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
-
-
-;; restore window size as it was at previous use
-(defun restore-saved-window-size()
-  (unless (load "~/.emacs.d/whsettings" t nil t)
-    (setq saved-window-size '(80 30)))
-  (nconc default-frame-alist `((width . ,(car saved-window-size))
-                   (height . ,(cadr saved-window-size)))))
-
-(restore-saved-window-size)
-
-(defun save-window-size-if-changed (&optional unused)
-  (let ((original-window-size  `(,(frame-width) ,(frame-height))))
-    (unless (equal original-window-size saved-window-size)
-      (with-temp-buffer
-        (setq saved-window-size original-window-size)
-        (insert (concat "(setq saved-window-size '"
-                        (prin1-to-string saved-window-size) ")"))
-        (write-file "~/.emacs.d/whsettings")))))
-
-(add-hook 'window-size-change-functions 'save-window-size-if-changed)
-
-
-;; Refresh
-(global-set-key (kbd "C-c R") '(lambda () (interactive) (revert-buffer nil t nil)))
-(defun revert-all-buffers ()
-  "Refreshes all open buffers from their respective files."
-  (interactive)
-  (dolist (buf (buffer-list))
-    (with-current-buffer buf
-      (when (and (buffer-file-name) (not (buffer-modified-p)))
-        (revert-buffer t t t) )))
-  (message "Refreshed open files.") )
-(global-set-key (kbd "C-c r") '(lambda () (interactive) (revert-all-buffers)))
-
-;; smart home behaviour
+;;; ----- My key definitions -----------------------------------------
+;; --- smart home behaviour ---
 (defun smart-beginning-of-line ()
   "Move point to first non-whitespace character or beginning-of-line.
 
@@ -437,349 +346,34 @@ If point was already at that position, move point to beginning of line."
 (global-set-key [home] 'smart-beginning-of-line)
 (global-set-key "\C-a" 'smart-beginning-of-line)
 
-(dolist (hook '(emacs-lisp-mode-hook
-                cperl-mode-hook
-                shell-mode-hook
-                text-mode-hook
-                change-log-mode-hook
-                makefile-mode-hook
-                message-mode-hook
-                c-mode-hook
-                asm-mode-hook
-                texinfo-mode-hook))
-  ; Testing fill-column-indicator instead
-  ;(add-hook hook (lambda ()
-  ;                 (interactive)
-  ;                 (column-marker-1 78)
-  ;                 (column-marker-2 79)
-  ;                 (column-marker-3 80)))
-  )
-(defface column-marker-1 '((t (:background "red")))
-  "Face for column marker 1."
-  :group 'faces)
-;; (defvar column-marker-1-face ((t (:background "#4f4f4f"))))
-;; (defvar column-marker-2-face ((t (:background "#5f5f5f"))))
-;; (defvar column-marker-3-face ((t (:background "#8c5353"))))
-
-;; Always spell checking for text files
-(add-hook 'text-mode-hook
-	  (lambda ()
-	    (when (< (buffer-size) 1000)
-	      (flyspell-mode))))
-
-;; Always can after enabling flyspell
-(add-hook 'flyspell-mode-hook 'flyspell-buffer)
+;; --- search ---
+(global-set-key "\M-s" 'project-find-regexp)
 
 
-(setq ag-highlight-search t)
-(setq ag-ignore-list '("build" "tools/offnet/temp-plot.html" "vendor" "venv/"))
-(setq ag-arguments '("--skip-vcs-ignores"))
-(use-package ag
-  :ensure t)
-
-;; ANSI colors, first added for search results from ack. Need to call the
-;; function automatically on ack buffer. Links still not working, so continue
-;; calling ack with --group --no-color --no-heading
-;; Could be removed, now that I am using ag?
-(use-package ansi-color
-  :ensure t)
-(defun display-ansi-colors ()
-  (interactive)
-  (let ((inhibit-read-only t))
-    (ansi-color-apply-on-region (point-min) (point-max))))
-(add-hook 'ack-mode-hook 'display-ansi-colors)
-
-;; Better buffer list functionality.
-(use-package ibuffer
-  :ensure t)
-(setq ibuffer-saved-filter-groups
-      (quote (("default"
-               ("Assembly" (mode . asm-mode))
-               ("Programming" (or
-                               (mode . c-mode)
-                               (mode . perl-mode)
-                               (mode . python-mode)
-                               (mode . emacs-lisp-mode)))
-               ("org" (filename . ".*\.org"))
-	       ("text" (filename . ".*\.txt"))
-               ("Emacs" (name . "^\\*.*\\*$"))))))
-
-(add-hook 'ibuffer-mode-hook
-  (lambda ()
-    (ibuffer-switch-to-saved-filter-groups "default")))
-
-(global-set-key (kbd "C-x C-b") 'ibuffer)
-
-;; Tags
-(defun create-tags ()
-  "Create tags file for current git repo."
-  (interactive)
-  (shell-command
-   (format "cd %s && find . -type f \\( -name '*.[ch]' -o -name '*.[ch]pp' \\) | etags --regex=@$HOME/.emacs.d/emacs_mira_tags_regexpfile -"
-	   (vc-root-dir)))
-  )
-
-;; ido makes competing buffers and finding files easier
-(ido-mode 'both) ;; for buffers and files
-(setq
-  ido-save-directory-list-file "~/.emacs.d/cache/ido.last"
-
-  ido-ignore-buffers ;; ignore these guys
-  '("\\` " "^\*Mess" "^\*Back" ".*Completion" "^\*Ido" "^\*trace"
-
-     "^\*compilation" "^\*GTAGS" "^session\.*")
-  ido-work-directory-list '("~/" "~/Desktop" "~/Documents" "~src")
-  ido-case-fold  t                 ; be case-insensitive
-
-  ido-enable-last-directory-history t ; remember last used dirs
-  ido-max-work-directory-list 30   ; should be enough
-  ido-max-work-file-list      50   ; remember many
-  ido-use-filename-at-point nil    ; don't use filename at point (annoying)
-  ido-use-url-at-point nil         ; don't use url at point (annoying)
-
-  ido-enable-flex-matching nil     ; don't try to be too smart
-  ido-max-prospects 8              ; don't spam my minibuffer
-  ido-confirm-unique-completion t) ; wait for RET, even with unique completion
-
-;; when using ido, the confirmation is rather annoying...
- (setq confirm-nonexistent-file-or-buffer nil)
-
-(put 'dired-find-alternate-file 'disabled nil)
-
-;; pymacs
-;; (setenv "PYMACS_PYTHON" "c:/program/python2.7")
-;;
-;; (autoload 'pymacs-apply "pymacs")
-;; (autoload 'pymacs-call "pymacs")
-;; (autoload 'pymacs-eval "pymacs" nil t)
-;; (autoload 'pymacs-exec "pymacs" nil t)
-;; (autoload 'pymacs-load "pymacs" nil t)
-;; (use-package pymacs)
- ;;(eval-after-load "pymacs"
- ;;  '(add-to-list 'pymacs-load-path YOUR-PYMACS-DIRECTORY"))
-
-
-;; iPython integration
-;; (add-to-list 'interpreter-mode-alist '("python" . python-mode))
-;; (use-package ipython)
-;; (setq py-python-command-args '("-pylab" "-colors" "LightBG"))
-;; (setq ipython-command "ipython")
-
- ;;(when (executable-find "ipython")
- ;;    (use-package ipython nil 'noerror))
- ;;(when (featurep 'ipython)
- ;;  (setq python-python-command "ipython")
- ;;  (autoload 'py-shell "ipython"
- ;;    "Use IPython as the Python interpreter." t))
-
-(defun insert-function-header()
-  "Insert a C function header above the current function."
-  (interactive)
-  (beginning-of-defun)  ; leave mark at the old location
-  (insert "/**
- * @brief
- * @param
- * @return
- */
-")
-  (word-search-backward "brief")
-  (move-end-of-line nil))
-(define-key global-map "\C-x\C-hf" 'insert-function-header)
-
-(defun insert-prototype-header()
-  "Insert a C prototype header here."
-  (interactive)
-  (insert "/**
- * @brief
- * @param
- * @return
- */
-")
-  (word-search-backward "brief")
-  (move-end-of-line nil))
-(define-key global-map "\C-x\C-hp" 'insert-prototype-header)
-
-(defun insert-c-file-header()
-  "Insert a C file header."
-  (interactive)
-  (insert "/*----------------------------------------------------------------------------
-Copyright (c) 2021 LumenRadio AB
-This code is the property of Lumenradio AB and may not be redistributed in any
-form without prior written permission from LumenRadio AB.
-----------------------------------------------------------------------------*/
-
-//******************************************************************************
-// Module constants
-//******************************************************************************
-
-//******************************************************************************
-// Module variables
-//******************************************************************************
-
-//******************************************************************************
-// Function prototypes
-//******************************************************************************
-
-//******************************************************************************
-// Function definitions
-//******************************************************************************
-
-//******************************************************************************
-// Internal functions
-//******************************************************************************
-"))
-
-
-(defun insert-h-file-header()
-  "Insert a H file header."
-  (interactive)
-  (insert "/*----------------------------------------------------------------------------
-Copyright (c) 2021 LumenRadio AB
-This code is the property of LumenRadio AB and may not be redistributed in any
-form without prior written permission from LumenRadio AB.
-----------------------------------------------------------------------------*/
-
-#ifndef _INCLUDED
-#define _INCLUDED
-#endif // _INCLUDED
-"))
-
-
-; Occur
-;; Same as occur with default symbol at point, no need to press enter.
-(defun occur-symbol-at-point ()
-  (interactive)
-  (let ((sym (thing-at-point 'symbol)))
-    (funcall 'occur sym)))
-(global-set-key (kbd "\C-co") 'occur-symbol-at-point)
-
-
-(if (< emacs-major-version 25)
-    ;; Find-tag
-    ;; Same as find-tag, without the need to press enter.
-    (defun find-tag-at-point ()
-      (interactive)
-      (let ((sym (thing-at-point 'symbol)))
-	(funcall 'find-tag sym))))
-(if (< emacs-major-version 25)
-    (global-set-key (kbd "C-.") 'find-tag-at-point)
-  (global-set-key (kbd "M-*") 'pop-tag-mark))
-
-;; Cover Emacs 25 bug for getting packages, see here:
-;; https://www.reddit.com/r/emacs/comments/cdei4p/failed_to_download_gnu_archive_bad_request/
-(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
-
-;; ws-trim is not in elpa, local include
-;;(require 'ws-trim)
-;;(setq ws-trim-level 1) ; 1 -> only modified lines are trimmed.
-;;(setq ws-trim-method-hook '(ws-trim-trailing))
-(use-package ws-butler
-  :ensure t)
-
-(use-package copy)
-
-;; use-package cannot handle highlight-symbol?
-(use-package highlight-symbol
-  :ensure t)
-(global-set-key (kbd "C-c h") 'highlight-symbol-at-point)
-(global-set-key (kbd "C-c n") 'highlight-symbol-next)
-(global-set-key (kbd "C-c p") 'highlight-symbol-prev)
-(global-set-key (kbd "C-c H") 'highlight-symbol-remove-all)
-(setq highlight-symbol-mode t)
-
-(use-package magit
-  :ensure t)
-  ;;;;;;:config
-  ;;;;;;(setq magit-log-arguments (quote ("--graph" "--color" "--decorate" "-n256"))))
-;; To format git commit messages ;; Obsolete, managed by magit?
-;;(require 'git-commit)
-;;(add-hook 'git-commit-mode-hook 'git-commit-turn-on-flyspell)
-;;(add-hook 'git-commit-setup-hook 'git-commit-turn-on-flyspell) ;; does not work, slow for big commits
-;;(add-hook 'git-commit-mode-hook 'git-commit-turn-on-flyspell)
-
-;; Mover buffers across windows
-(use-package buffer-move)
-(global-set-key (kbd "<C-S-up>")     'buf-move-up)
-(global-set-key (kbd "<C-S-down>")   'buf-move-down)
-(global-set-key (kbd "<C-S-left>")   'buf-move-left)
-(global-set-key (kbd "<C-S-right>")  'buf-move-right)
-
-
-;; Start server to allow for emacsclient to use this.
-;; Somehow, starting the server (emacs --daemon) from a terminal or Ubuntu's
-;; startup applicactions does not seem to work for the emacs 25 I have.
-(server-start)
-
-;; Server now started by the daemon at my log in.
-(put 'downcase-region 'disabled nil)
-
-
-;; Fill newly created files with template content
-(use-package defaultcontent)
-
-;; UTF-8 as default (mostly for encoding swedish characters correctly)
-(prefer-coding-system 'utf-8)
-
-(setq-default fill-column 80)
-
-
-;; Backup and auto-save
-(use-package backup-each-save
-  :ensure t)
-(add-hook 'after-save-hook 'backup-each-save)
-(setq
-   backup-by-copying t      ; don't clobber symlinks
-   backup-directory-alist '(("." . "~/.saves"))    ; don't litter my fs tree
-   delete-old-versions t
-   kept-new-versions 9
-   kept-old-versions 6
-   version-control t        ; use versioned backups
-   auto-save-default t      ; auto-save every buffer that visits a file
-   auto-save-timeout 20     ; number of seconds idle time before auto-save (default: 30)
-   auto-save-interval 200   ; number of keystrokes between auto-saves (default: 300)
-   )
-
-;; Don't convert _ and ^ unless surrounded by braces
-(setq org-export-with-sub-superscripts '{})
-(add-hook 'org-mode-hook 'auto-fill-mode)
-(setq org-startup-indented t)
-(setq org-ellipsis " \u25bc")
-
-;;(use-package notmuch)
-
-(setq mail-user-agent 'message-user-agent)
-(setq user-mail-address "gauthier.ostervall@lumenradio.com"
-      user-full-name "Gauthier Östervall")
-(setq smtpmail-smtp-server "smtp.lumenradio.com") ; not tested
-; Line below gives warning at startup, wront number of arguments?
-;(message-send-mail-function 'message-smtpmail-send-it)
-
-;; For visual-line-mode, to set a right margin
-;; visual-wrap-column-set
-(use-package visual)
-
-(use-package google-c-style)
-
-;; Find File
-(setq cc-search-directories '("."
-							  "../include" "../source"
-			      "../inc" "../inc/*" "../../inc/*" "../../../inc/*"
-                              "../../inc/*/*" "../../../inc/*/*/*"
-                              "../src" "../src/*" "../../src/*" "../../../src/*"
-                              "../../src/*/*" "../../../src/*/*/*"
-                              "/usr/include" "/usr/local/include/*"))
-
+;; --- find other file ---
 (defun find-other-file-no-include ()
   (interactive)
   (ff-find-other-file nil t))
-(global-set-key (kbd "M-o") 'find-other-file-no-include)
 
 (defun find-other-file-no-include-other-window ()
   (interactive)
   (ff-find-other-file t t))
-(global-set-key (kbd "M-O") 'find-other-file-no-include-other-window)
 
-;; Zoom on all frame
+(add-hook 'c-mode-common-hook
+	  (lambda ()
+	    (local-set-key (kbd "M-o") 'find-other-file-no-include)))
+(add-hook 'c-mode-common-hook
+	  (lambda ()
+	    (local-set-key (kbd "M-O") 'find-other-file-no-include-other-window)))
+
+;; --- smart kill-line ---
+;; On end of line, strips white space from following line.
+(defadvice kill-line (after kill-line-cleanup-whitespace activate compile)
+      "cleanup whitespace on kill-line"
+      (if (not (bolp))
+	  (delete-region (point) (progn (skip-chars-forward " \t") (point)))))
+
+;; --- Zoom applies to the whole frame ---
 ; Taken from a comment in package frame-cmds.el (elpa). Probably not working for versions under 22.
 (defun my-enlarge-font (&optional increment frame)
     "Increase size of font in FRAME by INCREMENT.
@@ -801,129 +395,28 @@ Optional FRAME parameter defaults to current frame."
 (global-set-key (kbd "C-x C--") 'my-zoom-out)
 (global-set-key (kbd "C-x C-0") 'my-zoom-out)
 
-;; key bindings for Mac
-;;(when (eq system-type 'darwin) ;; mac specific settings
-;;  (setq mac-option-modifier 'meta)
-;;  (setq mac-command-modifier 'control)
-;;  (global-set-key [kp-delete] 'delete-char) ;; sets fn-delete to be right-delete
-;;  )
+;; --------------------------------------------------------------------
+(server-start)
 
-;; Import important environment variables from shell, for Mac OS
-(when (memq window-system '(mac ns))
-  (exec-path-from-shell-initialize)
-  (exec-path-from-shell-copy-envs '("LANG" "LC_ALL"))
-  (message "Initialized PATH and other variables from SHELL."))
-
-(setq-default indent-tabs-mode nil)
-(use-package dtrt-indent
-  :ensure t
-  :config (setq dtrt-indent-run-after-smie t))
-
-;; Display whitespace characters.
-(require 'whitespace) ;; builtin
-(global-set-key (kbd "C-c b") 'whitespace-mode)
-(delete 'indentation whitespace-style) ; no warning about indent with spaces
-(delete 'lines whitespace-style) ; remove whole highlight of long lines
-(add-to-list 'whitespace-style 'lines-tail) ; highlight the tail of long lines
-
-;; Magit
-(global-set-key (kbd "C-x g") 'magit-status)
-;;; This worked for a short while, but not anymore. Anyway, C-u <enter> does this.
-(defun my-magit-status-mode-hook ()
-  "Custom magit hook functions. Sets C-<return> in diff to open file in other window."
-  (local-set-key (kbd "C-<return>") 'magit-diff-visit-file-other-window))
-(add-hook 'magit-status-mode-hook 'my-magit-status-mode-hook)
-(remove-hook 'magit-section-highlight-hook 'magit-section-highlight)
-
-;; Projectile
-(use-package projectile
-  :ensure t)
-(global-set-key (kbd "C-x C-S-f") 'projectile-find-file)
-
-;; flx-ido
-;; (use-package flx-ido) ;; unnecessary because available from melpa?
-;; Comment out ido while evaluating helm
-;(ido-mode 1)
-;(ido-everywhere 1)
-;(flx-ido-mode 1)
-;; disable ido faces to see flx highlights.
-(setq ido-enable-flex-matching t)
-(setq ido-use-faces nil)
-
-;; cflow
-(autoload 'cflow-mode "cflow-mode")
-
-;; dumb-jump
-;;; Use ag: sudo apt install silversearcher-ag
-;(when (use-package dumb-jump nil 'noerror)
-;  (dumb-jump-mode t)
-;  (setq dumb-jump-force-searcher nil))
-
-(use-package expand-region
-  :ensure t)
-(global-set-key (kbd "C->") 'er/expand-region)
-(global-set-key (kbd "C-<") 'er/contract-region)
-
-; I should use this to manage my packages!
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-
-(use-package writegood-mode
-	     :ensure t
-	     :bind ("C-c g" . writegood-mode)
-	     :config
-	     (add-to-list 'writegood-weasel-words "actionable"))
-
-(use-package protobuf-mode
-  :ensure t)
-
-(use-package csharp-mode
-  :ensure t)
-
-(use-package fill-column-indicator
-  :ensure t)
-
-; Saving to kill ring uses Primary (as well as Clipboard), to ease usage with
-; xclip -o.
-(setq x-select-enable-primary t)
-
-;; Helm
-(use-package helm
-  :ensure t)
-(use-package helm-swoop
-  :ensure t)
-(helm-mode 1)
-(global-set-key (kbd "M-y") 'helm-show-kill-ring)
-(global-set-key (kbd "M-x") 'helm-M-x)
-(global-set-key (kbd "C-x b") 'helm-mini)
-(global-set-key (kbd "C-x C-f") 'helm-find-files)
-(setq helm-split-window-inside-p            t ;  open helm buffer inside current window, not occupy whole other window
-      helm-split-window-default-side        'below
-      helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
-      helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
-      helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
-      helm-ff-file-name-history-use-recentf t
-      helm-echo-input-in-header-line t)
-(helm-autoresize-mode t)
-(setq helm-buffers-fuzzy-matching t
-      helm-recentf-fuzzy-match    t)
-
-;; Helm-ag
-;;; I want this package for its refactoring ability (edit and apply on search results)
-(use-package helm-ag
-  :ensure t)
-;;(setq helm-ag-insert-at-point 'symbol) ; Use M-n instead
-(setq helm-ag-insert-at-point nil) ; Use M-n instead, or my branch for default
-				   ; if empty.
-(setq helm-ag-ignore-patterns '("build" "vendor" "venv/"))
-;;;(global-set-key "\M-s" 'helm-ag-project-root)
-
-;; Why doesn't this honor ag-ignore-list defined above?
-(global-set-key "\M-s" 'ag-project) ; Search the whole project (e.g. git repo)
-(global-set-key "\M-S" 'ag-regexp) ; Prompt for directory to search in
-
-
-;; Navigate read-only files with "less" pager keybindings.
-;; Hint: activate read-only mode with C-x C-q.
-(setq view-read-only t)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   '("3aacadf67e421a837c47284854060c7d5bb62c4b9bdf03a92e655a969c0ac323" "2158fab79919b07b8c41d388d77bb3f66c0572ce856fe3aab1fa0d6520a89f40" "0e0cacf8e0ec7b1de25e5c440c35ecf33620038de1bb80814d1c7bb43d534805" "b34048d609ded633cdd7052256cbf87d2c8109852d0a9a47ca9ed505ceb78f7b" "3d68356198d520570aa636fb8a66f3b959ba18632dd73bc7dc04a98cc28a5593" "1c19b68c2ffcd0b53a8bf3b7ebecd66ba745b6b6e191f7c7fa2720c12a94164b" "ddca32451ac164f5f0d89fd97e3e039e1897d8948fcef4ea845c4941c585eb37" "641818eabfebf65644eb2bf19016665295e85b99406fefc38fadf9b702b3d109" "5d8a411973e6c709ced3d74d815b8f76f682246687f7338bf5269963b89585cd" "0f3d58666b0f7e7539677ab03f71f6df3f079a9ebc444d0ce211c8cb01d3392b" "ac0e741c51ff61dd7e15b209515e35795bac69ed75473617afe2a8420e0edd9f" "80a258b561ca0434b31f1d14cb853fd5919ac14a7267fc006b0b5854a8417135" "42e0bcef76316c29347f29b33a699ac7b5c6cd18715cf1cd3e79e8bf9a6a5466" "24d64cbf6479da1b5ea0699ad10555aa2f9b1a3aebd08cd6f8804547ca5283b9" "344b2a3a4d96b392ca810c95f65b3de564cbbab51fb41cfb4a752a00ce3056f4" "0c7e222fd484fd65a22881aede855249a9738db79ba95e497d792997fedd51f1" "11ae64e6fad6090e0c50ee77ffbfbb031940a261e5509a9fccc34a127dd6f238" "4929e019ff782dbd7aaa2962b077d3ce30617fd67276091875e2dbab6fd38db1" "3267b287b5d7bc0f6ae52b4c58b9a1a7d9f55d7db4d270de4369418e27a0fdde" "ea51fdbad2a3c0817f89295ce6662002d69a1586724bab290ca3861866457c7c" "a21f194824b5b6f6ffdad9b886376fc7d79b453a4a43c62112471e70942a3ec7" "89075e1074987d149b142413cc703ab3f6e6a206d0f2b889216c961a7d5519ce" "f61e5b67769f4b0c224403a1b80348a370f9852f0d1b3cb3110d58ee09b3280f" "2fd1984837f6ff2fa8269ca1ea00ac77c3c356fa31df3104306f617199197523" "3567e721cc27da3c1dca5a84d76557db8cbb148af942957d1b8b0d580a1fe454" "0da36ac06fbdab6526de7e35954b01c181fef81b9d46b18f60c7a50babda877f" "1e2ff7c10e1254cf1951057641ee846c9f2dc11d018c5c1e13b51b0337bc01d0" "1bbb8f6a10b20f0269c99e8a35625e941080138b7fb9d0b87b42c9a0b5143eaf" "4eb87b023ca55625af1598aa6aacc9f723292f07667f75834e21afe63fddcd36" "d121db8ab80295939943d369f9f241a73171ac97b8e0de2d3505162241c7ba8d" "2d8961a4f11fccc665bd8ea04097ee1a8af40628f7a889f6a09feb81b8fc24ae" "d5ea2385740b04fc3a2762616418445436ff5e0a8566b7525d124ab1041aec5f" "b04eccdc3c57ff50952397bb4422b9af6c900f0111040cb8f81193d30ab99b87" "a04f2b9cf7070fabb0f96fc2ce76a3888af211de8b100482471058dc679ad9ee" "a103ec629e2b731b27dffd369948bf6fb72668995ed841fecbba8b380db663f5" "ca2c929a670770b9936b37bab3e25f231cb2fb32cca7e602a623c316e28243ce" "62ebbd1858fb03846e639629bf77d782241574f600b946f5ad46f1d370641431" "f33a8a7fc53ce5899fc2f63332053eb6c90914defc4ee8c34aedc0e89e509891" "6d98ced4486ca69703b8e81fb706757ff4b7fa7b2fea4d97fc7ce516385a0025" "d66d715604f6b7a939584444096dce1d5df4fb0578ecedbbb6d8931f19e97633" default))
+ '(package-selected-packages
+   '(flycheck-posframe flycheck dap-gdb-lldb dap-mode dtrt-indent csharp-mode lsp-pyright tree-sitter-langs tree-sitter-c tree-sitter hl-block-mode writegood-mode ws-butler which-key flycheck-mode robot-mode counsel highlight-symbol lsp-treemacs lsp-ui lsp-mode magit use-package))
+ '(safe-local-variable-values
+   '((eval when
+	   (fboundp 'rainbow-mode)
+	   (rainbow-mode 1))
+     (c-default-style . "linux")
+     (indent-tabs-mode t)
+     (projectile-project-root . "/home/gauthier/src/airglow_fw"))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

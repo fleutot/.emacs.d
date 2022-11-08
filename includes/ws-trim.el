@@ -53,7 +53,6 @@
 ;;   font-lock.el by "jwz, then rms, then sm <simon@gnu.ai.mit.edu>".
 
 ;;; Change log:
-
 ;; Sat Feb 11 17:51:15 CET 2012       Martin Stjernholm <mast@lysator.liu.se>
 ;;	*  Removed long-since obsolete function make-local-hook which
 ;;	   no longer exists in Emacs 24.  Thanks to Phil Sainty for

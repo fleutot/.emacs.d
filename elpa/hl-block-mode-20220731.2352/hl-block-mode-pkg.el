@@ -1,0 +1,2 @@
+;;; Generated package description from hl-block-mode.el  -*- no-byte-compile: t -*-
+(define-package "hl-block-mode" "20220731.2352" "Highlighting nested blocks" '((emacs "26.1")) :commit "a9e8e8cfd83972a448bdbb0a9967989d0aa1d05a" :authors '(("Campbell Barton" . "ideasman42@gmail.com")) :maintainer '("Campbell Barton" . "ideasman42@gmail.com") :url "https://codeberg.org/ideasman42/emacs-hl-block-mode")
