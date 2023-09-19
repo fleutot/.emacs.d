@@ -58,10 +58,12 @@
       (bisque-red-5 "#7c4343")
       (bisque-orange "#dfaf8f")
       (bisque-orange-1 "#cf9f7f")
+      (bisque-orange-4 "#674f3f")
       (bisque-yellow+1 "#e0d370")
       (bisque-yellow "#f0dfaf")
       (bisque-yellow-1 "#e0cf9f")
       (bisque-yellow-2 "#d0bf8f")
+      (bisque-green-4 "#273727")
       (bisque-green-2 "#4f6f4f")
       (bisque-green-1 "#688068")
       (bisque-green "#7f9f7f")
@@ -238,10 +240,10 @@
    `(eshell-ls-symlink ((t (:foreground ,bisque-cyan :weight bold))))
 
    ;; flycheck
-   `(flycheck-error ((t (:foreground ,bisque-red-2 :weight bold :underline t))))
-   `(flycheck-warning ((t (:foreground ,bisque-orange-1 :weight
+   `(flycheck-error ((t (:background ,bisque-red-4 :weight bold :underline t))))
+   `(flycheck-warning ((t (:background ,bisque-orange-4 :weight
                                        bold))))
-   `(flycheck-info ((t (:foreground ,bisque-green+1 :weight bold))))
+   `(flycheck-info ((t (:background ,bisque-green-4 :weight bold))))
    `(flycheck-posframe-error-face ((t (:foreground ,bisque-red-1))))
    `(flycheck-posframe-warning-face ((t (:foreground ,bisque-orange))))
    `(flycheck-posframe-info-face ((t (:foreground ,bisque-green))))
