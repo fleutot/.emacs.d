@@ -90,6 +90,9 @@
   :args "DISPLAY=:1" ;; this line breaks it. But how to I pass DISPLAY?
   :target "/home/gauthier/src/dwm/dwm" :cwd "."))
 
+(use-package go-mode
+  :ensure t)
+
 (use-package treemacs
   :ensure t)
 
@@ -105,14 +108,32 @@
 ;;    (which-key-mode))
 
 ;;;; How to install languages??
-(use-package tree-sitter-langs
-  :ensure t)
-
-(use-package tree-sitter
-  :init
-  (tree-sitter-require 'c-sharp)
-  (tree-sitter-require 'c)
-  :ensure t)
+;;(use-package tree-sitter-langs
+;;  :ensure t)
+;;
+;;(use-package tree-sitter
+;;  :init
+;;  (tree-sitter-require 'c-sharp)
+;;  (tree-sitter-require 'c)
+;;  (tree-sitter-require 'go)
+;;  (tree-sitter-require 'python)
+;;  :ensure t)
+(setq treesit-language-source-alist
+   '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+     (cmake "https://github.com/uyha/tree-sitter-cmake")
+     (css "https://github.com/tree-sitter/tree-sitter-css")
+     (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+     (go "https://github.com/tree-sitter/tree-sitter-go")
+     (html "https://github.com/tree-sitter/tree-sitter-html")
+     (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
+     (json "https://github.com/tree-sitter/tree-sitter-json")
+     (make "https://github.com/alemuller/tree-sitter-make")
+     (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+     (python "https://github.com/tree-sitter/tree-sitter-python")
+     (toml "https://github.com/tree-sitter/tree-sitter-toml")
+     (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
+     (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
+     (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
 
 (use-package magit
   :ensure t)
@@ -429,7 +450,7 @@ Optional FRAME parameter defaults to current frame."
  '(custom-safe-themes
    '("64a46f7b85d0d8b640a21ed8c3e577bc8774974e71f3df7e2e9df18879dee993" "3aacadf67e421a837c47284854060c7d5bb62c4b9bdf03a92e655a969c0ac323" "2158fab79919b07b8c41d388d77bb3f66c0572ce856fe3aab1fa0d6520a89f40" "0e0cacf8e0ec7b1de25e5c440c35ecf33620038de1bb80814d1c7bb43d534805" "b34048d609ded633cdd7052256cbf87d2c8109852d0a9a47ca9ed505ceb78f7b" "3d68356198d520570aa636fb8a66f3b959ba18632dd73bc7dc04a98cc28a5593" "1c19b68c2ffcd0b53a8bf3b7ebecd66ba745b6b6e191f7c7fa2720c12a94164b" "ddca32451ac164f5f0d89fd97e3e039e1897d8948fcef4ea845c4941c585eb37" "641818eabfebf65644eb2bf19016665295e85b99406fefc38fadf9b702b3d109" "5d8a411973e6c709ced3d74d815b8f76f682246687f7338bf5269963b89585cd" "0f3d58666b0f7e7539677ab03f71f6df3f079a9ebc444d0ce211c8cb01d3392b" "ac0e741c51ff61dd7e15b209515e35795bac69ed75473617afe2a8420e0edd9f" "80a258b561ca0434b31f1d14cb853fd5919ac14a7267fc006b0b5854a8417135" "42e0bcef76316c29347f29b33a699ac7b5c6cd18715cf1cd3e79e8bf9a6a5466" "24d64cbf6479da1b5ea0699ad10555aa2f9b1a3aebd08cd6f8804547ca5283b9" "344b2a3a4d96b392ca810c95f65b3de564cbbab51fb41cfb4a752a00ce3056f4" "0c7e222fd484fd65a22881aede855249a9738db79ba95e497d792997fedd51f1" "11ae64e6fad6090e0c50ee77ffbfbb031940a261e5509a9fccc34a127dd6f238" "4929e019ff782dbd7aaa2962b077d3ce30617fd67276091875e2dbab6fd38db1" "3267b287b5d7bc0f6ae52b4c58b9a1a7d9f55d7db4d270de4369418e27a0fdde" "ea51fdbad2a3c0817f89295ce6662002d69a1586724bab290ca3861866457c7c" "a21f194824b5b6f6ffdad9b886376fc7d79b453a4a43c62112471e70942a3ec7" "89075e1074987d149b142413cc703ab3f6e6a206d0f2b889216c961a7d5519ce" "f61e5b67769f4b0c224403a1b80348a370f9852f0d1b3cb3110d58ee09b3280f" "2fd1984837f6ff2fa8269ca1ea00ac77c3c356fa31df3104306f617199197523" "3567e721cc27da3c1dca5a84d76557db8cbb148af942957d1b8b0d580a1fe454" "0da36ac06fbdab6526de7e35954b01c181fef81b9d46b18f60c7a50babda877f" "1e2ff7c10e1254cf1951057641ee846c9f2dc11d018c5c1e13b51b0337bc01d0" "1bbb8f6a10b20f0269c99e8a35625e941080138b7fb9d0b87b42c9a0b5143eaf" "4eb87b023ca55625af1598aa6aacc9f723292f07667f75834e21afe63fddcd36" "d121db8ab80295939943d369f9f241a73171ac97b8e0de2d3505162241c7ba8d" "2d8961a4f11fccc665bd8ea04097ee1a8af40628f7a889f6a09feb81b8fc24ae" "d5ea2385740b04fc3a2762616418445436ff5e0a8566b7525d124ab1041aec5f" "b04eccdc3c57ff50952397bb4422b9af6c900f0111040cb8f81193d30ab99b87" "a04f2b9cf7070fabb0f96fc2ce76a3888af211de8b100482471058dc679ad9ee" "a103ec629e2b731b27dffd369948bf6fb72668995ed841fecbba8b380db663f5" "ca2c929a670770b9936b37bab3e25f231cb2fb32cca7e602a623c316e28243ce" "62ebbd1858fb03846e639629bf77d782241574f600b946f5ad46f1d370641431" "f33a8a7fc53ce5899fc2f63332053eb6c90914defc4ee8c34aedc0e89e509891" "6d98ced4486ca69703b8e81fb706757ff4b7fa7b2fea4d97fc7ce516385a0025" "d66d715604f6b7a939584444096dce1d5df4fb0578ecedbbb6d8931f19e97633" default))
  '(package-selected-packages
-   '(hideshow-mode py-autopep8 flycheck-posframe flycheck dap-gdb-lldb dap-mode dtrt-indent csharp-mode lsp-pyright tree-sitter-langs tree-sitter-c tree-sitter hl-block-mode writegood-mode ws-butler which-key flycheck-mode robot-mode counsel highlight-symbol lsp-treemacs lsp-ui lsp-mode magit use-package))
+   '(go-mode hideshow-mode py-autopep8 flycheck-posframe flycheck dap-gdb-lldb dap-mode dtrt-indent csharp-mode lsp-pyright tree-sitter-langs tree-sitter-c tree-sitter hl-block-mode writegood-mode ws-butler which-key flycheck-mode robot-mode counsel highlight-symbol lsp-treemacs lsp-ui lsp-mode magit use-package))
  '(safe-local-variable-values
    '((eval when
 	   (fboundp 'rainbow-mode)
