@@ -45,6 +45,7 @@
   (setq lsp-enable-on-type-formatting nil)
   (setq lsp-headerline-breadcrumb-enable nil)
   (setq lsp-headerline-breadcrumb-enable-diagnostics nil)
+  (setq lsp-clients-clangd-args '("--query-driver=/usr/bin/arm-none-eabi-g*" "--background-index" "--header-insertion=iwyu" ))
   :hook (
          (c-mode . lsp-deferred)
          (lsp-mode . lsp-enable-which-key-integration))
@@ -62,7 +63,13 @@
 (use-package flycheck
   :init
   (setq flycheck-highlighting-mode 'lines)
-  (setq flycheck-display-errors-function #'flycheck-display-error-messages)
+  (setq flycheck-display-errors-function
+	#'flycheck-display-error-messages)
+  :bind (
+	 :map flycheck-mode-map
+	      ("M-p" . flycheck-previous-error)
+	      ("M-n" . flycheck-next-error)
+	      )
   :ensure t)
 ;; Show flyckeck diagnostics at location in a little frame
 ;;(use-package flycheck-posframe
@@ -77,6 +84,10 @@
               (side            . bottom)
               (reusable-frames . visible)
               (window-height   . 0.33)))
+
+;; shellcheck
+(use-package sh-script
+  :hook (sh-mode . flycheck-mode))
 
 (use-package dap-mode
   :ensure t)
@@ -145,6 +156,8 @@
   (setq highlight-symbol-on-navigation-p t)
   (add-hook 'prog-mode-hook #'highlight-symbol-mode)
   (add-hook 'prog-mode-hook #'highlight-symbol-nav-mode)
+  (unbind-key (kbd "M-p") highlight-symbol-nav-mode-map)
+  (unbind-key (kbd "M-n") highlight-symbol-nav-mode-map)
   (global-set-key (kbd "C-c h") 'highlight-symbol-at-point)
   (global-set-key (kbd "C-c n") 'highlight-symbol-next)
   (global-set-key (kbd "C-c p") 'highlight-symbol-prev)
