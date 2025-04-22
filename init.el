@@ -25,15 +25,25 @@
 (setq split-height-threshold 120)
 (setq split-width-threshold 150)
 
+;; I could only manage to get Terminus in bitmap format, bad for
+;; scaling. Installing fonts-terminus-otb did not help.
+;; See https://emacs.stackexchange.com/questions/80802/cannot-rescale-frame-font
 (when (member "Terminus" (font-family-list))
-  (set-frame-font "-xos4-Terminus-normal-normal-normal-*-12-*-*-*-c-60-iso10646-1")
-  (add-to-list 'default-frame-alist '(font . "-xos4-Terminus-normal-normal-normal-*-12-*-*-*-c-60-iso10646-1")))
+  (set-frame-font "-xos4-Terminus-normal-normal-normal-*-14-*-*-*-c-60-iso10646-1")
+  (add-to-list 'default-frame-alist '(font
+				      . "-xos4-Terminus-normal-normal-normal-*-14-*-*-*-c-60-iso10646-1")))
+
+;;(when (member "Liberation Mono" (font-family-list))
+;;  (set-face-attribute 'default nil :font "Liberation Mono-10")
+;;  (set-frame-font "Liberation Mono-10" nil t))
 
 (setq auto-mode-alist (cons '("Makefile\\." . makefile-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '(".ts$" . c-mode) auto-mode-alist))
 (setq auto-mode-alist (append auto-mode-alist '(("\\.cflow$" . cflow-mode))))
 (add-to-list 'auto-mode-alist '("\\.bash_aliases\\'" . sh-mode))
 
+(use-package browse-kill-ring
+  :ensure t)
 
 ;;; ----- Modes ---------------------------------------------------
 ;;; See https://emacs.stackexchange.com/questions/73080/indent-region-does-not-respect-my-c-mode-style
@@ -208,6 +218,7 @@
   ;;(flyspell-prog-mode) ;; This makes Python unusable (freeze)
   (flycheck-mode)
   (auto-fill-mode)
+  (auto-insert-mode)
   (writegood-mode)
   (ws-trim-mode)
   ; Dupes highlight e.g. two `fi` in a row in bash
@@ -241,10 +252,8 @@ Useful for highlighting an error after running 'next-error'"
 (add-hook 'compilation-minor-mode-hook (lambda () (visual-line-mode 1)))
 (setq compilation-scroll-output 'first-error)
 (setq compilation-context-lines 15)
-
-;;; I get a "Cannot load" on that??
-;;(use-package flycheck-mode
-;;  :ensure t)
+;; Colorful ANSI output
+(add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
 
 ;; ido makes competing buffers and finding files easier
 (ido-mode 'both) ;; for buffers and files
@@ -307,6 +316,13 @@ Useful for highlighting an error after running 'next-error'"
                                      nil require-match initial-input hist def))
         ad-do-it))))
 
+;;; ----- Backup -----------------------------------------------------
+(setq backup-directory-alist `(("." . "~/.saves")))
+(setq delete-old-versions t
+  kept-new-versions 6
+  kept-old-versions 2
+  version-control t)
+
 ;;; ----- Programming formatting -------------------------------------
 (defconst mira-c-style
   '((c-basic-offset . 4)
@@ -333,7 +349,24 @@ Useful for highlighting an error after running 'next-error'"
                         )))
   "Mira C Programming Style")
 (c-add-style "Mira C" mira-c-style)
-(setq c-default-style "Mira C")
+;;(setq c-default-style "Mira C")
+
+;;(defconst nobel-c-style
+;;  '((arglist-intro  . +)
+;;    (arglist-close  . 0)
+;;    (arglist-cont-nonempty . +)))
+(setq c-default-style "linux"
+      c-offsets-alist '((arglist-intro  . +)
+                        (arglist-close  . 0)
+			(arglist-cont-nonempty . +)
+			))
+
+; Insert default content for new files
+(auto-insert-mode)  ;;; Adds hook to find-files-hook
+(setq auto-insert-directory "~/.emacs.d/autoinsert/") ;;; *NOTE* Trailing slash important
+(setq auto-insert-query nil) ;;; Do not prompt before insertion
+(define-auto-insert "\\.c$" "template.c")
+(define-auto-insert "\\.h$" "template.h")
 
 ; Color-coding #if 0 as comment.
 (defun my-c-mode-font-lock-if0 (limit)
@@ -360,7 +393,9 @@ Useful for highlighting an error after running 'next-error'"
   nil)
 
 (defun my-c-mode-common-hook ()
-  (c-set-offset 'inextern-lang 0) ; No extra indent in an extern block (#ifdef __cplusplus)
+  (c-set-offset 'inextern-lang 0) ; No extra indent in an extern block
+					; (#ifdef __cplusplus)
+  (set-fill-column 80)
   (when (derived-mode-p 'c-mode 'c++-mode 'java-mode))
   (font-lock-add-keywords
    nil
@@ -374,6 +409,11 @@ Useful for highlighting an error after running 'next-error'"
 ; Color theme
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
 (load-theme 'bisque t)
+
+;;; Disable themes before loading a new one, to try to reset settings
+;;; that the new theme would not overwrite.
+(defadvice load-theme (before theme-dont-propagate activate)
+  (mapc #'disable-theme custom-enabled-themes))
 
 ;;; ----- My key definitions -----------------------------------------
 ;; --- smart home behaviour ---
@@ -443,14 +483,15 @@ Optional FRAME parameter defaults to current frame."
                                (face-attribute 'default :height frame 'default))))
 (defun my-zoom-in ()
   (interactive)
-  (my-enlarge-font 2))
+  (my-enlarge-font 1))
 (defun my-zoom-out ()
   (interactive)
-  (my-enlarge-font -2))
+  (my-enlarge-font -1))
 (global-set-key (kbd "C-x C-+") 'my-zoom-in)
 (global-set-key (kbd "C-x C-=") 'my-zoom-in)
 (global-set-key (kbd "C-x C--") 'my-zoom-out)
 (global-set-key (kbd "C-x C-0") 'my-zoom-out)
+
 
 ;; --------------------------------------------------------------------
 (server-start)
@@ -461,15 +502,82 @@ Optional FRAME parameter defaults to current frame."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   '("64a46f7b85d0d8b640a21ed8c3e577bc8774974e71f3df7e2e9df18879dee993" "3aacadf67e421a837c47284854060c7d5bb62c4b9bdf03a92e655a969c0ac323" "2158fab79919b07b8c41d388d77bb3f66c0572ce856fe3aab1fa0d6520a89f40" "0e0cacf8e0ec7b1de25e5c440c35ecf33620038de1bb80814d1c7bb43d534805" "b34048d609ded633cdd7052256cbf87d2c8109852d0a9a47ca9ed505ceb78f7b" "3d68356198d520570aa636fb8a66f3b959ba18632dd73bc7dc04a98cc28a5593" "1c19b68c2ffcd0b53a8bf3b7ebecd66ba745b6b6e191f7c7fa2720c12a94164b" "ddca32451ac164f5f0d89fd97e3e039e1897d8948fcef4ea845c4941c585eb37" "641818eabfebf65644eb2bf19016665295e85b99406fefc38fadf9b702b3d109" "5d8a411973e6c709ced3d74d815b8f76f682246687f7338bf5269963b89585cd" "0f3d58666b0f7e7539677ab03f71f6df3f079a9ebc444d0ce211c8cb01d3392b" "ac0e741c51ff61dd7e15b209515e35795bac69ed75473617afe2a8420e0edd9f" "80a258b561ca0434b31f1d14cb853fd5919ac14a7267fc006b0b5854a8417135" "42e0bcef76316c29347f29b33a699ac7b5c6cd18715cf1cd3e79e8bf9a6a5466" "24d64cbf6479da1b5ea0699ad10555aa2f9b1a3aebd08cd6f8804547ca5283b9" "344b2a3a4d96b392ca810c95f65b3de564cbbab51fb41cfb4a752a00ce3056f4" "0c7e222fd484fd65a22881aede855249a9738db79ba95e497d792997fedd51f1" "11ae64e6fad6090e0c50ee77ffbfbb031940a261e5509a9fccc34a127dd6f238" "4929e019ff782dbd7aaa2962b077d3ce30617fd67276091875e2dbab6fd38db1" "3267b287b5d7bc0f6ae52b4c58b9a1a7d9f55d7db4d270de4369418e27a0fdde" "ea51fdbad2a3c0817f89295ce6662002d69a1586724bab290ca3861866457c7c" "a21f194824b5b6f6ffdad9b886376fc7d79b453a4a43c62112471e70942a3ec7" "89075e1074987d149b142413cc703ab3f6e6a206d0f2b889216c961a7d5519ce" "f61e5b67769f4b0c224403a1b80348a370f9852f0d1b3cb3110d58ee09b3280f" "2fd1984837f6ff2fa8269ca1ea00ac77c3c356fa31df3104306f617199197523" "3567e721cc27da3c1dca5a84d76557db8cbb148af942957d1b8b0d580a1fe454" "0da36ac06fbdab6526de7e35954b01c181fef81b9d46b18f60c7a50babda877f" "1e2ff7c10e1254cf1951057641ee846c9f2dc11d018c5c1e13b51b0337bc01d0" "1bbb8f6a10b20f0269c99e8a35625e941080138b7fb9d0b87b42c9a0b5143eaf" "4eb87b023ca55625af1598aa6aacc9f723292f07667f75834e21afe63fddcd36" "d121db8ab80295939943d369f9f241a73171ac97b8e0de2d3505162241c7ba8d" "2d8961a4f11fccc665bd8ea04097ee1a8af40628f7a889f6a09feb81b8fc24ae" "d5ea2385740b04fc3a2762616418445436ff5e0a8566b7525d124ab1041aec5f" "b04eccdc3c57ff50952397bb4422b9af6c900f0111040cb8f81193d30ab99b87" "a04f2b9cf7070fabb0f96fc2ce76a3888af211de8b100482471058dc679ad9ee" "a103ec629e2b731b27dffd369948bf6fb72668995ed841fecbba8b380db663f5" "ca2c929a670770b9936b37bab3e25f231cb2fb32cca7e602a623c316e28243ce" "62ebbd1858fb03846e639629bf77d782241574f600b946f5ad46f1d370641431" "f33a8a7fc53ce5899fc2f63332053eb6c90914defc4ee8c34aedc0e89e509891" "6d98ced4486ca69703b8e81fb706757ff4b7fa7b2fea4d97fc7ce516385a0025" "d66d715604f6b7a939584444096dce1d5df4fb0578ecedbbb6d8931f19e97633" default))
+   '("f9a679cf51ad9dc278f3785edca549a41d65902e76659eac717617eeeca9f228"
+     "a2511e94e964a43d588be35d057c57e741234f9ed49fb6c5b6f65fe4e3ab30bd"
+     "fa3add447bcf03b8ef790d2ddf31b7cd5f58db01785d2fafabdf79426626ffa1"
+     "a5270d86fac30303c5910be7403467662d7601b821af2ff0c4eb181153ebfc0a"
+     "98ef36d4487bf5e816f89b1b1240d45755ec382c7029302f36ca6626faf44bbd"
+     "ba323a013c25b355eb9a0550541573d535831c557674c8d59b9ac6aa720c21d3"
+     "871b064b53235facde040f6bdfa28d03d9f4b966d8ce28fb1725313731a2bcc8"
+     "d3149bf75812cde0043689ffe29c55626ca4cb72d86f307a123a1fa4766b7c7b"
+     "022b16d9141701785540bf590e84d35cdb9423ac11372c45d603412f73e528d9"
+     "d6f4f91c486c6501190282055892adfd83e71ba5ae64c33bfc2782093b4d39f9"
+     "1f82180dc6a71f66b45790854f073ab0fc244de5fad31a4134f5c94c11414644"
+     "7c4cbec36f2b930d4f5df00d499343b70dc3ea7b380f92825429124ddc9aa1fc"
+     "91361a23fadcc40c3d636a66d8477a47574f5be94cbdf26049250b285f4fc0f9"
+     "d173bf14ae1f471147d873f7e697072c649f3425b6b327993c5f62e6d73aa4a0"
+     "87937f7e250d9b6c3051de0b7ae9cee9c5618a5045b3293bd0c292f943b0226c"
+     "d23fcc7cb49381420e5f546d904be86f3c3ebc45c4c6f551ca139f3adf52410d"
+     "c84039dec7a8a6b376a403aa8b7a0e433b662bbdb99e19b9e004dd7fbc4fb0c3"
+     "fc7c3d75e6d9a597e75de9631cec14295fe88505f6d4a99f5f54a191c3998f95"
+     "80c65570228ad90c13d925a06d30864b0d9b2f22abba957cdc67ff955834c250"
+     "8625d2d7c37db33a5b8d2a3eca24551422bf1cae55c462a248ad4a276d384de9"
+     "bc96bb1144e9a2909e884a81b18760eff4a14fa1e3c1f5c0d30ec7ffa834a64b"
+     "e6d2d30a9990093460046519ee44007b9fe37dfe2837eb66a29fce945fdd240d"
+     "b75aa68990bc2f97a5c9f2c76a2385baf8e03b5c63d41efc6e7eece93ccef54a"
+     "9b518873e6ea15b34febb2b408be712f561949be4b779597cc715ab7a94b3a89"
+     "edc33fad54938603d6b7e8844a64be28083eb1d3b12c96aba97fcba11bd2ce67"
+     "64a46f7b85d0d8b640a21ed8c3e577bc8774974e71f3df7e2e9df18879dee993"
+     "3aacadf67e421a837c47284854060c7d5bb62c4b9bdf03a92e655a969c0ac323"
+     "2158fab79919b07b8c41d388d77bb3f66c0572ce856fe3aab1fa0d6520a89f40"
+     "0e0cacf8e0ec7b1de25e5c440c35ecf33620038de1bb80814d1c7bb43d534805"
+     "b34048d609ded633cdd7052256cbf87d2c8109852d0a9a47ca9ed505ceb78f7b"
+     "3d68356198d520570aa636fb8a66f3b959ba18632dd73bc7dc04a98cc28a5593"
+     "1c19b68c2ffcd0b53a8bf3b7ebecd66ba745b6b6e191f7c7fa2720c12a94164b"
+     "ddca32451ac164f5f0d89fd97e3e039e1897d8948fcef4ea845c4941c585eb37"
+     "641818eabfebf65644eb2bf19016665295e85b99406fefc38fadf9b702b3d109"
+     "5d8a411973e6c709ced3d74d815b8f76f682246687f7338bf5269963b89585cd"
+     "0f3d58666b0f7e7539677ab03f71f6df3f079a9ebc444d0ce211c8cb01d3392b"
+     "ac0e741c51ff61dd7e15b209515e35795bac69ed75473617afe2a8420e0edd9f"
+     "80a258b561ca0434b31f1d14cb853fd5919ac14a7267fc006b0b5854a8417135"
+     "42e0bcef76316c29347f29b33a699ac7b5c6cd18715cf1cd3e79e8bf9a6a5466"
+     "24d64cbf6479da1b5ea0699ad10555aa2f9b1a3aebd08cd6f8804547ca5283b9"
+     "344b2a3a4d96b392ca810c95f65b3de564cbbab51fb41cfb4a752a00ce3056f4"
+     "0c7e222fd484fd65a22881aede855249a9738db79ba95e497d792997fedd51f1"
+     "11ae64e6fad6090e0c50ee77ffbfbb031940a261e5509a9fccc34a127dd6f238"
+     "4929e019ff782dbd7aaa2962b077d3ce30617fd67276091875e2dbab6fd38db1"
+     "3267b287b5d7bc0f6ae52b4c58b9a1a7d9f55d7db4d270de4369418e27a0fdde"
+     "ea51fdbad2a3c0817f89295ce6662002d69a1586724bab290ca3861866457c7c"
+     "a21f194824b5b6f6ffdad9b886376fc7d79b453a4a43c62112471e70942a3ec7"
+     "89075e1074987d149b142413cc703ab3f6e6a206d0f2b889216c961a7d5519ce"
+     "f61e5b67769f4b0c224403a1b80348a370f9852f0d1b3cb3110d58ee09b3280f"
+     "2fd1984837f6ff2fa8269ca1ea00ac77c3c356fa31df3104306f617199197523"
+     "3567e721cc27da3c1dca5a84d76557db8cbb148af942957d1b8b0d580a1fe454"
+     "0da36ac06fbdab6526de7e35954b01c181fef81b9d46b18f60c7a50babda877f"
+     "1e2ff7c10e1254cf1951057641ee846c9f2dc11d018c5c1e13b51b0337bc01d0"
+     "1bbb8f6a10b20f0269c99e8a35625e941080138b7fb9d0b87b42c9a0b5143eaf"
+     "4eb87b023ca55625af1598aa6aacc9f723292f07667f75834e21afe63fddcd36"
+     "d121db8ab80295939943d369f9f241a73171ac97b8e0de2d3505162241c7ba8d"
+     "2d8961a4f11fccc665bd8ea04097ee1a8af40628f7a889f6a09feb81b8fc24ae"
+     "d5ea2385740b04fc3a2762616418445436ff5e0a8566b7525d124ab1041aec5f"
+     "b04eccdc3c57ff50952397bb4422b9af6c900f0111040cb8f81193d30ab99b87"
+     "a04f2b9cf7070fabb0f96fc2ce76a3888af211de8b100482471058dc679ad9ee"
+     "a103ec629e2b731b27dffd369948bf6fb72668995ed841fecbba8b380db663f5"
+     "ca2c929a670770b9936b37bab3e25f231cb2fb32cca7e602a623c316e28243ce"
+     "62ebbd1858fb03846e639629bf77d782241574f600b946f5ad46f1d370641431"
+     "f33a8a7fc53ce5899fc2f63332053eb6c90914defc4ee8c34aedc0e89e509891"
+     "6d98ced4486ca69703b8e81fb706757ff4b7fa7b2fea4d97fc7ce516385a0025"
+     "d66d715604f6b7a939584444096dce1d5df4fb0578ecedbbb6d8931f19e97633"
+     default))
  '(package-selected-packages
-   '(go-mode hideshow-mode py-autopep8 flycheck-posframe flycheck dap-gdb-lldb dap-mode dtrt-indent csharp-mode lsp-pyright tree-sitter-langs tree-sitter-c tree-sitter hl-block-mode writegood-mode ws-butler which-key flycheck-mode robot-mode counsel highlight-symbol lsp-treemacs lsp-ui lsp-mode magit use-package))
+   '(browse-kill-ring cmake-mode counsel dap-mode dtrt-indent flycheck
+		      go-mode gruvbox-theme haskell-mode
+		      highlight-symbol indent-dtrt intel-hex-mode
+		      lsp-ui magit protobuf-mode rainbow-mode
+		      robot-mode which-key writegood-mode ws-butler))
  '(safe-local-variable-values
-   '((eval when
-	   (fboundp 'rainbow-mode)
-	   (rainbow-mode 1))
-     (c-default-style . "linux")
-     (indent-tabs-mode t)
+   '((eval when (fboundp 'rainbow-mode) (rainbow-mode 1))
+     (c-default-style . "linux") (indent-tabs-mode t)
      (projectile-project-root . "/home/gauthier/src/airglow_fw"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -477,3 +585,10 @@ Optional FRAME parameter defaults to current frame."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+;;; This is specific to projects that build the host files in another
+;;; context, e.g. a docker container, where the path is /projroot. Useful
+;;; for going to the location of an error from the compilation
+;;; buffer. Unfortunately, I could not find a way to make this work
+;;; with a setting in the project itself, so here it is, globally.
+(setq directory-abbrev-alist '(("^/projroot" . "./")))
