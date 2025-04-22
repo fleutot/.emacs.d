@@ -1,2 +1,0 @@
-;;; Generated package description from robot-mode.el  -*- no-byte-compile: t -*-
-(define-package "robot-mode" "20210425.1925" "Major-mode for Robot Framework files" '((emacs "26.1")) :commit "e7e9c4d4750d048ad771fa735621ad813fa9c128" :authors '(("Kalle Kankare" . "kalle.kankare@iki.fi")) :maintainer '("Kalle Kankare" . "kalle.kankare@iki.fi") :keywords '("languages" "files") :url "https://github.com/kopoli/robot-mode")
