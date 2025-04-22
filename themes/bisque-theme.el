@@ -100,6 +100,15 @@
    `(highlight ((t (:background ,bisque-bg-05))))
    `(shadow ((t (:foreground ,bisque-bg+05))))
 
+   ;;; ANSI
+   `(ansi-color-red ((t (:foreground ,bisque-red-3))))
+   `(ansi-color-green ((t (:foreground ,bisque-green-1))))
+   `(ansi-color-yellow ((t (:foreground ,bisque-yellow-2))))
+   `(ansi-color-blue ((t (:foreground ,bisque-blue-3))))
+   `(ansi-color-magenta ((t (:foreground ,bisque-magenta-2))))
+   `(ansi-color-cyan ((t (:foreground ,bisque-cyan))))
+   `(ansi-color-bold ((t (:weight bold))))
+
    ;;; compilation
    `(compilation-column-face ((t (:foreground ,bisque-yellow))))
    `(compilation-enter-directory-face ((t (:foreground ,bisque-green))))
@@ -279,6 +288,10 @@
    `(erc-prompt-face ((t (:foreground ,bisque-orange :background ,bisque-bg :weight bold))))
    `(erc-timestamp-face ((t (:foreground ,bisque-green+1))))
    `(erc-underline-face ((t (:underline t))))
+
+   ;; git
+   `(git-commit-nonempty-second-line ((,class (:foreground ,bisque-red :weight bold :inverse-video t))))
+   `(git-commit-overlong-summary ((,class (:foreground ,bisque-orange :inverse-video t))))
 
    ;; git-gutter
    `(git-gutter:added ((,class (:foreground ,bisque-green :weight bold :inverse-video t))))
