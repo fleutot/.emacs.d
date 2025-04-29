@@ -408,7 +408,8 @@ Useful for highlighting an error after running 'next-error'"
 ;;; ----- Themes -----------------------------------------------------
 ; Color theme
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
-(load-theme 'bisque t)
+;;(load-theme 'bisque t) ;; Winter.
+(load-theme 'gruvbox-light-soft t) ;; Summer!
 
 ;;; Disable themes before loading a new one, to try to reset settings
 ;;; that the new theme would not overwrite.
@@ -416,6 +417,10 @@ Useful for highlighting an error after running 'next-error'"
   (mapc #'disable-theme custom-enabled-themes))
 
 ;;; ----- My key definitions -----------------------------------------
+
+(global-set-key (kbd "C-x i")
+  (lambda () (interactive) (other-window -1)))
+
 ;; --- smart home behaviour ---
 (defun smart-beginning-of-line ()
   "Move point to first non-whitespace character or beginning-of-line.
