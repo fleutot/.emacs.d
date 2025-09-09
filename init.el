@@ -55,6 +55,7 @@
   (setq lsp-enable-on-type-formatting nil)
   (setq lsp-headerline-breadcrumb-enable nil)
   (setq lsp-headerline-breadcrumb-enable-diagnostics nil)
+  (setq lsp-enable-symbol-highlighting t)
   (setq lsp-clients-clangd-args '("--query-driver=/usr/bin/arm-none-eabi-g*" "--background-index" "--header-insertion=iwyu" ))
   :hook (
          (c-mode . lsp-deferred)
@@ -164,7 +165,10 @@
   :config
   (setq highlight-symbol-idle-delay 0)
   (setq highlight-symbol-on-navigation-p t)
-  (add-hook 'prog-mode-hook #'highlight-symbol-mode)
+  ;; No automatic highlighting, rely on LSP for that. Highlighting
+  ;; here forces user to run `highlight-symbol-at-point twice, in
+  ;; order to get the highlight. Commenting out:
+  ;; (add-hook 'prog-mode-hook #'highlight-symbol-mode)
   (add-hook 'prog-mode-hook #'highlight-symbol-nav-mode)
   (unbind-key (kbd "M-p") highlight-symbol-nav-mode-map)
   (unbind-key (kbd "M-n") highlight-symbol-nav-mode-map)
@@ -257,6 +261,11 @@ Useful for highlighting an error after running 'next-error'"
 
 ;; ido makes competing buffers and finding files easier
 (ido-mode 'both) ;; for buffers and files
+(icomplete-mode 1)
+(define-key icomplete-minibuffer-map (kbd "RET") 'icomplete-force-complete-and-exit)
+(define-key icomplete-minibuffer-map (kbd "TAB") 'icomplete-force-complete)
+(setq icomplete-show-matches-on-no-input t
+      icomplete-hide-common-prefix nil)
 (setq
   ido-save-directory-list-file "~/.emacs.d/cache/ido.last"
 
@@ -272,49 +281,12 @@ Useful for highlighting an error after running 'next-error'"
   ido-use-filename-at-point nil    ; don't use filename at point (annoying)
   ido-use-url-at-point nil         ; don't use url at point (annoying)
 
-  ido-enable-flex-matching nil     ; don't try to be too smart
+  ido-enable-flex-matching t       ; was nil for: don't try to be too smart
   ido-max-prospects 8              ; don't spam my minibuffer
   ido-confirm-unique-completion t) ; wait for RET, even with unique completion
 
 ;; when using ido, the confirmation is rather annoying...
 (setq confirm-nonexistent-file-or-buffer nil)
-
-;; Unnecessary since the completing-read function below?
-;;;; ido completion for M-x
-;;(global-set-key
-;; "\M-x"
-;; (lambda ()
-;;   (interactive)
-;;   (call-interactively
-;;    (intern
-;;     (ido-completing-read
-;;      "M-x "
-;;      (all-completions "" obarray 'commandp))))))
-
-(defvar ido-enable-replace-completing-read t
-  "If t, use ido-completing-read instead of completing-read if possible.
-
-    Set it to nil using let in around-advice for functions where the
-    original completing-read is required.  For example, if a function
-    foo absolutely must use the original completing-read, define some
-    advice like this:
-
-    (defadvice foo (around original-completing-read-only activate)
-      (let (ido-enable-replace-completing-read) ad-do-it))")
-;; Replace completing-read wherever possible, unless directed otherwise
-(defadvice completing-read
-    (around use-ido-when-possible activate)
-  (if (or (not ido-enable-replace-completing-read) ; Manual override disable ido
-          (and (boundp 'ido-cur-list)
-               ido-cur-list)) ; Avoid infinite loop from ido calling this
-      ad-do-it
-    (let ((allcomp (all-completions "" collection predicate)))
-      (if allcomp
-          (setq ad-return-value
-                (ido-completing-read prompt
-                                     allcomp
-                                     nil require-match initial-input hist def))
-        ad-do-it))))
 
 ;;; ----- Backup -----------------------------------------------------
 (setq backup-directory-alist `(("." . "~/.saves")))
@@ -409,12 +381,25 @@ Useful for highlighting an error after running 'next-error'"
 ; Color theme
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
 ;;(load-theme 'bisque t) ;; Winter.
-(load-theme 'gruvbox-light-soft t) ;; Summer!
+;;(load-theme 'gruvbox-light-soft t) ;; Summer!
+(load-theme 'solarized-light t) ;; Summer!
 
 ;;; Disable themes before loading a new one, to try to reset settings
 ;;; that the new theme would not overwrite.
 (defadvice load-theme (before theme-dont-propagate activate)
   (mapc #'disable-theme custom-enabled-themes))
+
+;;; Personal changes to existing themes
+(defun my-themes-customization (theme)
+  "Apply customization for specific theme."
+  (when (eq theme 'apropospriate-light)
+    (set-face-attribute 'fill-column-indicator nil :foreground
+			"grey90"))
+  (when (eq theme 'gruvbox-light-soft)
+    (set-face-attribute 'fill-column-indicator nil :foreground
+			"#d5c4a1")))
+
+(add-hook 'enable-theme-functions #'my-themes-customization)
 
 ;;; ----- My key definitions -----------------------------------------
 
@@ -507,7 +492,15 @@ Optional FRAME parameter defaults to current frame."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   '("f9a679cf51ad9dc278f3785edca549a41d65902e76659eac717617eeeca9f228"
+   '("7fea145741b3ca719ae45e6533ad1f49b2a43bf199d9afaee5b6135fd9e6f9b8"
+     "b49f66a2e1724db880692485a5d5bcb9baf28ed2a3a05c7a799fa091f24321da"
+     "57a29645c35ae5ce1660d5987d3da5869b048477a7801ce7ab57bfb25ce12d3e"
+     "285d1bf306091644fb49993341e0ad8bafe57130d9981b680c1dbd974475c5c7"
+     "51ec7bfa54adf5fff5d466248ea6431097f5a18224788d0bd7eb1257a4f7b773"
+     "2b0fcc7cc9be4c09ec5c75405260a85e41691abb1ee28d29fcd5521e4fca575b"
+     "f1b2de4bc88d1120782b0417fe97f97cc9ac7c5798282087d4d1d9290e3193bb"
+     "aeb5508a548f1716142142095013b6317de5869418c91b16d75ce4043c35eb2b"
+     "f9a679cf51ad9dc278f3785edca549a41d65902e76659eac717617eeeca9f228"
      "a2511e94e964a43d588be35d057c57e741234f9ed49fb6c5b6f65fe4e3ab30bd"
      "fa3add447bcf03b8ef790d2ddf31b7cd5f58db01785d2fafabdf79426626ffa1"
      "a5270d86fac30303c5910be7403467662d7601b821af2ff0c4eb181153ebfc0a"
@@ -575,11 +568,12 @@ Optional FRAME parameter defaults to current frame."
      "d66d715604f6b7a939584444096dce1d5df4fb0578ecedbbb6d8931f19e97633"
      default))
  '(package-selected-packages
-   '(browse-kill-ring cmake-mode counsel dap-mode dtrt-indent flycheck
-		      go-mode gruvbox-theme haskell-mode
-		      highlight-symbol indent-dtrt intel-hex-mode
-		      lsp-ui magit protobuf-mode rainbow-mode
-		      robot-mode which-key writegood-mode ws-butler))
+   '(apropospriate-theme browse-kill-ring cmake-mode counsel dap-mode
+			 dtrt-indent flycheck go-mode gruvbox-theme
+			 haskell-mode highlight-symbol indent-dtrt
+			 intel-hex-mode lsp-ui magit protobuf-mode
+			 rainbow-mode robot-mode solarized-theme
+			 which-key writegood-mode ws-butler))
  '(safe-local-variable-values
    '((eval when (fboundp 'rainbow-mode) (rainbow-mode 1))
      (c-default-style . "linux") (indent-tabs-mode t)

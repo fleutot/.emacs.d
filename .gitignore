@@ -2,3 +2,5 @@ session.*
 *whsettings*
 *~
 eshell*
+elpa*
+eln-cache*
