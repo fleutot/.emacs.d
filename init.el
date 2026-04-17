@@ -397,7 +397,21 @@ Useful for highlighting an error after running 'next-error'"
 			"grey90"))
   (when (eq theme 'gruvbox-light-soft)
     (set-face-attribute 'fill-column-indicator nil :foreground
-			"#d5c4a1")))
+			"#d5c4a1"))
+
+  (when (eq theme 'solarized-light)
+    (set-face-attribute 'magit-diff-file-heading nil
+			:background "#b0d4cf"
+			:foreground "#657b83"
+			:height 1.15
+			:weight 'normal
+			:extend t)
+    (set-face-attribute 'magit-diff-file-heading-highlight nil
+			:background "#7ab3af"
+			:foreground "#fdf6e3"
+			:weight 'normal
+			:height 1.0 ; heigth inherited from heading
+			)))
 
 (add-hook 'enable-theme-functions #'my-themes-customization)
 
