@@ -381,9 +381,6 @@ Useful for highlighting an error after running 'next-error'"
 ;;; ----- Themes -----------------------------------------------------
 ; Color theme
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
-;;(load-theme 'bisque t) ;; Winter.
-;;(load-theme 'gruvbox-light-soft t) ;; Summer!
-(load-theme 'solarized-light t) ;; Summer!
 
 ;;; Disable themes before loading a new one, to try to reset settings
 ;;; that the new theme would not overwrite.
@@ -415,6 +412,9 @@ Useful for highlighting an error after running 'next-error'"
 			)))
 
 (add-hook 'enable-theme-functions #'my-themes-customization)
+;;(load-theme 'bisque t) ;; Winter.
+;;(load-theme 'gruvbox-light-soft t) ;; Summer!
+(load-theme 'solarized-light t) ;; Summer!
 
 ;;; ----- My key definitions -----------------------------------------
 
@@ -507,7 +507,8 @@ Optional FRAME parameter defaults to current frame."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   '("7fea145741b3ca719ae45e6533ad1f49b2a43bf199d9afaee5b6135fd9e6f9b8"
+   '("26e2e6cad9ec59b694a75f8e1f8e377174c4175d6f8d7829c343d4e6b45460e4"
+     "7fea145741b3ca719ae45e6533ad1f49b2a43bf199d9afaee5b6135fd9e6f9b8"
      "b49f66a2e1724db880692485a5d5bcb9baf28ed2a3a05c7a799fa091f24321da"
      "57a29645c35ae5ce1660d5987d3da5869b048477a7801ce7ab57bfb25ce12d3e"
      "285d1bf306091644fb49993341e0ad8bafe57130d9981b680c1dbd974475c5c7"
