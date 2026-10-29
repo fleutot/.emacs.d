@@ -57,7 +57,22 @@
   (setq lsp-headerline-breadcrumb-enable nil)
   (setq lsp-headerline-breadcrumb-enable-diagnostics nil)
   (setq lsp-enable-symbol-highlighting t)
-  (setq lsp-clients-clangd-args '("--query-driver=/usr/bin/arm-none-eabi-g*" "--background-index" "--header-insertion=iwyu" ))
+  (setq lsp-clients-clangd-args
+	'("--query-driver=/usr/bin/arm-none-eabi-g*"
+	  "--background-index" "--header-insertion=iwyu"
+	  "--clang-tidy"))
+  ;; Fix: Dynamically inject path-mappings right before the server
+  ;; initializes
+  ;; Better to include that in the project root instead?
+  ;; (nil . ((eval . (setenv "CLANGD_FLAGS" "--path-mappings=/projroot=/home/gostervall/src/mcu"))))
+  (add-hook 'lsp-before-initialize-hook
+            (lambda ()
+              (when (and (lsp-workspace-root)
+                         (string-match-p "mcu" (lsp-workspace-root)))
+                (unless (member "--path-mappings" lsp-clients-clangd-args)
+                  (setq lsp-clients-clangd-args
+                        (append lsp-clients-clangd-args
+                                '("--path-mappings" "/projroot=/home/gostervall/src/mcu")))))))
   :hook (
          (c-mode . lsp-deferred)
          (lsp-mode . lsp-enable-which-key-integration))
@@ -101,22 +116,7 @@
 (use-package sh-script
   :hook (sh-mode . flycheck-mode))
 
-(use-package dap-mode
-  :ensure t)
-(require 'dap-gdb-lldb)
-;; This seems required too: M-x dap-gdb-lldb-setup
-;; Project specific debug template (should be in the project itself?):
-(dap-register-debug-template
- "GDB::dwm"
- (list
-  :type "gdb" :request "launch" :name "GDB::Run"
-  :args "DISPLAY=:1" ;; this line breaks it. But how to I pass DISPLAY?
-  :target "/home/gauthier/src/dwm/dwm" :cwd "."))
-
 (use-package go-mode
-  :ensure t)
-
-(use-package treemacs
   :ensure t)
 
 (use-package counsel
@@ -369,10 +369,10 @@ Useful for highlighting an error after running 'next-error'"
   (c-set-offset 'inextern-lang 0) ; No extra indent in an extern block
 					; (#ifdef __cplusplus)
   (set-fill-column 80)
-  (when (derived-mode-p 'c-mode 'c++-mode 'java-mode))
+  (when (derived-mode-p 'c-mode 'c++-mode 'java-mode)
   (font-lock-add-keywords
    nil
-   '((my-c-mode-font-lock-if0 (0 font-lock-comment-face prepend))) 'add-to-end))
+   '((my-c-mode-font-lock-if0 (0 font-lock-comment-face prepend))) 'add-to-end)))
 (add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
 
 ;;; ----- Mode line --------------------------------------------------
@@ -381,6 +381,9 @@ Useful for highlighting an error after running 'next-error'"
 ;;; ----- Themes -----------------------------------------------------
 ; Color theme
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
+
+(use-package solarized-theme
+  :ensure t)
 
 ;;; Disable themes before loading a new one, to try to reset settings
 ;;; that the new theme would not overwrite.
@@ -583,15 +586,13 @@ Optional FRAME parameter defaults to current frame."
      "6d98ced4486ca69703b8e81fb706757ff4b7fa7b2fea4d97fc7ce516385a0025"
      "d66d715604f6b7a939584444096dce1d5df4fb0578ecedbbb6d8931f19e97633"
      default))
- '(package-selected-packages
-   '(apropospriate-theme browse-kill-ring cmake-mode counsel dap-mode
-			 dtrt-indent flycheck go-mode gruvbox-theme
-			 haskell-mode highlight-symbol indent-dtrt
-			 intel-hex-mode lsp-ui magit protobuf-mode
-			 rainbow-mode robot-mode solarized-theme
-			 which-key writegood-mode ws-butler))
+ '(package-selected-packages nil)
  '(safe-local-variable-values
-   '((eval when (fboundp 'rainbow-mode) (rainbow-mode 1))
+   '((eval setq-local lsp-clients-clangd-args
+	   (append lsp-clients-clangd-args
+		   '("--path-mappings"
+		     "/projroot=/home/gostervall/src/mcu")))
+     (eval when (fboundp 'rainbow-mode) (rainbow-mode 1))
      (c-default-style . "linux") (indent-tabs-mode t)
      (projectile-project-root . "/home/gauthier/src/airglow_fw"))))
 (custom-set-faces
